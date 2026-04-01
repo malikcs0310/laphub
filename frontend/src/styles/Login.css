@@ -1,0 +1,314 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap");
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0f172a; /* dark tech background */
+  font-family: "Nunito", sans-serif;
+  padding: 20px;
+}
+
+/* ===== Card ===== */
+.box {
+  position: relative;
+  width: 420px;
+  min-height: 520px;
+  background-color: #020617;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ===== Form ===== */
+.box form {
+  position: absolute;
+  inset: 4px;
+  background: #020617;
+  padding: 45px 40px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Branding ===== */
+.brand {
+  color: #38bdf8; /* LapHub blue */
+  font-size: 42px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.tagline {
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+/* ===== Error Message ===== */
+.error-message {
+  background: rgba(220, 38, 38, 0.1);
+  border-left: 3px solid #ef4444;
+  color: #fecaca;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ===== Inputs ===== */
+.box form .inputbox {
+  position: relative;
+  width: 100%;
+  margin-top: 35px;
+}
+
+.box form .inputbox input {
+  position: relative;
+  width: 100%;
+  padding: 20px 10px 10px;
+  background: transparent;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  transition: 0.5s;
+  z-index: 10;
+}
+
+.box form .inputbox span {
+  position: absolute;
+  left: 0;
+  padding: 20px 0px 10px;
+  pointer-events: none;
+  color: #8f8f8f;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  transition: 0.5s;
+}
+
+.box form .inputbox input:valid ~ span,
+.box form .inputbox input:focus ~ span {
+  color: #38bdf8;
+  font-size: 0.75em;
+  transform: translateY(-34px);
+}
+
+.box form .inputbox i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: #38bdf8;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+.box form .inputbox input:valid ~ i,
+.box form .inputbox input:focus ~ i {
+  height: 44px;
+  background: linear-gradient(90deg, #38bdf8, #2563eb);
+}
+
+/* ===== Options Section ===== */
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0 15px;
+}
+
+.show-password {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.75em;
+  color: #8f8f8f;
+  transition: 0.3s;
+}
+
+.show-password:hover {
+  color: #38bdf8;
+}
+
+.show-password input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #38bdf8;
+}
+
+.forgot-link {
+  font-size: 0.75em;
+  color: #8f8f8f;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.forgot-link:hover {
+  color: #38bdf8;
+}
+
+/* ===== Button ===== */
+input[type="submit"] {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: #ffffff;
+  font-size: 0.95em;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+input[type="submit"]:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+}
+
+input[type="submit"].disabled,
+input[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Signup Link ===== */
+.signup-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.75em;
+  color: #8f8f8f;
+}
+
+.signup-link a {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Demo Credentials ===== */
+.demo-credentials {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.demo-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.demo-row {
+  font-size: 11px;
+  color: #94a3b8;
+  text-align: center;
+  margin-bottom: 5px;
+  font-family: monospace;
+}
+
+.demo-role {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.demo-pass {
+  color: #64748b;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .box {
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .box form {
+    padding: 35px 25px;
+  }
+
+  .brand {
+    font-size: 34px;
+  }
+
+  .options {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .show-password {
+    order: 2;
+  }
+
+  .forgot-link {
+    order: 1;
+  }
+}
+
+/* ===== Animation for error ===== */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.error-message {
+  animation: shake 0.3s ease-in-out;
+}
+
+/* ===== Focus glow effect ===== */
+.box form .inputbox input:focus {
+  caret-color: #38bdf8;
+}
+
+/* ===== Loading spinner for button ===== */
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

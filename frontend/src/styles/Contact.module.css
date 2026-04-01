@@ -1,0 +1,59 @@
+/* Contact.module.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;700;900&display=swap");
+
+.box {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  background-color: #1c1c1c;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 30px;
+  color: white;
+}
+
+.box::before,
+.box::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(0deg, transparent, #45f3ff, #45f3ff);
+  z-index: 1;
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.inputbox {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.inputbox input,
+.inputbox textarea {
+  width: 100%;
+  padding: 12px;
+  background: #333;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.inputbox input:focus,
+.inputbox textarea:focus {
+  background: #444;
+}
