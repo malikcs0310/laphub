@@ -70,7 +70,7 @@ const ViewProducts = () => {
     try {
       await Promise.all(
         selectedProducts.map((id) =>
-          fetch(`http://localhost:5000/api/laptops/${id}`, {
+          fetch(`${import.meta.env.VITE_API_URL}/api/laptops/${id}`, {
             method: "DELETE",
           }),
         ),

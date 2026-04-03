@@ -83,10 +83,13 @@ const AddLaptop = () => {
         }
       });
 
-      const res = await fetch("http://localhost:5000/api/laptops/add", {
-        method: "POST",
-        body: data,
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/laptops/add`,
+        {
+          method: "POST",
+          body: data,
+        },
+      );
 
       const result = await res.json();
       alert(result.message);
