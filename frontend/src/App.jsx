@@ -45,6 +45,10 @@ import OrderDetails from "./pages/admin/orders/OrderDetails";
 import ManageContacts from "./pages/admin/ManageContacts";
 import ManageReviews from "./pages/admin/ManageReviews";
 import ManageTestimonials from "./pages/admin/ManageTestimonials";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import FAQ from "./pages/FAQ";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +63,10 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> },
       { path: "cart", element: <Cart /> },
+      { path: "privacy", element: <PrivacyPolicy /> },
+      { path: "terms", element: <TermsConditions /> },
+      { path: "returns", element: <ReturnPolicy /> },
+      { path: "faq", element: <FAQ /> },
       { path: "forgot-password", element: <ForgotPassword /> },
       { path: "reset-password", element: <ResetPassword /> },
       { path: "order-success", element: <OrderSuccess /> },
