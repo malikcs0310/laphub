@@ -58,7 +58,7 @@ const FeaturedProducts = () => {
         const data = await res.json();
         setProducts(Array.isArray(data) ? data : data.data || []);
       } catch (error) {
-        // console.log("Error fetching featured products:", error);  // ← DELETE THIS
+        console.log("Error fetching featured products:", error);
         toast.error("Failed to load featured products");
       } finally {
         setLoading(false);

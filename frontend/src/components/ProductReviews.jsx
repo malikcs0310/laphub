@@ -46,7 +46,40 @@ const ProductReviews = ({ productId }) => {
       setLoading(false);
     }
   };
-
+  useEffect(() => {
+    // Temporary test data
+    const testReviews = [
+      {
+        _id: "1",
+        userName: "Ahmed Raza",
+        rating: 5,
+        title: "Excellent Laptop!",
+        comment: "Best laptop I've ever used. Performance is amazing.",
+        verifiedPurchase: true,
+        helpful: 12,
+        notHelpful: 1,
+        createdAt: "2026-03-25T10:00:00.000Z",
+      },
+      {
+        _id: "2",
+        userName: "Sara Khan",
+        rating: 4,
+        title: "Good Value for Money",
+        comment: "Satisfied with the purchase. Works well for my daily tasks.",
+        verifiedPurchase: true,
+        helpful: 8,
+        notHelpful: 0,
+        createdAt: "2026-03-20T14:30:00.000Z",
+      },
+    ];
+    setReviews(testReviews);
+    setRatingStats({
+      average: 4.5,
+      total: 2,
+      distribution: { 5: 1, 4: 1, 3: 0, 2: 0, 1: 0 },
+    });
+    setLoading(false);
+  }, [productId]);
   useEffect(() => {
     fetchReviews(true);
   }, [productId]);

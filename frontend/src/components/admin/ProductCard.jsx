@@ -145,6 +145,7 @@ const ProductCard = () => {
           setProducts(data.data || []);
         }
       } catch (error) {
+        console.log("Error fetching products:", error);
         toast.error("Failed to load products");
         setProducts([]);
       } finally {

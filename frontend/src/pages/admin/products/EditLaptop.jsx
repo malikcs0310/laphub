@@ -111,13 +111,10 @@ const EditLaptop = () => {
         }
       });
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/laptops/${id}`,
-        {
-          method: "PUT",
-          body: data,
-        },
-      );
+      const res = await fetch(`http://localhost:5000/api/laptops/${id}`, {
+        method: "PUT",
+        body: data,
+      });
 
       const result = await res.json();
 
