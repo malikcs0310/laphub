@@ -16,8 +16,9 @@ const FeaturedProducts = () => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const API_URL = "https://laphub-backend-lrer.onrender.com";
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  // const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   // Check login status
   useEffect(() => {
