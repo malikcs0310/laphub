@@ -49,10 +49,10 @@ const UserLayout = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* 🔥 SIDEBAR - Desktop always visible, Mobile slide menu */}
+      {/* 🔥 SIDEBAR - Full height fixed */}
       <aside
         className={`
-        fixed top-0 left-0 h-full w-64 bg-[#0f172a] text-gray-300 z-50
+        fixed top-0 left-0 h-screen w-64 bg-[#0f172a] text-gray-300 z-50
         transform transition-transform duration-300 ease-in-out
         lg:relative lg:translate-x-0 lg:flex lg:flex-col
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -89,8 +89,8 @@ const UserLayout = () => {
           </div>
         </div>
 
-        {/* Menu */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
+        {/* Menu - flex-grow to push bottom content down */}
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {menuItems.map((item) => (
             <Link
               key={item.path}
@@ -108,7 +108,7 @@ const UserLayout = () => {
           ))}
         </nav>
 
-        {/* Bottom */}
+        {/* Bottom - sticks to bottom */}
         <div className="p-4 border-t border-gray-800">
           <button
             onClick={handleLogout}
