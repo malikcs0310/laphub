@@ -8,7 +8,6 @@ import {
   FiLogOut,
   FiMenu,
   FiX,
-  FiSearch,
 } from "react-icons/fi";
 import { MdLaptop } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -18,7 +17,6 @@ const UserLayout = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -36,13 +34,6 @@ const UserLayout = () => {
     localStorage.clear();
     toast.success("Logged out");
     navigate("/");
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
-    }
   };
 
   const isActive = (path) => location.pathname === path;
@@ -127,9 +118,9 @@ const UserLayout = () => {
         />
       )}
 
-      {/* 🔥 MAIN AREA - flex column with fixed header and scrollable content */}
+      {/* 🔥 MAIN AREA */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-        {/* 🔥 HEADER - Fixed */}
+        {/* 🔥 HEADER - Fixed - Only User Name */}
         <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm border-b shrink-0">
           {/* Mobile Menu Button */}
           <button
@@ -139,26 +130,11 @@ const UserLayout = () => {
             <FiMenu size={22} />
           </button>
 
-          <div>{user?.name || "User"}</div>
-
-          {/* Mobile Search Icon */}
-          <button
-            onClick={() => {
-              const searchInput = document.getElementById(
-                "mobile-search-input",
-              );
-              if (searchInput) searchInput.classList.toggle("hidden");
-            }}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-          >
-            <FiSearch size={20} />
-          </button>
-
-          {/* Desktop User Info */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* Desktop - User Name */}
+          <div className="hidden lg:flex items-center gap-3 ml-auto">
             <div className="text-right">
               <p className="text-sm font-medium text-gray-700">
-                {user?.name?.split(" ")[0] || "User"}
+                {user?.name || "User"}
               </p>
               <p className="text-xs text-gray-500">My Account</p>
             </div>
@@ -166,8 +142,15 @@ const UserLayout = () => {
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
           </div>
+
+          {/* Mobile - Only Avatar */}
+          <div className="lg:hidden">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              {user?.name?.charAt(0)?.toUpperCase() || "U"}
+            </div>
+          </div>
         </header>
-        <div>{user?.name || "User"}</div>
+
         {/* 🔥 CONTENT - Scrollable */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm min-h-full p-4 sm:p-6">
