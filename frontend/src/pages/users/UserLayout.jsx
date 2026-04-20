@@ -139,20 +139,7 @@ const UserLayout = () => {
             <FiMenu size={22} />
           </button>
 
-          {/* Search - Desktop */}
-          <form
-            onSubmit={handleSearch}
-            className="hidden lg:flex items-center bg-gray-100 px-4 py-2 rounded-lg w-full max-w-md"
-          >
-            <FiSearch className="text-gray-400 mr-2" />
-            <input
-              type="text"
-              placeholder="Search laptops..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent outline-none w-full"
-            />
-          </form>
+          <div>{user?.name || "User"}</div>
 
           {/* Mobile Search Icon */}
           <button
@@ -180,25 +167,7 @@ const UserLayout = () => {
             </div>
           </div>
         </header>
-
-        {/* Mobile Search Bar */}
-        <form
-          id="mobile-search-input"
-          onSubmit={handleSearch}
-          className="lg:hidden hidden px-4 py-2 bg-white border-b shrink-0"
-        >
-          <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
-            <FiSearch className="text-gray-400 mr-2" />
-            <input
-              type="text"
-              placeholder="Search laptops..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent outline-none w-full"
-            />
-          </div>
-        </form>
-
+        <div>{user?.name || "User"}</div>
         {/* 🔥 CONTENT - Scrollable */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm min-h-full p-4 sm:p-6">
