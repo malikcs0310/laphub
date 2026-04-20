@@ -48,17 +48,17 @@ const UserLayout = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* 🔥 SIDEBAR - Full height fixed */}
+    <div className="h-screen flex overflow-hidden bg-gray-100">
+      {/* 🔥 SIDEBAR - Fixed */}
       <aside
         className={`
-        fixed top-0 left-0 h-screen w-64 bg-[#0f172a] text-gray-300 z-50
+        fixed top-0 left-0 h-full w-64 bg-[#0f172a] text-gray-300 z-50
         transform transition-transform duration-300 ease-in-out
-        lg:relative lg:translate-x-0 lg:flex lg:flex-col
+        lg:relative lg:translate-x-0 lg:flex lg:flex-col lg:shrink-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
-        {/* Logo + Close Button for Mobile */}
+        {/* Logo */}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <MdLaptop className="text-blue-500" size={28} />
@@ -89,7 +89,7 @@ const UserLayout = () => {
           </div>
         </div>
 
-        {/* Menu - flex-grow to push bottom content down */}
+        {/* Menu */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {menuItems.map((item) => (
             <Link
@@ -108,7 +108,7 @@ const UserLayout = () => {
           ))}
         </nav>
 
-        {/* Bottom - sticks to bottom */}
+        {/* Bottom */}
         <div className="p-4 border-t border-gray-800">
           <button
             onClick={handleLogout}
@@ -127,10 +127,10 @@ const UserLayout = () => {
         />
       )}
 
-      {/* 🔥 MAIN AREA */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* 🔥 TOP HEADER */}
-        <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm border-b sticky top-0 z-30">
+      {/* 🔥 MAIN AREA - flex column with fixed header and scrollable content */}
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
+        {/* 🔥 HEADER - Fixed */}
+        <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm border-b shrink-0">
           {/* Mobile Menu Button */}
           <button
             onClick={() => setSidebarOpen(true)}
@@ -181,11 +181,11 @@ const UserLayout = () => {
           </div>
         </header>
 
-        {/* Mobile Search Bar (Hidden by default) */}
+        {/* Mobile Search Bar */}
         <form
           id="mobile-search-input"
           onSubmit={handleSearch}
-          className="lg:hidden hidden px-4 py-2 bg-white border-b"
+          className="lg:hidden hidden px-4 py-2 bg-white border-b shrink-0"
         >
           <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
             <FiSearch className="text-gray-400 mr-2" />
@@ -199,9 +199,9 @@ const UserLayout = () => {
           </div>
         </form>
 
-        {/* 🔥 CONTENT */}
-        <main className="p-4 sm:p-6">
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm min-h-[500px] p-4 sm:p-6">
+        {/* 🔥 CONTENT - Scrollable */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm min-h-full p-4 sm:p-6">
             <Outlet />
           </div>
         </main>
