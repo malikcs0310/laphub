@@ -53,7 +53,7 @@ const UserLayout = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Mobile Header */}
+      {/* Mobile Header - Only on mobile */}
       <div className="lg:hidden bg-[#0f172a] text-white px-4 py-3 flex items-center justify-between sticky top-0 z-50">
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2">
           <FiMenu size={24} />
@@ -73,16 +73,16 @@ const UserLayout = () => {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Desktop: always visible, Mobile: slide menu */}
       <aside
         className={`
           fixed top-0 left-0 h-full w-72 bg-[#0f172a] text-gray-300 z-50
           transform transition-transform duration-300 ease-in-out
-          lg:relative lg:translate-x-0 lg:flex lg:flex-col
+          lg:translate-x-0 lg:relative lg:flex lg:flex-col
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* Logo */}
+        {/* Logo - Desktop visible, Mobile mein close button */}
         <div className="p-6 flex items-center justify-between border-b border-gray-800">
           <div className="flex items-center gap-3">
             <MdLaptop className="text-blue-500" size={28} />
@@ -143,24 +143,23 @@ const UserLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <div className="lg:ml-0 flex-1 flex flex-col">
-        {/* Top Header */}
-        <header className="bg-white px-4 py-3 flex items-center justify-between shadow-sm border-b sticky top-0 z-30">
-          <div className="hidden lg:block w-10"></div>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4">
-            <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
-              <FiSearch className="text-gray-400 mr-2" />
-              <input
-                type="text"
-                placeholder="Search laptops..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm"
-              />
-            </div>
-          </form>
+      <div className="lg:ml-72 flex-1 flex flex-col">
+        {/* Top Header - Desktop Search */}
+        <header className="bg-white px-6 py-4 flex items-center justify-between shadow-sm border-b sticky top-0 z-30">
+          <div className="hidden lg:flex items-center flex-1 max-w-md">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+                <FiSearch className="text-gray-400 mr-2" />
+                <input
+                  type="text"
+                  placeholder="Search laptops..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-transparent outline-none w-full text-sm"
+                />
+              </div>
+            </form>
+          </div>
 
           {/* Desktop User Menu */}
           <div className="hidden lg:flex items-center gap-4">
@@ -177,12 +176,43 @@ const UserLayout = () => {
             </div>
           </div>
 
-          <div className="lg:hidden w-8"></div>
+          {/* Mobile Search Icon */}
+          <div className="lg:hidden">
+            <button
+              onClick={() =>
+                document
+                  .getElementById("mobile-search")
+                  ?.classList.toggle("hidden")
+              }
+              className="p-2 rounded-lg hover:bg-gray-100"
+            >
+              <FiSearch size={20} />
+            </button>
+          </div>
         </header>
+
+        {/* Mobile Search Bar (Hidden by default) */}
+        <div
+          id="mobile-search"
+          className="lg:hidden hidden px-4 py-2 bg-white border-b"
+        >
+          <form onSubmit={handleSearch}>
+            <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+              <FiSearch className="text-gray-400 mr-2" />
+              <input
+                type="text"
+                placeholder="Search laptops..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-transparent outline-none w-full text-sm"
+              />
+            </div>
+          </form>
+        </div>
 
         {/* Page Content */}
         <main className="p-4 md:p-6">
-          <div className="bg-white rounded-xl shadow-sm min-h-[calc(100vh-120px)] p-4 md:p-6">
+          <div className="bg-white rounded-xl shadow-sm min-h-[calc(100vh-140px)] p-4 md:p-6">
             <Outlet />
           </div>
         </main>
