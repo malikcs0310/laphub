@@ -10,6 +10,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // ✅ Add this line - Backend URL
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -18,16 +21,13 @@ const Login = () => {
     try {
       // Check if it's admin login
       if (email === "admin@laptopshop.com" && password === "admin123") {
-        const adminRes = await fetch(
-          "http://localhost:5000/api/auth/admin/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
+        const adminRes = await fetch(`${API_URL}/api/auth/admin/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({ email, password }),
+        });
 
         const adminData = await adminRes.json();
 
@@ -41,7 +41,7 @@ const Login = () => {
       }
 
       // User login
-      const userRes = await fetch("http://localhost:5000/api/auth/login", {
+      const userRes = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,38 +51,20 @@ const Login = () => {
 
       const userData = await userRes.json();
 
-      // DEBUG LOGS
-      console.log("User login response:", userData);
-      console.log("User role:", userData.user?.role);
-      console.log("Token:", userData.token?.substring(0, 50) + "...");
-
       if (!userRes.ok) {
         throw new Error(userData.message || "Login failed");
-      }
-
-      // Check if role exists
-      if (!userData.user?.role) {
-        console.warn("No role found in user data, defaulting to User");
-        userData.user.role = "User";
       }
 
       // Save user data
       localStorage.setItem("token", userData.token);
       localStorage.setItem("user", JSON.stringify(userData.user));
 
-      // DEBUG: Verify saved data
-      console.log(
-        "Saved to localStorage - token:",
-        !!localStorage.getItem("token"),
-      );
-      console.log("Saved user:", localStorage.getItem("user"));
-
       // Clear any admin data
       localStorage.removeItem("adminToken");
       localStorage.removeItem("isAdmin");
 
       // Redirect based on role
-      if (userData.user.role === "Admin") {
+      if (userData.user?.role === "Admin") {
         navigate("/admin");
       } else {
         navigate("/");
