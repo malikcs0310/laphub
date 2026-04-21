@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getAllMessages, deleteMessage } from "../../services/contactService";
+import {
+  FiRefreshCw,
+  FiTrash2,
+  FiMail,
+  FiUser,
+  FiMessageSquare,
+  FiCalendar,
+} from "react-icons/fi";
 import toast from "react-hot-toast";
 
 const ManageContacts = () => {
@@ -15,12 +23,8 @@ const ManageContacts = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      console.log("Fetching messages with token:", !!token);
-
       const data = await getAllMessages(token);
-      console.log("Messages response:", data);
 
-      // Check if data.contacts exists or data is array
       if (data.contacts) {
         setMessages(data.contacts);
       } else if (Array.isArray(data)) {
@@ -66,16 +70,16 @@ const ManageContacts = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 sm:p-8 text-center">
         <svg
-          className="mx-auto h-12 w-12 text-red-500"
+          className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-red-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -87,13 +91,13 @@ const ManageContacts = () => {
             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <h3 className="mt-2 text-lg font-medium text-gray-900">
+        <h3 className="mt-2 text-base sm:text-lg font-medium text-gray-900">
           Error loading messages
         </h3>
-        <p className="mt-1 text-gray-500">{error}</p>
+        <p className="mt-1 text-xs sm:text-sm text-gray-500">{error}</p>
         <button
           onClick={fetchMessages}
-          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition text-sm"
         >
           Try Again
         </button>
@@ -102,150 +106,137 @@ const ManageContacts = () => {
   }
 
   return (
-    <div className="w-full mx-auto p-6 bg-white shadow-lg rounded-xl border border-gray-100">
-      <div className="flex justify-between items-center mb-6">
+    <div className="w-full mx-auto p-3 sm:p-4 md:p-6 bg-white shadow-lg rounded-lg sm:rounded-xl border border-gray-100">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Contact Messages</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+            Contact Messages
+          </h2>
+          <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">
             Messages from customers who contacted through the website
           </p>
         </div>
         <button
           onClick={fetchMessages}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700"
+          className="flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 text-sm"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
-          </svg>
+          <FiRefreshCw size={12} className="sm:w-3.5 sm:h-3.5" />
           Refresh
         </button>
       </div>
 
+      {/* Empty State */}
       {messages.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
+        <div className="text-center py-8 sm:py-12 bg-gray-50 rounded-lg">
+          <FiMail className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">
             No messages
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-xs sm:text-sm text-gray-500">
             No contact messages received yet.
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  #
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subject
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Message
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {messages.map((msg, index) => (
-                <tr key={msg._id} className="hover:bg-gray-50 transition">
-                  <td className="px-4 py-3 text-sm text-gray-500">
-                    {index + 1}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="text-sm font-medium text-gray-900">
-                      {msg.name}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="text-sm text-gray-600">{msg.email}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="text-sm text-gray-600">{msg.subject}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="text-sm text-gray-600 max-w-md break-words line-clamp-2">
-                      {msg.message}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="text-xs text-gray-500">
-                      {formatDate(msg.createdAt)}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => handleDelete(msg._id)}
-                      className="text-red-600 hover:text-red-800 transition p-1 rounded hover:bg-red-50"
-                      title="Delete message"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </td>
+        <>
+          {/* Messages Table - Horizontal scroll on mobile */}
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] sm:min-w-full">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    #
+                  </th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    Email
+                  </th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    Subject
+                  </th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    Message
+                  </th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    Date
+                  </th>
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-[9px] sm:text-xs font-medium text-gray-500 uppercase">
+                    Action
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {messages.map((msg, index) => (
+                  <tr key={msg._id} className="hover:bg-gray-50 transition">
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs text-gray-500">
+                      {index + 1}
+                    </td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <FiUser
+                          size={10}
+                          className="sm:w-3 sm:h-3 text-gray-400"
+                        />
+                        <span className="text-[10px] sm:text-xs font-medium text-gray-900">
+                          {msg.name?.length > 20
+                            ? `${msg.name.substring(0, 20)}...`
+                            : msg.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <p className="text-[10px] sm:text-xs text-gray-600 truncate max-w-[100px] sm:max-w-[150px]">
+                        {msg.email}
+                      </p>
+                    </td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <p className="text-[10px] sm:text-xs text-gray-600 truncate max-w-[80px] sm:max-w-[120px]">
+                        {msg.subject}
+                      </p>
+                    </td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <div className="text-[10px] sm:text-xs text-gray-600 max-w-[150px] sm:max-w-[200px] md:max-w-[300px] break-words line-clamp-2">
+                        {msg.message}
+                      </div>
+                    </td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <div className="flex items-center gap-1">
+                        <FiCalendar
+                          size={8}
+                          className="sm:w-2.5 sm:h-2.5 text-gray-400"
+                        />
+                        <span className="text-[9px] sm:text-[10px] text-gray-500">
+                          {formatDate(msg.createdAt)}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <button
+                        onClick={() => handleDelete(msg._id)}
+                        className="text-red-600 hover:text-red-800 transition p-1 rounded hover:bg-red-50"
+                        title="Delete message"
+                      >
+                        <FiTrash2 size={12} className="sm:w-3.5 sm:h-3.5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      {/* Stats */}
-      {messages.length > 0 && (
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <p className="text-sm text-gray-500">
-            Total messages:{" "}
-            <span className="font-semibold text-gray-700">
-              {messages.length}
-            </span>
-          </p>
-        </div>
+          {/* Stats */}
+          <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-200">
+            <p className="text-[10px] sm:text-xs text-gray-500">
+              Total messages:{" "}
+              <span className="font-semibold text-gray-700">
+                {messages.length}
+              </span>
+            </p>
+          </div>
+        </>
       )}
     </div>
   );
