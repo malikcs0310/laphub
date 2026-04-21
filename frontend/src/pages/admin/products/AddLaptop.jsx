@@ -61,7 +61,6 @@ const AddLaptop = () => {
       ...imagePreviews,
       ...files.map((f) => URL.createObjectURL(f)),
     ];
-
     setFormData({ ...formData, images: newImages });
     setImagePreviews(newPreviews);
   };
@@ -92,14 +91,11 @@ const AddLaptop = () => {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(`${API_URL}/api/laptops/add`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: data,
       });
 
       const result = await res.json();
-
       if (res.ok) {
         toast.success(result.message || "Laptop added successfully!");
         setFormData({
@@ -131,19 +127,19 @@ const AddLaptop = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 py-4 sm:py-6 px-3 sm:px-4 lg:px-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow-lg w-full max-w-4xl mx-auto p-4 sm:p-6 md:p-8"
+        className="bg-white rounded-xl sm:rounded-2xl shadow-lg w-full max-w-4xl mx-auto p-4 sm:p-5 md:p-6 lg:p-8"
       >
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800">
           Add New Laptop
         </h2>
 
         {/* Basic Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Laptop Title *
             </label>
             <input
@@ -151,13 +147,13 @@ const AddLaptop = () => {
               name="title"
               value={formData.title}
               placeholder="e.g., Dell Latitude 7490"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Price (PKR) *
             </label>
             <input
@@ -165,19 +161,19 @@ const AddLaptop = () => {
               name="price"
               value={formData.price}
               placeholder="e.g., 52000"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Type *
             </label>
             <select
               name="type"
               value={formData.type}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               onChange={handleChange}
               required
             >
@@ -190,13 +186,13 @@ const AddLaptop = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Condition *
             </label>
             <select
               name="condition"
               value={formData.condition}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               onChange={handleChange}
             >
               <option value="New">New</option>
@@ -205,7 +201,7 @@ const AddLaptop = () => {
             </select>
           </div>
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Location *
             </label>
             <input
@@ -213,7 +209,7 @@ const AddLaptop = () => {
               name="location"
               value={formData.location}
               placeholder="e.g., Lahore, Pakistan"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               onChange={handleChange}
               required
             />
@@ -221,19 +217,19 @@ const AddLaptop = () => {
         </div>
 
         {/* Brand & Model */}
-        <div className="mt-6">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3">
+        <div className="mt-4 sm:mt-6">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
             Brand & Model
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Brand *
               </label>
               <select
                 name="brand"
                 value={formData.brand}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 onChange={handleChange}
                 required
               >
@@ -246,13 +242,13 @@ const AddLaptop = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Model *
               </label>
               <select
                 name="model"
                 value={formData.model}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                 onChange={handleChange}
                 disabled={!formData.brand}
                 required
@@ -270,29 +266,29 @@ const AddLaptop = () => {
         </div>
 
         {/* Description */}
-        <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="mt-4 sm:mt-6">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Description *
           </label>
           <textarea
             name="description"
             value={formData.description}
             placeholder="Detailed description of the laptop..."
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-y"
-            rows="4"
+            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-y text-sm"
+            rows={4}
             onChange={handleChange}
             required
           />
         </div>
 
         {/* Specifications */}
-        <div className="mt-6">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3">
+        <div className="mt-4 sm:mt-6">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
             Specifications
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Processor
               </label>
               <input
@@ -300,12 +296,12 @@ const AddLaptop = () => {
                 name="processor"
                 value={formData.processor}
                 placeholder="e.g., Intel Core i5 8th Gen"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 RAM
               </label>
               <input
@@ -313,12 +309,12 @@ const AddLaptop = () => {
                 name="ram"
                 value={formData.ram}
                 placeholder="e.g., 8GB"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Storage
               </label>
               <input
@@ -326,12 +322,12 @@ const AddLaptop = () => {
                 name="storage"
                 value={formData.storage}
                 placeholder="e.g., 256GB SSD"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Screen Size
               </label>
               <input
@@ -339,7 +335,7 @@ const AddLaptop = () => {
                 name="screenSize"
                 value={formData.screenSize}
                 placeholder="e.g., 14 inch"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 onChange={handleChange}
               />
             </div>
@@ -347,17 +343,17 @@ const AddLaptop = () => {
         </div>
 
         {/* Image Upload */}
-        <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="mt-4 sm:mt-6">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
             Upload Images
           </label>
-          <div className="flex flex-wrap gap-3 mb-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-3">
             {imagePreviews.map((preview, index) => (
               <div key={index} className="relative">
                 <img
                   src={preview}
                   alt={`preview ${index}`}
-                  className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg border border-gray-200"
+                  className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-cover rounded-lg border border-gray-200"
                 />
                 <button
                   type="button"
@@ -368,8 +364,8 @@ const AddLaptop = () => {
                 </button>
               </div>
             ))}
-            <label className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition bg-gray-50">
-              <span className="text-2xl text-gray-400">+</span>
+            <label className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition bg-gray-50">
+              <span className="text-xl sm:text-2xl text-gray-400">+</span>
               <input
                 type="file"
                 accept="image/*"
@@ -379,7 +375,7 @@ const AddLaptop = () => {
               />
             </label>
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-[10px] sm:text-xs text-gray-500">
             You can select multiple images
           </p>
         </div>
@@ -388,11 +384,11 @@ const AddLaptop = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full mt-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-6 sm:mt-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
         >
           {loading ? (
             <div className="flex items-center justify-center gap-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
               Adding Laptop...
             </div>
           ) : (
