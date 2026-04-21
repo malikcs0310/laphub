@@ -72,29 +72,28 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
 
   return (
     <>
-      {/* Desktop Sidebar - z-index 40 (lower than header's 50) */}
+      {/* Desktop Sidebar */}
       <aside className="hidden lg:block fixed top-0 left-0 h-screen w-64 sm:w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-40 overflow-y-auto">
         <SidebarContent />
       </aside>
 
-      {/* Mobile Sidebar Overlay - z-index 60 */}
+      {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-60 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-50 lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Mobile Sidebar - z-index 60 */}
+      {/* Mobile Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64 sm:w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-60
+          fixed top-0 left-0 h-full w-64 sm:w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-50
           transform transition-transform duration-300 ease-in-out lg:hidden
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         <div className="relative h-full">
-          {/* Close Button */}
           <button
             onClick={() => setMobileOpen(false)}
             className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-lg hover:bg-gray-700 transition z-10"
