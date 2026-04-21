@@ -17,8 +17,10 @@ const AdminLayout = () => {
         setMobileOpen={setMobileSidebarOpen}
       />
 
-      {/* Header */}
-      <AdminHeader setMobileSidebarOpen={setMobileSidebarOpen} />
+      {/* Header - Add relative z-10 */}
+      <div className="relative z-10">
+        <AdminHeader setMobileSidebarOpen={setMobileSidebarOpen} />
+      </div>
 
       {/* Main Content */}
       <main className="lg:ml-64 sm:lg:ml-72 pt-16 sm:pt-20 p-3 sm:p-4 lg:p-6">
