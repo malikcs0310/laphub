@@ -81,21 +81,23 @@ const FAQ = () => {
         />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-              <FiPackage className="text-blue-600 text-2xl" />
+      <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-3 sm:px-4">
+        <div className="container mx-auto max-w-4xl">
+          {/* Header - Mobile Optimized */}
+          <div className="text-center mb-6 sm:mb-10">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full mb-3 sm:mb-4">
+              <FiPackage className="text-blue-600 text-xl sm:text-2xl" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Frequently Asked Questions
             </h1>
-            <p className="text-gray-500">
+            <p className="text-gray-500 text-xs sm:text-sm">
               Find answers to common questions about LapHub.pk
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          {/* FAQ Accordion - Mobile Optimized */}
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm overflow-hidden">
             {faqs.map((faq, index) => {
               const Icon = faq.icon;
               const isOpen = openIndex === index;
@@ -106,25 +108,31 @@ const FAQ = () => {
                 >
                   <button
                     onClick={() => toggleFAQ(index)}
-                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition text-left"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between hover:bg-gray-50 transition text-left"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="bg-blue-50 p-2 rounded-lg">
-                        <Icon className="text-blue-600" size={18} />
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="bg-blue-50 p-1.5 sm:p-2 rounded-lg">
+                        <Icon
+                          className="text-blue-600 text-sm sm:text-base"
+                          size={14}
+                          className="sm:w-4 sm:h-4"
+                        />
                       </div>
-                      <span className="font-medium text-gray-800">
+                      <span className="font-medium text-gray-800 text-xs sm:text-sm md:text-base">
                         {faq.question}
                       </span>
                     </div>
                     {isOpen ? (
-                      <FiChevronUp className="text-gray-400 flex-shrink-0" />
+                      <FiChevronUp className="text-gray-400 flex-shrink-0 text-sm sm:text-base" />
                     ) : (
-                      <FiChevronDown className="text-gray-400 flex-shrink-0" />
+                      <FiChevronDown className="text-gray-400 flex-shrink-0 text-sm sm:text-base" />
                     )}
                   </button>
                   {isOpen && (
-                    <div className="px-6 pb-4 pl-14">
-                      <p className="text-gray-600">{faq.answer}</p>
+                    <div className="px-4 sm:px-6 pb-3 sm:pb-4 pl-10 sm:pl-14">
+                      <p className="text-gray-600 text-xs sm:text-sm">
+                        {faq.answer}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -132,26 +140,27 @@ const FAQ = () => {
             })}
           </div>
 
-          <div className="mt-10 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+          {/* Contact Section - Mobile Optimized */}
+          <div className="mt-6 sm:mt-10 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl sm:rounded-2xl p-5 sm:p-6 text-center">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">
               Still have questions?
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">
               We're here to help! Contact us anytime.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center">
               <a
                 href="tel:+923104082056"
-                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition text-sm sm:text-base"
               >
-                <FiPhone size={16} />
+                <FiPhone size={12} className="sm:w-3.5 sm:h-3.5" />
                 Call Us
               </a>
               <a
                 href="mailto:support@laphub.pk"
-                className="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-lg transition"
+                className="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition text-sm sm:text-base"
               >
-                <FiMail size={16} />
+                <FiMail size={12} className="sm:w-3.5 sm:h-3.5" />
                 Email Us
               </a>
             </div>
