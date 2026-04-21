@@ -391,6 +391,8 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Featured Products */}
+        <FeaturedProducts />
         {/* Why Choose Us */}
         <section className="bg-white py-10 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -474,9 +476,6 @@ const Home = () => {
 
         {/* Customer Testimonials */}
         <Testimonials />
-
-        {/* Featured Products */}
-        <FeaturedProducts />
       </div>
     </>
   );
