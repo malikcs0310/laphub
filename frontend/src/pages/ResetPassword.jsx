@@ -63,9 +63,7 @@ const ResetPassword = () => {
       if (response.ok) {
         setSuccess(true);
         toast.success("Password reset successfully!");
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+        setTimeout(() => navigate("/login"), 3000);
       } else {
         setError(data.message);
         toast.error(data.message);
@@ -78,22 +76,23 @@ const ResetPassword = () => {
     }
   };
 
+  // Invalid Link State - Mobile Optimized
   if (!token && !success) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-            <FiAlertCircle className="text-red-600 text-3xl" />
+        <div className="max-w-md w-full bg-white rounded-xl sm:rounded-2xl shadow-xl p-6 sm:p-8 text-center">
+          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-red-100 rounded-full mb-3 sm:mb-4">
+            <FiAlertCircle className="text-red-600 text-2xl sm:text-3xl" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             Invalid Link
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 text-sm sm:text-base mb-5 sm:mb-6">
             {error || "This password reset link is invalid or has expired."}
           </p>
           <Link
             to="/forgot-password"
-            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 sm:px-6 sm:py-2 rounded-lg transition text-sm sm:text-base"
           >
             Request New Link
           </Link>
@@ -102,23 +101,24 @@ const ResetPassword = () => {
     );
   }
 
+  // Success State - Mobile Optimized
   if (success) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-            <FiCheckCircle className="text-green-600 text-3xl" />
+        <div className="max-w-md w-full bg-white rounded-xl sm:rounded-2xl shadow-xl p-6 sm:p-8 text-center">
+          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-3 sm:mb-4">
+            <FiCheckCircle className="text-green-600 text-2xl sm:text-3xl" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             Password Reset!
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 text-sm sm:text-base mb-5 sm:mb-6">
             Your password has been reset successfully. You can now login with
             your new password.
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 sm:px-6 sm:py-2 rounded-lg transition text-sm sm:text-base"
           >
             Go to Login
           </Link>
@@ -128,45 +128,58 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-8 sm:py-12 px-3 sm:px-4">
       <div className="max-w-md w-full">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
-              <MdLaptop className="text-white" size={32} />
+        {/* Logo - Mobile Optimized */}
+        <div className="text-center mb-6 sm:mb-8">
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-2 sm:space-x-3"
+          >
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-1.5 sm:p-2 rounded-lg sm:rounded-xl">
+              <MdLaptop className="text-white text-xl sm:text-2xl md:text-3xl" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">LapHub.pk</h1>
-              <p className="text-xs text-gray-500">Create new password</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+                LapHub.pk
+              </h1>
+              <p className="text-[10px] sm:text-xs text-gray-500">
+                Create new password
+              </p>
             </div>
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Reset Password</h2>
-            <p className="text-gray-600 mt-2">Enter your new password below.</p>
+        {/* Reset Form - Mobile Optimized */}
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-6 md:p-8">
+          <div className="text-center mb-5 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+              Reset Password
+            </h2>
+            <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-2">
+              Enter your new password below.
+            </p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            <div className="mb-4 p-2.5 sm:p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs sm:text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+            {/* New Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 New Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-9 sm:pl-10 pr-10 sm:pr-12 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                   placeholder="••••••••"
                   required
                 />
@@ -175,39 +188,45 @@ const ResetPassword = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  {showPassword ? (
+                    <FiEyeOff size={16} className="sm:w-5 sm:h-5" />
+                  ) : (
+                    <FiEye size={16} className="sm:w-5 sm:h-5" />
+                  )}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="mt-1 text-[10px] sm:text-xs text-gray-500">
                 Password must be at least 6 characters
               </p>
             </div>
 
+            {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Confirm New Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                   placeholder="••••••••"
                   required
                 />
               </div>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   Resetting...
                 </div>
               ) : (
@@ -215,10 +234,11 @@ const ResetPassword = () => {
               )}
             </button>
 
+            {/* Back to Login */}
             <div className="text-center">
               <Link
                 to="/login"
-                className="text-blue-600 hover:text-blue-700 text-sm"
+                className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm"
               >
                 Back to Login
               </Link>
