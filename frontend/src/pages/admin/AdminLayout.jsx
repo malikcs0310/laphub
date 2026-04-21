@@ -17,13 +17,11 @@ const AdminLayout = () => {
         setMobileOpen={setMobileSidebarOpen}
       />
 
-      {/* Header - Add relative z-10 */}
-      <div className="relative z-10">
-        <AdminHeader setMobileSidebarOpen={setMobileSidebarOpen} />
-      </div>
+      {/* Header - will be fixed at top */}
+      <AdminHeader setMobileSidebarOpen={setMobileSidebarOpen} />
 
-      {/* Main Content */}
-      <main className="lg:ml-64 sm:lg:ml-72 pt-16 sm:pt-20 p-3 sm:p-4 lg:p-6">
+      {/* Main Content - Add padding-top to account for fixed header */}
+      <main className="lg:ml-72 pt-16 sm:pt-16 p-3 sm:p-4 lg:p-6">
         <div className="bg-white border rounded-lg sm:rounded-xl lg:rounded-2xl shadow-sm min-h-[calc(100vh-100px)] p-3 sm:p-4 lg:p-6">
           <Outlet />
         </div>

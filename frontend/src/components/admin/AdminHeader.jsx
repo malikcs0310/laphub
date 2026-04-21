@@ -24,8 +24,8 @@ const AdminHeader = ({ setMobileSidebarOpen }) => {
   };
 
   return (
-    // Header - z-index 30 (less than sidebar's 40)
-    <header className="sticky top-0 z-30 bg-white border-b shadow-sm">
+    // Header - higher z-index than sidebar
+    <header className="fixed top-0 right-0 left-0 lg:left-72 z-50 bg-white border-b shadow-sm">
       <div className="flex items-center justify-between px-3 sm:px-4 py-3 lg:px-6">
         {/* Left - Mobile Menu Button */}
         <button
