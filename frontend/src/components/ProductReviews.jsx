@@ -51,7 +51,7 @@ const ProductReviews = ({ productId }) => {
     const testReviews = [
       {
         _id: "1",
-        userName: "Ahmed Raza",
+        userName: "Muhammad Usama",
         rating: 5,
         title: "Excellent Laptop!",
         comment: "Best laptop I've ever used. Performance is amazing.",
