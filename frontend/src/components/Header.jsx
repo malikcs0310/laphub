@@ -14,6 +14,7 @@ import {
   FiPhone,
   FiMapPin,
   FiChevronRight,
+  FiMail,
 } from "react-icons/fi";
 import { MdLaptop, MdOutlineSecurity } from "react-icons/md";
 import { HiOutlineDesktopComputer } from "react-icons/hi";
@@ -73,9 +74,7 @@ const Header = () => {
     loadCartItems();
     const handleCartUpdate = () => loadCartItems();
     window.addEventListener("cartUpdated", handleCartUpdate);
-    return () => {
-      window.removeEventListener("cartUpdated", handleCartUpdate);
-    };
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, [loadCartItems]);
 
   useEffect(() => {
@@ -176,292 +175,271 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 border-b bg-white/95 backdrop-blur-md transition-all duration-300 ${
-          isScrolled ? "shadow-lg shadow-gray-200/70" : "shadow-sm"
+        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
+          isScrolled ? "shadow-md" : "shadow-sm"
         }`}
       >
-        {/* Top Bar - Hidden on mobile */}
-        <div className="hidden md:block border-b bg-gray-950 text-gray-300">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:text-sm">
-            <div className="flex items-center gap-4 sm:gap-6">
-              <a
-                href="tel:+923104082056"
-                className="flex items-center gap-1 sm:gap-2 transition hover:text-white"
-              >
-                <FiPhone size={12} />
-                <span>+92 310 4082056</span>
-              </a>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <FiMapPin size={12} />
-                <span>Lahore, Pakistan</span>
+        {/* Top Bar - Contact Info */}
+        <div className="hidden md:block bg-gray-900 text-gray-300 text-sm">
+          <div className="max-w-7xl mx-auto px-4 py-2">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-6">
+                <a
+                  href="tel:+923104082056"
+                  className="flex items-center gap-2 hover:text-white transition"
+                >
+                  <FiPhone size={13} />
+                  <span>+92 310 408 2056</span>
+                </a>
+                <div className="flex items-center gap-2">
+                  <FiMail size={13} />
+                  <span>info@laphub.pk</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FiMapPin size={13} />
+                  <span>Lahore, Pakistan</span>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-4 sm:gap-6">
-              <span className="flex items-center gap-1 sm:gap-2 text-green-400">
-                <HiOutlineDesktopComputer size={13} />
-                <span className="hidden xs:inline">Premium Laptops</span>
-              </span>
-              <span className="flex items-center gap-1 sm:gap-2">
-                <MdOutlineSecurity size={13} />
-                <span className="hidden xs:inline">Secure Payments</span>
-              </span>
+              <div className="flex items-center gap-4">
+                <span className="flex items-center gap-1 text-green-400">
+                  <HiOutlineDesktopComputer size={14} />
+                  Premium Laptops
+                </span>
+                <span className="flex items-center gap-1">
+                  <MdOutlineSecurity size={14} />
+                  Secure Payments
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Main Header */}
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 sm:px-4 py-3 sm:py-4">
-          {/* Left Side - Menu Button + Logo */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="rounded-xl p-1.5 sm:p-2 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600 lg:hidden"
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            >
-              {isMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-            </button>
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+              >
+                {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+              </button>
+              <Link
+                to="/"
+                className="flex items-center gap-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
+                  <MdLaptop className="text-white text-xl" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">
+                    LapHub<span className="text-blue-600">.pk</span>
+                  </h1>
+                  <p className="text-[10px] text-gray-500 hidden sm:block">
+                    Trusted Laptops Store
+                  </p>
+                </div>
+              </Link>
+            </div>
 
-            <Link
-              to="/"
-              className="group flex items-center gap-2 sm:gap-3"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <div className="rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-1.5 sm:p-2 md:p-3 shadow-md transition duration-300 group-hover:scale-105">
-                <MdLaptop className="text-white text-xl sm:text-2xl md:text-[28px]" />
-              </div>
-              <div>
-                <h1 className="text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight text-gray-900">
-                  LapHub<span className="text-blue-600">.pk</span>
-                </h1>
-                <p className="hidden xs:block text-[10px] sm:text-xs text-gray-500">
-                  Trusted Laptops Store
-                </p>
-              </div>
-            </Link>
-          </div>
-
-          {/* Center - Search (Desktop only) */}
-          <div className="hidden lg:flex flex-1 max-w-xl mx-8 relative">
-            <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search laptops, brands, specs..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full pl-12 pr-28 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={handleSearch}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-md hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
-            >
-              Search
-            </button>
-          </div>
-
-          {/* Right Side - Icons */}
-          <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
-            {/* Mobile Search Toggle */}
-            <button
-              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-              className="lg:hidden rounded-xl p-1.5 sm:p-2 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-            >
-              <FiSearch size={18} />
-            </button>
-
-            {/* Wishlist Icon */}
-            <Link
-              to="/user/wishlist"
-              className="rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-red-50 hover:text-red-500"
-            >
-              <FiHeart size={18} className="sm:w-5 sm:h-5" />
-            </Link>
-
-            {/* Cart Icon */}
-            <button
-              onClick={openCartDrawer}
-              className="relative rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-            >
-              <FiShoppingCart
-                size={18}
-                className="sm:w-5 sm:h-5 md:w-[22px] md:h-[22px]"
-              />
-              {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] sm:h-5 sm:min-w-[20px] items-center justify-center rounded-full bg-red-500 px-0.5 text-[8px] sm:text-[10px] font-bold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
-            {/* Profile Icon (Only when logged in) */}
-            {isLoggedIn && (
-              <div className="relative profile-dropdown">
-                <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center justify-center rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-                >
-                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-xs sm:text-sm">
-                    {getUserInitials()}
-                  </div>
-                </button>
-
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 sm:mt-3 w-56 sm:w-64 overflow-hidden rounded-xl sm:rounded-2xl border border-gray-100 bg-white shadow-2xl z-50">
-                    <div className="border-b bg-gradient-to-r from-gray-50 to-white px-3 py-3 sm:px-4 sm:py-4">
-                      <p className="text-xs sm:text-sm font-bold text-gray-900 truncate">
-                        {user?.name || "User Account"}
-                      </p>
-                      <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs text-gray-500 truncate">
-                        {user?.email || "Manage your profile"}
-                      </p>
-                    </div>
-                    <div className="p-1 sm:p-2">
-                      <Link
-                        to="/user/dashboard"
-                        className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <FiGrid size={14} />
-                        <span>Dashboard</span>
-                      </Link>
-                      <Link
-                        to="/user/orders"
-                        className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <FiPackage size={14} />
-                        <span>My Orders</span>
-                      </Link>
-                      <Link
-                        to="/user/wishlist"
-                        className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <FiHeart size={14} />
-                        <span>Wishlist</span>
-                      </Link>
-                      <Link
-                        to="/user/profile"
-                        className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <FiUser size={14} />
-                        <span>Profile</span>
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="flex w-full items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-red-600 transition hover:bg-red-50"
-                      >
-                        <FiLogOut size={14} />
-                        <span>Logout</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Login/Signup Buttons - Desktop only */}
-            {!isLoggedIn && (
-              <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-                <Link
-                  to="/login"
-                  className="rounded-lg sm:rounded-xl px-2 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="rounded-lg sm:rounded-xl bg-blue-600 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-700"
-                >
-                  Signup
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Mobile Search Bar */}
-        {mobileSearchOpen && (
-          <div className="lg:hidden px-3 pb-3 border-b bg-white">
-            <div className="relative">
+            {/* Desktop Search */}
+            <div className="hidden lg:flex flex-1 max-w-lg relative">
               <FiSearch
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={16}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
               />
               <input
                 type="text"
-                placeholder="Search laptops..."
+                placeholder="Search laptops, brands, specs..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                autoFocus
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
               <button
                 onClick={handleSearch}
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-700 transition"
+                className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm transition"
               >
-                Go
+                Search
               </button>
             </div>
-          </div>
-        )}
 
-        {/* Desktop Navigation */}
-        <div className="hidden lg:block border-t">
-          <div className="mx-auto flex max-w-7xl items-center gap-2 px-4">
+            {/* Right Icons */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              {/* Mobile Search Toggle */}
+              <button
+                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+              >
+                <FiSearch size={18} />
+              </button>
+
+              {/* Wishlist */}
+              <Link
+                to="/user/wishlist"
+                className="p-2 rounded-lg hover:bg-gray-100 transition"
+              >
+                <FiHeart size={18} />
+              </Link>
+
+              {/* Cart */}
+              <button
+                onClick={openCartDrawer}
+                className="relative p-2 rounded-lg hover:bg-gray-100 transition"
+              >
+                <FiShoppingCart size={18} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Profile / Login */}
+              {isLoggedIn ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center gap-1 p-1 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-sm">
+                      {getUserInitials()}
+                    </div>
+                  </button>
+
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
+                      <div className="px-4 py-3 border-b bg-gray-50">
+                        <p className="font-semibold text-gray-900">
+                          {user?.name}
+                        </p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                      </div>
+                      <div className="py-2">
+                        <Link
+                          to="/user/dashboard"
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <FiGrid size={16} /> Dashboard
+                        </Link>
+                        <Link
+                          to="/user/orders"
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <FiPackage size={16} /> My Orders
+                        </Link>
+                        <Link
+                          to="/user/wishlist"
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <FiHeart size={16} /> Wishlist
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        >
+                          <FiLogOut size={16} /> Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link
+                    to="/login"
+                    className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="px-4 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                  >
+                    Signup
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Search Bar */}
+          {mobileSearchOpen && (
+            <div className="lg:hidden mt-3">
+              <div className="relative">
+                <FiSearch
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={16}
+                />
+                <input
+                  type="text"
+                  placeholder="Search laptops..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                >
+                  Go
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-1 border-t mt-3 pt-3">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`relative px-4 py-4 text-sm font-semibold transition ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition ${
                   isActive(link.path)
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                 }`}
               >
                 {link.name}
-                {isActive(link.path) && (
-                  <span className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-blue-600"></span>
-                )}
               </Link>
             ))}
           </div>
         </div>
 
-        {/* Mobile Menu - Navigation links + Login/Signup buttons when logged out */}
+        {/* Mobile Menu */}
         <div
-          className={`overflow-hidden border-t bg-white transition-all duration-300 lg:hidden ${
-            isMenuOpen ? "max-h-[500px]" : "max-h-0"
-          }`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 border-t bg-white ${isMenuOpen ? "max-h-96" : "max-h-0"}`}
         >
-          <div className="space-y-1 px-3 py-3">
+          <div className="px-4 py-3 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className="flex items-center justify-between rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
+                className="flex items-center justify-between py-3 px-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <span>{link.name}</span>
-                <FiChevronRight size={14} />
+                <FiChevronRight size={16} />
               </Link>
             ))}
-
-            {/* Login/Signup Buttons for Mobile Menu (Only when logged out) */}
             {!isLoggedIn && (
-              <div className="pt-3 mt-2 border-t border-gray-100">
+              <div className="pt-2 border-t mt-2">
                 <Link
                   to="/login"
-                  className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
+                  className="block py-3 px-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="block rounded-lg bg-blue-600 px-3 py-2.5 font-medium text-white transition hover:bg-blue-700 text-sm text-center"
+                  className="block py-3 px-2 bg-blue-600 text-white rounded-lg mt-1 text-center"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Signup
@@ -472,10 +450,87 @@ const Header = () => {
         </div>
       </header>
 
+      {/* Cart Drawer */}
+      <div
+        className={`fixed right-0 top-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-bold">Your Cart ({cartCount})</h2>
+          <button
+            onClick={() => setIsCartOpen(false)}
+            className="p-2 rounded-lg hover:bg-gray-100"
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          {cartItems.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-64 text-center">
+              <FiShoppingCart size={48} className="text-gray-300 mb-4" />
+              <p className="text-gray-500">Your cart is empty</p>
+              <button
+                onClick={() => navigate("/products")}
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {cartItems.map((item) => (
+                <div key={item._id} className="flex gap-3 border-b pb-3">
+                  <img
+                    src={getImageUrl(item.images?.[0])}
+                    alt={item.title}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                  <div className="flex-1">
+                    <h3 className="text-sm font-medium line-clamp-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Rs {Number(item.price).toLocaleString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleRemove(item._id)}
+                    className="text-red-500"
+                  >
+                    <FiTrash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {cartItems.length > 0 && (
+          <div className="p-4 border-t">
+            <div className="flex justify-between mb-3">
+              <span className="font-medium">Total</span>
+              <span className="font-bold text-lg">
+                Rs {totalPrice.toLocaleString()}
+              </span>
+            </div>
+            <button
+              onClick={handleViewCart}
+              className="w-full bg-blue-600 text-white py-2 rounded-lg mb-2"
+            >
+              View Cart
+            </button>
+            <button
+              onClick={handleCheckout}
+              className="w-full border border-blue-600 text-blue-600 py-2 rounded-lg"
+            >
+              Checkout
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Overlay */}
       {(isCartOpen || isMenuOpen || mobileSearchOpen) && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/40 z-40"
           onClick={() => {
             setIsCartOpen(false);
             setIsMenuOpen(false);
@@ -483,120 +538,6 @@ const Header = () => {
           }}
         />
       )}
-
-      {/* Cart Drawer (Same as before) */}
-      <div
-        className={`fixed right-0 top-0 z-[60] flex h-full w-full max-w-sm sm:max-w-md flex-col bg-white shadow-2xl transition-transform duration-300 ${
-          isCartOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="border-b bg-white px-4 py-3 sm:px-5 sm:py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900">
-                Shopping Cart
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-500">
-                {cartCount} {cartCount === 1 ? "item" : "items"}
-              </p>
-            </div>
-            <button
-              onClick={() => setIsCartOpen(false)}
-              className="rounded-lg p-1.5 sm:p-2 text-gray-600 transition hover:bg-gray-100 hover:text-black"
-            >
-              <FiX size={20} />
-            </button>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
-          {cartItems.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center text-center">
-              <div className="mb-3 sm:mb-4 rounded-full bg-gray-100 p-4 sm:p-6">
-                <FiShoppingCart size={40} className="text-gray-400" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-800">
-                Cart is empty
-              </h3>
-              <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-500">
-                You haven't added any laptop yet.
-              </p>
-              <button
-                onClick={() => {
-                  setIsCartOpen(false);
-                  navigate("/products");
-                }}
-                className="mt-4 sm:mt-6 rounded-lg sm:rounded-xl bg-blue-600 px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-700"
-              >
-                Continue Shopping
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-3 sm:space-y-4">
-              {cartItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="group flex gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border border-gray-200 bg-white p-2 sm:p-3 transition hover:shadow-md"
-                >
-                  <img
-                    src={getImageUrl(item.images?.[0])}
-                    alt={item.title}
-                    className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg sm:rounded-xl border object-cover"
-                    loading="lazy"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <h3 className="line-clamp-2 text-xs sm:text-sm font-bold text-gray-900">
-                      {item.title}
-                    </h3>
-                    <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs text-gray-500">
-                      {item.brand} {item.model}
-                    </p>
-                    <p className="mt-1.5 sm:mt-3 text-sm sm:text-base font-bold text-blue-600">
-                      Rs {Number(item.price || 0).toLocaleString()}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleRemove(item._id)}
-                    className="self-start rounded-lg p-1.5 sm:p-2 text-red-500 transition hover:bg-red-50 hover:text-red-700"
-                  >
-                    <FiTrash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {cartItems.length > 0 && (
-          <div className="border-t bg-white p-3 sm:p-4">
-            <div className="mb-2 sm:mb-4 rounded-xl sm:rounded-2xl bg-gray-50 p-3 sm:p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs sm:text-sm font-medium text-gray-600">
-                  Subtotal
-                </span>
-                <span className="text-lg sm:text-2xl font-bold text-gray-900">
-                  Rs {totalPrice.toLocaleString()}
-                </span>
-              </div>
-              <p className="mt-1 sm:mt-2 text-[10px] sm:text-xs text-gray-500">
-                Shipping calculated at checkout.
-              </p>
-            </div>
-            <button
-              className="mb-2 sm:mb-3 w-full rounded-lg sm:rounded-xl border border-gray-300 bg-white py-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
-              onClick={handleViewCart}
-            >
-              View Cart
-            </button>
-            <button
-              className="w-full rounded-lg sm:rounded-xl bg-gray-900 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-600"
-              onClick={handleCheckout}
-            >
-              Proceed to Checkout
-            </button>
-          </div>
-        )}
-      </div>
     </>
   );
 };
