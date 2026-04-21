@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const EditLaptop = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,27 +24,34 @@ const EditLaptop = () => {
   });
 
   const [existingImages, setExistingImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const laptopData = {
     Dell: ["Latitude", "Inspiron", "XPS", "Vostro", "Precision"],
     HP: ["EliteBook", "ProBook", "Pavilion", "Envy"],
     Lenovo: ["ThinkPad", "IdeaPad", "Legion", "Yoga"],
     Apple: ["MacBook Air", "MacBook Pro"],
+    ASUS: ["Vivobook", "Zenbook", "ROG", "TUF"],
+    Acer: ["Aspire", "Predator", "Swift", "Nitro"],
   };
 
   const types = [
-    "Chromebook",
-    "MacBook",
     "Traditional Laptop",
+    "MacBook",
+    "Chromebook",
     "Notebook",
+    "2-in-1 Laptop",
+    "Gaming Laptop",
+    "Ultrabook",
     "Other",
   ];
 
   useEffect(() => {
     const fetchLaptop = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/laptops/${id}`);
+        const res = await fetch(`${API_URL}/api/laptops/${id}`);
         const data = await res.json();
 
         setFormData({
@@ -64,24 +73,19 @@ const EditLaptop = () => {
         setExistingImages(data.images || []);
       } catch (error) {
         console.log("Error fetching laptop:", error);
-        alert("Failed to load laptop data");
+        toast.error("Failed to load laptop data");
       } finally {
         setLoading(false);
       }
     };
 
     fetchLaptop();
-  }, [id]);
+  }, [id, API_URL]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
 
-    if (name === "images") {
-      setFormData((prev) => ({
-        ...prev,
-        images: files,
-      }));
-    } else if (name === "brand") {
+    if (name === "brand") {
       setFormData((prev) => ({
         ...prev,
         brand: value,
@@ -95,238 +99,366 @@ const EditLaptop = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    const newPreviews = files.map((f) => URL.createObjectURL(f));
+    setImagePreviews((prev) => [...prev, ...newPreviews]);
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...files],
+    }));
+  };
+
+  const removeNewImage = (index) => {
+    const newPreviews = [...imagePreviews];
+    const newImages = [...formData.images];
+    newPreviews.splice(index, 1);
+    newImages.splice(index, 1);
+    setImagePreviews(newPreviews);
+    setFormData({ ...formData, images: newImages });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
     try {
       const data = new FormData();
-
       Object.keys(formData).forEach((key) => {
         if (key === "images") {
-          for (let i = 0; i < formData.images.length; i++) {
-            data.append("images", formData.images[i]);
-          }
+          formData.images.forEach((img) => img && data.append("images", img));
         } else {
           data.append(key, formData[key]);
         }
       });
 
-      const res = await fetch(`http://localhost:5000/api/laptops/${id}`, {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`${API_URL}/api/laptops/${id}`, {
         method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: data,
       });
 
       const result = await res.json();
-
-      alert(result.message || "Laptop updated successfully");
-      navigate("/admin/view-products");
+      if (res.ok) {
+        toast.success(result.message || "Laptop updated successfully");
+        navigate("/admin/view-products");
+      } else {
+        toast.error(result.message || "Something went wrong");
+      }
     } catch (error) {
       console.log(error);
-      alert("Something went wrong");
+      toast.error("Failed to update laptop");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div className="p-6 text-lg font-medium">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-100 py-4 sm:py-6 px-3 sm:px-4 lg:px-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-3xl"
+        className="bg-white rounded-xl sm:rounded-2xl shadow-lg w-full max-w-4xl mx-auto p-4 sm:p-5 md:p-6 lg:p-8"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Edit Laptop</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800">
+          Edit Laptop
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="title"
-            placeholder="Laptop Title"
-            className="input"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
+        {/* Basic Info */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Laptop Title *
+            </label>
+            <input
+              type="text"
+              name="title"
+              placeholder="Laptop Title"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <input
-            type="number"
-            name="price"
-            placeholder="Price (PKR)"
-            className="input"
-            value={formData.price}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Price (PKR) *
+            </label>
+            <input
+              type="number"
+              name="price"
+              placeholder="Price (PKR)"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <select
-            name="type"
-            className="input"
-            value={formData.type}
-            onChange={handleChange}
-          >
-            <option value="">Select Type</option>
-            {types.map((t, i) => (
-              <option key={i} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="condition"
-            className="input"
-            value={formData.condition}
-            onChange={handleChange}
-          >
-            <option value="New">New</option>
-            <option value="Used">Used</option>
-            <option value="Refurbished">Refurbished</option>
-          </select>
-
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            className="input"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">Brand & Model</h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <select
-            name="brand"
-            className="input"
-            value={formData.brand}
-            onChange={handleChange}
-          >
-            <option value="">Select Brand</option>
-            {Object.keys(laptopData).map((brand, i) => (
-              <option key={i} value={brand}>
-                {brand}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="model"
-            className="input"
-            value={formData.model}
-            onChange={handleChange}
-            disabled={!formData.brand}
-          >
-            <option value="">Select Model</option>
-            {formData.brand &&
-              laptopData[formData.brand]?.map((model, i) => (
-                <option key={i} value={model}>
-                  {model}
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Type *
+            </label>
+            <select
+              name="type"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.type}
+              onChange={handleChange}
+            >
+              <option value="">Select Type</option>
+              {types.map((t, i) => (
+                <option key={i} value={t}>
+                  {t}
                 </option>
               ))}
-          </select>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Condition *
+            </label>
+            <select
+              name="condition"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.condition}
+              onChange={handleChange}
+            >
+              <option value="New">New</option>
+              <option value="Used">Used</option>
+              <option value="Refurbished">Refurbished</option>
+            </select>
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Location *
+            </label>
+            <input
+              type="text"
+              name="location"
+              placeholder="Location"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.location}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
 
-        <textarea
-          name="description"
-          placeholder="Description"
-          className="input mt-4"
-          rows="4"
-          value={formData.description}
-          onChange={handleChange}
-        ></textarea>
+        {/* Brand & Model */}
+        <div className="mt-4 sm:mt-6">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
+            Brand & Model
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Brand *
+              </label>
+              <select
+                name="brand"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.brand}
+                onChange={handleChange}
+              >
+                <option value="">Select Brand</option>
+                {Object.keys(laptopData).map((brand, i) => (
+                  <option key={i} value={brand}>
+                    {brand}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <h3 className="text-lg font-semibold mt-6 mb-3">Specifications</h3>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Model *
+              </label>
+              <select
+                name="model"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                value={formData.model}
+                onChange={handleChange}
+                disabled={!formData.brand}
+              >
+                <option value="">Select Model</option>
+                {formData.brand &&
+                  laptopData[formData.brand]?.map((model, i) => (
+                    <option key={i} value={model}>
+                      {model}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="processor"
-            placeholder="Processor (i5 6th Gen)"
-            className="input"
-            value={formData.processor}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="ram"
-            placeholder="RAM (8GB)"
-            className="input"
-            value={formData.ram}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="storage"
-            placeholder="Storage (256GB SSD)"
-            className="input"
-            value={formData.storage}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="screenSize"
-            placeholder="Screen Size (14 inch)"
-            className="input"
-            value={formData.screenSize}
+        {/* Description */}
+        <div className="mt-4 sm:mt-6">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+            Description *
+          </label>
+          <textarea
+            name="description"
+            placeholder="Description"
+            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-y text-sm"
+            rows="4"
+            value={formData.description}
             onChange={handleChange}
           />
         </div>
 
+        {/* Specifications */}
+        <div className="mt-4 sm:mt-6">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
+            Specifications
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Processor
+              </label>
+              <input
+                type="text"
+                name="processor"
+                placeholder="Processor (i5 6th Gen)"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.processor}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                RAM
+              </label>
+              <input
+                type="text"
+                name="ram"
+                placeholder="RAM (8GB)"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.ram}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Storage
+              </label>
+              <input
+                type="text"
+                name="storage"
+                placeholder="Storage (256GB SSD)"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.storage}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Screen Size
+              </label>
+              <input
+                type="text"
+                name="screenSize"
+                placeholder="Screen Size (14 inch)"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.screenSize}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Existing Images */}
         {existingImages.length > 0 && (
-          <div className="mt-6">
-            <label className="block mb-2 font-medium">Existing Images</label>
-            <div className="flex flex-wrap gap-3">
+          <div className="mt-4 sm:mt-6">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+              Existing Images
+            </label>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {existingImages.map((img, index) => (
                 <img
                   key={index}
-                  src={`http://localhost:5000/uploads/${img}`}
+                  src={`${API_URL}/uploads/${img}`}
                   alt={`Laptop ${index}`}
-                  className="w-24 h-20 object-cover rounded-lg border"
+                  className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-gray-200"
                 />
               ))}
             </div>
           </div>
         )}
 
-        <div className="mt-6">
-          <label className="block mb-2 font-medium">Upload New Images</label>
-          <input
-            type="file"
-            name="images"
-            multiple
-            className="w-full"
-            onChange={handleChange}
-          />
+        {/* Upload New Images */}
+        <div className="mt-4 sm:mt-6">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+            Upload New Images
+          </label>
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-3">
+            {imagePreviews.map((preview, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={preview}
+                  alt={`preview ${index}`}
+                  className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-gray-200"
+                />
+                <button
+                  type="button"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 transition"
+                  onClick={() => removeNewImage(index)}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+            <label className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition bg-gray-50">
+              <span className="text-xl sm:text-2xl text-gray-400">+</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
+          </div>
+          <p className="text-[10px] sm:text-xs text-gray-500">
+            You can select multiple images
+          </p>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full mt-6 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition"
+          disabled={submitting}
+          className="w-full mt-6 sm:mt-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
         >
-          Update Laptop
+          {submitting ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
+              Updating...
+            </div>
+          ) : (
+            "Update Laptop"
+          )}
         </button>
       </form>
-
-      <style>{`
-        .input {
-          width: 100%;
-          padding: 12px;
-          border: 1px solid #ccc;
-          border-radius: 10px;
-          outline: none;
-          transition: 0.3s;
-        }
-        .input:focus {
-          border-color: #2563eb;
-          box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
-        }
-      `}</style>
     </div>
   );
 };
