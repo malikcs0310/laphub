@@ -116,8 +116,8 @@ const Testimonials = () => {
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+      <div className="py-16 sm:py-20 text-center">
+        <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600 mx-auto"></div>
       </div>
     );
   }
@@ -125,49 +125,49 @@ const Testimonials = () => {
   // If no testimonials yet, show empty state
   if (testimonials.length === 0) {
     return (
-      <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm mb-4">
-              <FiSmile className="text-yellow-500 mr-2" />
-              <span className="text-gray-700 text-sm font-semibold">
+      <section className="py-12 sm:py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white rounded-full shadow-sm mb-3 sm:mb-4">
+              <FiSmile className="text-yellow-500 mr-1 sm:mr-2" size={14} />
+              <span className="text-gray-700 text-xs sm:text-sm font-semibold">
                 Real Reviews
               </span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
               What Our Customers Say
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
               Be the first to share your experience with LapHub.pk!
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto text-center">
-            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
-              <div className="text-6xl mb-4">🌟</div>
-              <p className="text-gray-500 text-lg mb-6">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-6 sm:p-8 md:p-10">
+              <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">🌟</div>
+              <p className="text-gray-500 text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
                 No testimonials yet. Share your experience and help others find
                 their perfect laptop!
               </p>
               <button
                 onClick={() => setShowForm(!showForm)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg font-semibold transition text-sm sm:text-base"
               >
                 Share Your Experience
               </button>
             </div>
           </div>
 
-          {/* Testimonial Form */}
+          {/* Testimonial Form - Mobile Optimized */}
           {showForm && (
-            <div className="max-w-2xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="max-w-2xl mx-auto mt-6 sm:mt-8 bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-8">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
                 Share Your Experience
               </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       Your Name
                     </label>
                     <input
@@ -176,12 +176,12 @@ const Testimonials = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       Email
                     </label>
                     <input
@@ -190,14 +190,14 @@ const Testimonials = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                       required
                     />
                   </div>
                 </div>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       City
                     </label>
                     <input
@@ -206,12 +206,12 @@ const Testimonials = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, city: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       Laptop Purchased
                     </label>
                     <input
@@ -220,13 +220,13 @@ const Testimonials = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, laptop: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                       placeholder="e.g., Dell Latitude"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                     Rating
                   </label>
                   <div className="flex gap-1">
@@ -237,7 +237,7 @@ const Testimonials = () => {
                         onClick={() =>
                           setFormData({ ...formData, rating: star })
                         }
-                        className={`text-2xl ${star <= formData.rating ? "text-yellow-400" : "text-gray-300"} hover:scale-110 transition`}
+                        className={`text-xl sm:text-2xl ${star <= formData.rating ? "text-yellow-400" : "text-gray-300"} hover:scale-110 transition`}
                       >
                         ★
                       </button>
@@ -245,16 +245,16 @@ const Testimonials = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                     Your Review
                   </label>
                   <textarea
-                    rows="4"
+                    rows={4}
                     value={formData.comment}
                     onChange={(e) =>
                       setFormData({ ...formData, comment: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                     placeholder="Tell us about your experience with LapHub.pk..."
                     required
                   />
@@ -262,9 +262,9 @@ const Testimonials = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 text-sm sm:text-base"
                 >
-                  <FiSend />
+                  <FiSend size={14} />
                   {submitting ? "Submitting..." : "Submit Testimonial"}
                 </button>
               </form>
@@ -276,77 +276,86 @@ const Testimonials = () => {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm mb-4">
-            <FiSmile className="text-yellow-500 mr-2" />
-            <span className="text-gray-700 text-sm font-semibold">
+    <section className="py-12 sm:py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white rounded-full shadow-sm mb-3 sm:mb-4">
+            <FiSmile className="text-yellow-500 mr-1 sm:mr-2" size={14} />
+            <span className="text-gray-700 text-xs sm:text-sm font-semibold">
               Real Reviews
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
             What Our Customers Say
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
             Don't just take our word for it - here's what our happy customers
             have to say
           </p>
         </div>
 
-        {/* Testimonial Slider */}
+        {/* Testimonial Slider - Mobile Optimized */}
         <div
-          className="max-w-4xl mx-auto relative"
+          className="max-w-4xl mx-auto relative px-8 sm:px-0"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Previous Button */}
+          {/* Previous Button - Hidden on very small */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 bg-white/80 hover:bg-white text-gray-600 p-2 rounded-full shadow-lg z-10 transition"
+            className="hidden sm:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 bg-white/80 hover:bg-white text-gray-600 p-1.5 sm:p-2 rounded-full shadow-lg z-10 transition"
           >
-            <FiChevronLeft size={24} />
+            <FiChevronLeft size={18} className="sm:w-5 sm:h-5" />
           </button>
 
-          {/* Next Button */}
+          {/* Next Button - Hidden on very small */}
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 bg-white/80 hover:bg-white text-gray-600 p-2 rounded-full shadow-lg z-10 transition"
+            className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 bg-white/80 hover:bg-white text-gray-600 p-1.5 sm:p-2 rounded-full shadow-lg z-10 transition"
           >
-            <FiChevronRight size={24} />
+            <FiChevronRight size={18} className="sm:w-5 sm:h-5" />
           </button>
 
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 transition-all duration-500">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-8 md:p-10 transition-all duration-500">
             <div className="text-center">
               {/* Stars */}
-              <div className="flex justify-center mb-4">
+              <div className="flex justify-center mb-3 sm:mb-4">
                 {[...Array(testimonials[currentTestimonial]?.rating || 5)].map(
                   (_, i) => (
-                    <MdStar key={i} className="text-yellow-400 text-2xl" />
+                    <MdStar
+                      key={i}
+                      className="text-yellow-400 text-lg sm:text-2xl"
+                    />
                   ),
                 )}
               </div>
 
               {/* Quote */}
-              <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-6 italic">
+              <p className="text-gray-700 text-sm sm:text-base md:text-xl leading-relaxed mb-4 sm:mb-6 italic line-clamp-4 sm:line-clamp-none">
                 "{testimonials[currentTestimonial]?.comment}"
               </p>
 
               {/* Customer Info */}
               <div>
-                <p className="font-bold text-gray-900 text-lg">
+                <p className="font-bold text-gray-900 text-base sm:text-lg">
                   {testimonials[currentTestimonial]?.name}
                 </p>
-                <p className="text-gray-500 text-sm">
-                  {testimonials[currentTestimonial]?.city} •{" "}
-                  {testimonials[currentTestimonial]?.laptop || "Laptop"}
+                <div className="flex items-center justify-center gap-1 text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-0">
+                  <FiMapPin size={12} className="sm:w-3.5 sm:h-3.5" />
+                  <span>{testimonials[currentTestimonial]?.city}</span>
+                  <span>•</span>
+                  <span>
+                    {testimonials[currentTestimonial]?.laptop || "Laptop"}
+                  </span>
+                </div>
+                <p className="text-gray-400 text-[10px] sm:text-xs mt-1">
+                  {formatDate()}
                 </p>
-                <p className="text-gray-400 text-xs mt-1">{formatDate()}</p>
               </div>
             </div>
 
             {/* Dots */}
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="flex justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6">
               {testimonials.map((_, idx) => (
                 <button
                   key={idx}
@@ -355,10 +364,10 @@ const Testimonials = () => {
                     setCurrentTestimonial(idx);
                     setTimeout(() => setIsPaused(false), 10000);
                   }}
-                  className={`h-2 rounded-full transition-all duration-300 ${
+                  className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                     currentTestimonial === idx
-                      ? "w-6 bg-blue-600"
-                      : "w-2 bg-gray-300 hover:bg-gray-400"
+                      ? "w-4 sm:w-6 bg-blue-600"
+                      : "w-1.5 sm:w-2 bg-gray-300 hover:bg-gray-400"
                   }`}
                 />
               ))}
@@ -366,20 +375,20 @@ const Testimonials = () => {
           </div>
 
           {/* Trust Badge */}
-          <div className="text-center mt-8">
-            <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full">
-              <FiCheckCircle size={16} />
-              <span className="text-sm font-medium">
+          <div className="text-center mt-6 sm:mt-8">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-green-50 text-green-700 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
+              <FiCheckCircle size={12} className="sm:w-4 sm:h-4" />
+              <span className="text-[10px] sm:text-sm font-medium">
                 100% Genuine Reviews • {testimonials.length}+ Happy Customers
               </span>
             </div>
           </div>
 
           {/* Share Your Experience Button */}
-          <div className="text-center mt-8">
+          <div className="text-center mt-6 sm:mt-8">
             <button
               onClick={() => setShowForm(!showForm)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg font-semibold transition text-sm sm:text-base"
             >
               {showForm ? "Cancel" : "Share Your Experience"}
             </button>
@@ -387,16 +396,16 @@ const Testimonials = () => {
         </div>
       </div>
 
-      {/* Testimonial Form */}
+      {/* Testimonial Form - Mobile Optimized */}
       {showForm && (
-        <div className="max-w-2xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="max-w-2xl mx-auto mt-6 sm:mt-8 bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-8 mx-3 sm:mx-auto">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
             Share Your Experience
           </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Your Name
                 </label>
                 <input
@@ -405,12 +414,12 @@ const Testimonials = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
                 <input
@@ -419,14 +428,14 @@ const Testimonials = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                   required
                 />
               </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   City
                 </label>
                 <input
@@ -435,12 +444,12 @@ const Testimonials = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, city: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Laptop Purchased
                 </label>
                 <input
@@ -449,13 +458,13 @@ const Testimonials = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, laptop: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                   placeholder="e.g., Dell Latitude"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Rating
               </label>
               <div className="flex gap-1">
@@ -464,7 +473,7 @@ const Testimonials = () => {
                     key={star}
                     type="button"
                     onClick={() => setFormData({ ...formData, rating: star })}
-                    className={`text-2xl ${star <= formData.rating ? "text-yellow-400" : "text-gray-300"} hover:scale-110 transition`}
+                    className={`text-xl sm:text-2xl ${star <= formData.rating ? "text-yellow-400" : "text-gray-300"} hover:scale-110 transition`}
                   >
                     ★
                   </button>
@@ -472,16 +481,16 @@ const Testimonials = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Your Review
               </label>
               <textarea
-                rows="4"
+                rows={4}
                 value={formData.comment}
                 onChange={(e) =>
                   setFormData({ ...formData, comment: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 placeholder="Tell us about your experience with LapHub.pk..."
                 required
               />
@@ -489,9 +498,9 @@ const Testimonials = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 text-sm sm:text-base"
             >
-              <FiSend />
+              <FiSend size={14} />
               {submitting ? "Submitting..." : "Submit Testimonial"}
             </button>
           </form>
