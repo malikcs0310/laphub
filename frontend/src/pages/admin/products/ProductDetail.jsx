@@ -272,7 +272,8 @@ const ProductDetail = () => {
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
               >
                 <FiMessageCircle className="text-sm sm:text-base md:text-lg" />
-                <span className="hidden xs:inline">WhatsApp</span>
+                {/* <span className="hidden xs:inline">WhatsApp</span> */}
+                WhatsApp
               </button>
             </div>
 
