@@ -29,7 +29,6 @@ const Signup = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  // Validation
   const validateForm = () => {
     const newErrors = {};
 
@@ -70,7 +69,6 @@ const Signup = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    // Clear error for this field
     if (errors[e.target.name]) {
       setErrors({
         ...errors,
@@ -94,58 +92,63 @@ const Signup = () => {
     setIsSubmitting(false);
 
     if (result.success) {
-      // Redirect to home page after successful signup
       navigate("/");
     } else {
-      // Show error message from backend
       setErrors({ submit: result.error || "Signup failed. Please try again." });
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 sm:py-12 px-3 sm:px-4 lg:px-8">
       <div className="max-w-md mx-auto">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
-              <MdLaptop className="text-white" size={32} />
+        {/* Logo - Mobile Optimized */}
+        <div className="text-center mb-6 sm:mb-8">
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-2 sm:space-x-3"
+          >
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-1.5 sm:p-2 rounded-lg sm:rounded-xl">
+              <MdLaptop className="text-white text-xl sm:text-2xl md:text-3xl" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">LapHub.pk</h1>
-              <p className="text-xs text-gray-500">Create your account</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+                LapHub.pk
+              </h1>
+              <p className="text-[10px] sm:text-xs text-gray-500">
+                Create your account
+              </p>
             </div>
           </Link>
         </div>
 
-        {/* Signup Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        {/* Signup Form - Mobile Optimized */}
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-6 md:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
             Create Account
           </h2>
 
           {/* Error Message */}
           {errors.submit && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start text-red-600">
-              <FiAlertCircle className="mr-2 flex-shrink-0 mt-0.5" />
-              <span className="text-sm">{errors.submit}</span>
+              <FiAlertCircle className="mr-2 flex-shrink-0 mt-0.5 text-sm sm:text-base" />
+              <span className="text-xs sm:text-sm">{errors.submit}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Full Name
               </label>
               <div className="relative">
-                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-3 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
+                  className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-3 border rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 transition text-sm sm:text-base ${
                     errors.name
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -154,23 +157,23 @@ const Signup = () => {
                 />
               </div>
               {errors.name && (
-                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.name}</p>
               )}
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-3 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
+                  className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-3 border rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 transition text-sm sm:text-base ${
                     errors.email
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -179,23 +182,23 @@ const Signup = () => {
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.email}</p>
               )}
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Phone Number
               </label>
               <div className="relative">
-                <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-3 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
+                  className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-3 border rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 transition text-sm sm:text-base ${
                     errors.phone
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -204,23 +207,23 @@ const Signup = () => {
                 />
               </div>
               {errors.phone && (
-                <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.phone}</p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
+                  className={`w-full pl-9 sm:pl-10 pr-10 sm:pr-12 py-2 sm:py-3 border rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 transition text-sm sm:text-base ${
                     errors.password
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -232,30 +235,34 @@ const Signup = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  {showPassword ? (
+                    <FiEyeOff size={16} className="sm:w-5 sm:h-5" />
+                  ) : (
+                    <FiEye size={16} className="sm:w-5 sm:h-5" />
+                  )}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.password}</p>
               )}
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-[10px] sm:text-xs text-gray-500">
                 Password must be at least 6 characters
               </p>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
+                  className={`w-full pl-9 sm:pl-10 pr-10 sm:pr-12 py-2 sm:py-3 border rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 transition text-sm sm:text-base ${
                     errors.confirmPassword
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -268,14 +275,14 @@ const Signup = () => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showConfirmPassword ? (
-                    <FiEyeOff size={20} />
+                    <FiEyeOff size={16} className="sm:w-5 sm:h-5" />
                   ) : (
-                    <FiEye size={20} />
+                    <FiEye size={16} className="sm:w-5 sm:h-5" />
                   )}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">
+                <p className="mt-1 text-xs text-red-500">
                   {errors.confirmPassword}
                 </p>
               )}
@@ -287,9 +294,12 @@ const Signup = () => {
                 type="checkbox"
                 id="terms"
                 required
-                className="mt-1 mr-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mt-0.5 sm:mt-1 mr-2 sm:mr-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <label htmlFor="terms" className="text-sm text-gray-600">
+              <label
+                htmlFor="terms"
+                className="text-[10px] sm:text-xs text-gray-600"
+              >
                 I agree to the{" "}
                 <Link to="/terms" className="text-blue-600 hover:underline">
                   Terms of Service
@@ -305,11 +315,11 @@ const Signup = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {isSubmitting ? (
-                <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   Creating Account...
                 </div>
               ) : (
@@ -319,7 +329,7 @@ const Signup = () => {
           </form>
 
           {/* Login Link */}
-          <p className="mt-6 text-center text-gray-600">
+          <p className="mt-5 sm:mt-6 text-center text-gray-600 text-xs sm:text-sm">
             Already have an account?{" "}
             <Link
               to="/login"
@@ -330,18 +340,18 @@ const Signup = () => {
           </p>
         </div>
 
-        {/* Benefits */}
-        <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-          <div className="text-xs text-gray-500">
-            <FiCheckCircle className="mx-auto mb-1 text-green-500" size={16} />
+        {/* Benefits - Mobile Optimized */}
+        <div className="mt-5 sm:mt-6 grid grid-cols-3 gap-2 sm:gap-4 text-center">
+          <div className="text-[10px] sm:text-xs text-gray-500">
+            <FiCheckCircle className="mx-auto mb-1 text-green-500 text-xs sm:text-sm" />
             Free Shipping
           </div>
-          <div className="text-xs text-gray-500">
-            <FiCheckCircle className="mx-auto mb-1 text-green-500" size={16} />1
-            Year Warranty
+          <div className="text-[10px] sm:text-xs text-gray-500">
+            <FiCheckCircle className="mx-auto mb-1 text-green-500 text-xs sm:text-sm" />
+            1 Year Warranty
           </div>
-          <div className="text-xs text-gray-500">
-            <FiCheckCircle className="mx-auto mb-1 text-green-500" size={16} />
+          <div className="text-[10px] sm:text-xs text-gray-500">
+            <FiCheckCircle className="mx-auto mb-1 text-green-500 text-xs sm:text-sm" />
             24/7 Support
           </div>
         </div>
