@@ -73,7 +73,6 @@ const Header = () => {
     loadCartItems();
     const handleCartUpdate = () => loadCartItems();
     window.addEventListener("cartUpdated", handleCartUpdate);
-
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
@@ -82,7 +81,6 @@ const Header = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
-
     if (token && userData) {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
@@ -98,7 +96,6 @@ const Header = () => {
         setIsProfileOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isProfileOpen]);
@@ -109,7 +106,6 @@ const Header = () => {
     } else {
       document.body.style.overflow = "";
     }
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -123,7 +119,6 @@ const Header = () => {
       setMobileSearchOpen(false);
       return;
     }
-
     navigate(`/products?search=${encodeURIComponent(value)}`);
     setIsMenuOpen(false);
     setMobileSearchOpen(false);
@@ -274,7 +269,7 @@ const Header = () => {
               <FiSearch size={18} />
             </button>
 
-            {/* Wishlist Icon - Always visible */}
+            {/* Wishlist Icon */}
             <Link
               to="/user/wishlist"
               className="rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-red-50 hover:text-red-500"
@@ -366,7 +361,7 @@ const Header = () => {
               </div>
             )}
 
-            {/* Login/Signup Buttons (Only when NOT logged in) */}
+            {/* Login/Signup Buttons - Desktop only */}
             {!isLoggedIn && (
               <div className="hidden sm:flex items-center gap-1 sm:gap-2">
                 <Link
@@ -435,10 +430,10 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu - Only navigation links, NO profile */}
+        {/* Mobile Menu - Navigation links + Login/Signup buttons when logged out */}
         <div
           className={`overflow-hidden border-t bg-white transition-all duration-300 lg:hidden ${
-            isMenuOpen ? "max-h-[400px]" : "max-h-0"
+            isMenuOpen ? "max-h-[500px]" : "max-h-0"
           }`}
         >
           <div className="space-y-1 px-3 py-3">
@@ -453,6 +448,26 @@ const Header = () => {
                 <FiChevronRight size={14} />
               </Link>
             ))}
+
+            {/* Login/Signup Buttons for Mobile Menu (Only when logged out) */}
+            {!isLoggedIn && (
+              <div className="pt-3 mt-2 border-t border-gray-100">
+                <Link
+                  to="/login"
+                  className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="block rounded-lg bg-blue-600 px-3 py-2.5 font-medium text-white transition hover:bg-blue-700 text-sm text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Signup
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -469,7 +484,7 @@ const Header = () => {
         />
       )}
 
-      {/* Cart Drawer */}
+      {/* Cart Drawer (Same as before) */}
       <div
         className={`fixed right-0 top-0 z-[60] flex h-full w-full max-w-sm sm:max-w-md flex-col bg-white shadow-2xl transition-transform duration-300 ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
