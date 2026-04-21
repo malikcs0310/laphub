@@ -9,7 +9,6 @@ import {
   FiMail,
   FiStar,
   FiMessageCircle,
-  FiMenu,
   FiX,
 } from "react-icons/fi";
 import { MdLaptop } from "react-icons/md";
@@ -33,39 +32,39 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-700">
-        <div className="bg-blue-600 p-2 rounded-lg">
-          <MdLaptop size={24} />
+      <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-700">
+        <div className="bg-blue-600 p-1.5 sm:p-2 rounded-lg">
+          <MdLaptop size={20} className="sm:w-6 sm:h-6" />
         </div>
-        <h2 className="text-xl font-bold">LapHub Admin</h2>
+        <h2 className="text-base sm:text-xl font-bold">LapHub Admin</h2>
       </div>
 
       {/* Menu */}
-      <nav className="p-4 space-y-2">
+      <nav className="p-3 sm:p-4 space-y-1 sm:space-y-2">
         {menu.map((item, index) => (
           <NavLink
             key={index}
             to={item.path}
             onClick={() => setMobileOpen?.(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2.5 rounded-lg transition ${
+              `flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition ${
                 isActive
                   ? "bg-blue-600 text-white shadow"
                   : "text-gray-300 hover:bg-gray-700 hover:text-white"
               }`
             }
           >
-            <item.icon size={18} />
-            <span className="font-medium">{item.label}</span>
+            <item.icon size={16} className="sm:w-4 sm:h-4" />
+            <span className="font-medium text-xs sm:text-sm">{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
-        <div className="text-xs text-gray-500 text-center">
+      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-700">
+        <div className="text-[10px] sm:text-xs text-gray-500 text-center">
           <p>LapHub.pk Admin Panel</p>
-          <p className="mt-1">v1.0.0</p>
+          <p className="mt-0.5 sm:mt-1">v1.0.0</p>
         </div>
       </div>
     </>
@@ -74,7 +73,7 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block fixed top-0 left-0 h-screen w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-50 overflow-y-auto">
+      <aside className="hidden lg:block fixed top-0 left-0 h-screen w-64 sm:w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-50 overflow-y-auto">
         <SidebarContent />
       </aside>
 
@@ -89,7 +88,7 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
       {/* Mobile Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-50
+          fixed top-0 left-0 h-full w-64 sm:w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl z-50
           transform transition-transform duration-300 ease-in-out lg:hidden
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -98,9 +97,9 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
           {/* Close Button */}
           <button
             onClick={() => setMobileOpen(false)}
-            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-700 transition z-10"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-lg hover:bg-gray-700 transition z-10"
           >
-            <FiX size={22} />
+            <FiX size={18} className="sm:w-5 sm:h-5" />
           </button>
           <SidebarContent />
         </div>

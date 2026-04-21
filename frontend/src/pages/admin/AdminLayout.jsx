@@ -21,8 +21,8 @@ const AdminLayout = () => {
       <AdminHeader setMobileSidebarOpen={setMobileSidebarOpen} />
 
       {/* Main Content */}
-      <main className="lg:ml-72 pt-20 p-4 lg:p-6">
-        <div className="bg-white border rounded-2xl shadow-sm min-h-[calc(100vh-120px)] p-4 lg:p-6">
+      <main className="lg:ml-64 sm:lg:ml-72 pt-16 sm:pt-20 p-3 sm:p-4 lg:p-6">
+        <div className="bg-white border rounded-lg sm:rounded-xl lg:rounded-2xl shadow-sm min-h-[calc(100vh-100px)] p-3 sm:p-4 lg:p-6">
           <Outlet />
         </div>
       </main>
