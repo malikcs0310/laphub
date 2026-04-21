@@ -185,7 +185,7 @@ const Header = () => {
           isScrolled ? "shadow-lg shadow-gray-200/70" : "shadow-sm"
         }`}
       >
-        {/* Top Bar - Hidden on mobile, visible on tablet+ */}
+        {/* Top Bar - Hidden on mobile */}
         <div className="hidden md:block border-b bg-gray-950 text-gray-300">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:text-sm">
             <div className="flex items-center gap-4 sm:gap-6">
@@ -193,26 +193,21 @@ const Header = () => {
                 href="tel:+923104082056"
                 className="flex items-center gap-1 sm:gap-2 transition hover:text-white"
               >
-                <FiPhone size={12} className="sm:w-3.5 sm:h-3.5" />
+                <FiPhone size={12} />
                 <span>+92 310 4082056</span>
               </a>
-
               <div className="flex items-center gap-1 sm:gap-2">
-                <FiMapPin size={12} className="sm:w-3.5 sm:h-3.5" />
+                <FiMapPin size={12} />
                 <span>Lahore, Pakistan</span>
               </div>
             </div>
-
             <div className="flex items-center gap-4 sm:gap-6">
               <span className="flex items-center gap-1 sm:gap-2 text-green-400">
-                <HiOutlineDesktopComputer
-                  size={13}
-                  className="sm:w-3.5 sm:h-3.5"
-                />
+                <HiOutlineDesktopComputer size={13} />
                 <span className="hidden xs:inline">Premium Laptops</span>
               </span>
               <span className="flex items-center gap-1 sm:gap-2">
-                <MdOutlineSecurity size={13} className="sm:w-3.5 sm:h-3.5" />
+                <MdOutlineSecurity size={13} />
                 <span className="hidden xs:inline">Secure Payments</span>
               </span>
             </div>
@@ -221,17 +216,14 @@ const Header = () => {
 
         {/* Main Header */}
         <div className="mx-auto flex max-w-7xl items-center justify-between px-3 sm:px-4 py-3 sm:py-4">
+          {/* Left Side - Menu Button + Logo */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="rounded-xl p-1.5 sm:p-2 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600 lg:hidden"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
-              {isMenuOpen ? (
-                <FiX size={20} className="sm:w-6 sm:h-6" />
-              ) : (
-                <FiMenu size={20} className="sm:w-6 sm:h-6" />
-              )}
+              {isMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
 
             <Link
@@ -239,10 +231,9 @@ const Header = () => {
               className="group flex items-center gap-2 sm:gap-3"
               onClick={() => setIsMenuOpen(false)}
             >
-              <div className="rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-1.5 sm:p-2 md:p-3 shadow-md transition duration-300 group-hover:scale-105 group-hover:shadow-lg">
+              <div className="rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-1.5 sm:p-2 md:p-3 shadow-md transition duration-300 group-hover:scale-105">
                 <MdLaptop className="text-white text-xl sm:text-2xl md:text-[28px]" />
               </div>
-
               <div>
                 <h1 className="text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight text-gray-900">
                   LapHub<span className="text-blue-600">.pk</span>
@@ -254,7 +245,7 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Desktop Search - Hidden on mobile */}
+          {/* Center - Search (Desktop only) */}
           <div className="hidden lg:flex flex-1 max-w-xl mx-8 relative">
             <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
@@ -263,43 +254,56 @@ const Header = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full pl-12 pr-28 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              aria-label="Search products"
+              className="w-full pl-12 pr-28 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={handleSearch}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-md hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:scale-105"
-              aria-label="Search"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-md hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
             >
               Search
             </button>
           </div>
 
-          {/* Right Side */}
+          {/* Right Side - Icons */}
           <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
             {/* Mobile Search Toggle */}
             <button
               onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
               className="lg:hidden rounded-xl p-1.5 sm:p-2 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-              aria-label="Search"
             >
-              <FiSearch size={18} className="sm:w-5 sm:h-5" />
+              <FiSearch size={18} />
             </button>
 
+            {/* Wishlist Icon - Always visible */}
             <Link
               to="/user/wishlist"
-              className="hidden sm:flex rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-red-50 hover:text-red-500"
-              aria-label="Wishlist"
+              className="rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-red-50 hover:text-red-500"
             >
               <FiHeart size={18} className="sm:w-5 sm:h-5" />
             </Link>
 
-            {isLoggedIn ? (
+            {/* Cart Icon */}
+            <button
+              onClick={openCartDrawer}
+              className="relative rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
+            >
+              <FiShoppingCart
+                size={18}
+                className="sm:w-5 sm:h-5 md:w-[22px] md:h-[22px]"
+              />
+              {cartCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] sm:h-5 sm:min-w-[20px] items-center justify-center rounded-full bg-red-500 px-0.5 text-[8px] sm:text-[10px] font-bold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Profile Icon (Only when logged in) */}
+            {isLoggedIn && (
               <div className="relative profile-dropdown">
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="flex items-center justify-center rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-                  aria-label="Profile menu"
                 >
                   <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-xs sm:text-sm">
                     {getUserInitials()}
@@ -316,56 +320,54 @@ const Header = () => {
                         {user?.email || "Manage your profile"}
                       </p>
                     </div>
-
                     <div className="p-1 sm:p-2">
                       <Link
                         to="/user/dashboard"
                         className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
                         onClick={() => setIsProfileOpen(false)}
                       >
-                        <FiGrid size={14} className="sm:w-4 sm:h-4" />
+                        <FiGrid size={14} />
                         <span>Dashboard</span>
                       </Link>
-
                       <Link
                         to="/user/orders"
                         className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
                         onClick={() => setIsProfileOpen(false)}
                       >
-                        <FiPackage size={14} className="sm:w-4 sm:h-4" />
+                        <FiPackage size={14} />
                         <span>My Orders</span>
                       </Link>
-
                       <Link
                         to="/user/wishlist"
                         className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
                         onClick={() => setIsProfileOpen(false)}
                       >
-                        <FiHeart size={14} className="sm:w-4 sm:h-4" />
+                        <FiHeart size={14} />
                         <span>Wishlist</span>
                       </Link>
-
                       <Link
                         to="/user/profile"
                         className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-50"
                         onClick={() => setIsProfileOpen(false)}
                       >
-                        <FiUser size={14} className="sm:w-4 sm:h-4" />
+                        <FiUser size={14} />
                         <span>Profile</span>
                       </Link>
-
                       <button
                         onClick={handleLogout}
                         className="flex w-full items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-red-600 transition hover:bg-red-50"
                       >
-                        <FiLogOut size={14} className="sm:w-4 sm:h-4" />
+                        <FiLogOut size={14} />
                         <span>Logout</span>
                       </button>
                     </div>
                   </div>
                 )}
               </div>
-            ) : (
+            )}
+
+            {/* Login/Signup Buttons (Only when NOT logged in) */}
+            {!isLoggedIn && (
               <div className="hidden sm:flex items-center gap-1 sm:gap-2">
                 <Link
                   to="/login"
@@ -381,22 +383,6 @@ const Header = () => {
                 </Link>
               </div>
             )}
-
-            <button
-              onClick={openCartDrawer}
-              className="relative rounded-xl p-1.5 sm:p-2 md:p-2.5 text-gray-700 transition hover:bg-gray-100 hover:text-blue-600"
-              aria-label={`Shopping cart with ${cartCount} items`}
-            >
-              <FiShoppingCart
-                size={18}
-                className="sm:w-5 sm:h-5 md:w-[22px] md:h-[22px]"
-              />
-              {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] sm:h-5 sm:min-w-[20px] items-center justify-center rounded-full bg-red-500 px-0.5 text-[8px] sm:text-[10px] font-bold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </button>
           </div>
         </div>
 
@@ -415,13 +401,11 @@ const Header = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                aria-label="Search products"
                 autoFocus
               />
               <button
                 onClick={handleSearch}
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-700 transition-colors"
-                aria-label="Search"
+                className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-700 transition"
               >
                 Go
               </button>
@@ -429,7 +413,7 @@ const Header = () => {
           </div>
         )}
 
-        {/* Desktop Nav */}
+        {/* Desktop Navigation */}
         <div className="hidden lg:block border-t">
           <div className="mx-auto flex max-w-7xl items-center gap-2 px-4">
             {navLinks.map((link) => (
@@ -451,10 +435,10 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Only navigation links, NO profile */}
         <div
           className={`overflow-hidden border-t bg-white transition-all duration-300 lg:hidden ${
-            isMenuOpen ? "max-h-[600px]" : "max-h-0"
+            isMenuOpen ? "max-h-[400px]" : "max-h-0"
           }`}
         >
           <div className="space-y-1 px-3 py-3">
@@ -462,79 +446,13 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className="flex items-center justify-between rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50"
+                className="flex items-center justify-between rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <span className="text-sm">{link.name}</span>
+                <span>{link.name}</span>
                 <FiChevronRight size={14} />
               </Link>
             ))}
-
-            <div className="border-t my-2 pt-2">
-              {!isLoggedIn ? (
-                <>
-                  <Link
-                    to="/login"
-                    className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="block rounded-lg bg-blue-600 px-3 py-2.5 font-medium text-white transition hover:bg-blue-700 text-sm text-center"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Signup
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <div className="px-3 py-2 mb-1">
-                    <p className="font-semibold text-gray-900 text-sm truncate">
-                      {user?.name}
-                    </p>
-                    <p className="text-[10px] text-gray-500 truncate">
-                      {user?.email}
-                    </p>
-                  </div>
-                  <Link
-                    to="/user/dashboard"
-                    className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/user/orders"
-                    className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    My Orders
-                  </Link>
-                  <Link
-                    to="/user/wishlist"
-                    className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Wishlist
-                  </Link>
-                  <Link
-                    to="/user/profile"
-                    className="block rounded-lg px-3 py-2.5 font-medium text-gray-700 transition hover:bg-gray-50 text-sm"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full rounded-lg px-3 py-2.5 text-left font-medium text-red-600 transition hover:bg-red-50 text-sm"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </div>
           </div>
         </div>
       </header>
@@ -551,7 +469,7 @@ const Header = () => {
         />
       )}
 
-      {/* Cart Drawer - Mobile optimized */}
+      {/* Cart Drawer */}
       <div
         className={`fixed right-0 top-0 z-[60] flex h-full w-full max-w-sm sm:max-w-md flex-col bg-white shadow-2xl transition-transform duration-300 ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
@@ -571,7 +489,7 @@ const Header = () => {
               onClick={() => setIsCartOpen(false)}
               className="rounded-lg p-1.5 sm:p-2 text-gray-600 transition hover:bg-gray-100 hover:text-black"
             >
-              <FiX size={20} className="sm:w-6 sm:h-6" />
+              <FiX size={20} />
             </button>
           </div>
         </div>
@@ -580,10 +498,7 @@ const Header = () => {
           {cartItems.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center text-center">
               <div className="mb-3 sm:mb-4 rounded-full bg-gray-100 p-4 sm:p-6">
-                <FiShoppingCart
-                  size={40}
-                  className="sm:w-12 sm:h-12 text-gray-400"
-                />
+                <FiShoppingCart size={40} className="text-gray-400" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                 Cart is empty
@@ -629,7 +544,7 @@ const Header = () => {
                     onClick={() => handleRemove(item._id)}
                     className="self-start rounded-lg p-1.5 sm:p-2 text-red-500 transition hover:bg-red-50 hover:text-red-700"
                   >
-                    <FiTrash2 size={14} className="sm:w-4 sm:h-4" />
+                    <FiTrash2 size={14} />
                   </button>
                 </div>
               ))}
@@ -652,14 +567,12 @@ const Header = () => {
                 Shipping calculated at checkout.
               </p>
             </div>
-
             <button
               className="mb-2 sm:mb-3 w-full rounded-lg sm:rounded-xl border border-gray-300 bg-white py-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
               onClick={handleViewCart}
             >
               View Cart
             </button>
-
             <button
               className="w-full rounded-lg sm:rounded-xl bg-gray-900 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-600"
               onClick={handleCheckout}
