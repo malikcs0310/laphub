@@ -11,13 +11,9 @@ import {
   FiHeart,
   FiGrid,
   FiPackage,
-  FiPhone,
-  FiMapPin,
   FiChevronRight,
-  FiMail,
 } from "react-icons/fi";
-import { MdLaptop, MdOutlineSecurity } from "react-icons/md";
-import { HiOutlineDesktopComputer } from "react-icons/hi";
+import { MdLaptop } from "react-icons/md";
 import { getCartItems, removeFromCart } from "../utils/cartUtils";
 import toast from "react-hot-toast";
 
@@ -175,49 +171,12 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
-          isScrolled ? "shadow-md" : "shadow-sm"
-        }`}
+        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${isScrolled ? "shadow-md" : "shadow-sm"} border-b`}
       >
-        {/* Top Bar - Contact Info */}
-        <div className="hidden md:block bg-gray-900 text-gray-300 text-sm">
-          <div className="max-w-7xl mx-auto px-4 py-2">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-6">
-                <a
-                  href="tel:+923104082056"
-                  className="flex items-center gap-2 hover:text-white transition"
-                >
-                  <FiPhone size={13} />
-                  <span>+92 310 408 2056</span>
-                </a>
-                <div className="flex items-center gap-2">
-                  <FiMail size={13} />
-                  <span>info@laphub.pk</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FiMapPin size={13} />
-                  <span>Lahore, Pakistan</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1 text-green-400">
-                  <HiOutlineDesktopComputer size={14} />
-                  Premium Laptops
-                </span>
-                <span className="flex items-center gap-1">
-                  <MdOutlineSecurity size={14} />
-                  Secure Payments
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Header */}
+        {/* Main Header - Single Row */}
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
-            {/* Logo */}
+            {/* Logo + Mobile Menu */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -245,30 +204,24 @@ const Header = () => {
             </div>
 
             {/* Desktop Search */}
-            <div className="hidden lg:flex flex-1 max-w-lg relative">
+            <div className="hidden lg:flex flex-1 max-w-md relative">
               <FiSearch
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 size={18}
               />
               <input
                 type="text"
-                placeholder="Search laptops, brands, specs..."
+                placeholder="Search laptops..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
-              <button
-                onClick={handleSearch}
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm transition"
-              >
-                Search
-              </button>
             </div>
 
             {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-2">
-              {/* Mobile Search Toggle */}
+              {/* Mobile Search */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
@@ -382,20 +335,14 @@ const Header = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
-                <button
-                  onClick={handleSearch}
-                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
-                >
-                  Go
-                </button>
               </div>
             </div>
           )}
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1 border-t mt-3 pt-3">
+          {/* Navigation Links */}
+          <div className="hidden lg:flex items-center gap-1 mt-3 pt-3 border-t">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
