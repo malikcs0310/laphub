@@ -33,7 +33,6 @@ import { HiOutlineLightBulb } from "react-icons/hi";
 import Testimonials from "../components/Testimonials";
 
 const About = () => {
-  // REAL STATS - Update these with your actual numbers
   const stats = [
     {
       value: "40+",
@@ -61,9 +60,6 @@ const About = () => {
     },
   ];
 
-  // REAL CUSTOMER FEEDBACK (Add your actual customer reviews)
-
-  // Values data
   const values = [
     {
       icon: FiHeart,
@@ -110,36 +106,38 @@ const About = () => {
       </Helmet>
 
       <div className="min-h-screen bg-white">
-        {/* Hero Section */}
+        {/* Hero Section - Mobile Optimized */}
         <section className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&auto=format')] bg-cover bg-center opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
-          <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
+          <div className="container mx-auto px-4 py-16 sm:py-24 md:py-32 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-                <span className="text-white text-sm">Welcome to</span>
-                <span className="ml-2 text-blue-300 font-semibold">
+              <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-white/10 backdrop-blur-sm rounded-full mb-4 sm:mb-6">
+                <span className="text-white text-[11px] sm:text-sm">
+                  Welcome to
+                </span>
+                <span className="ml-1 sm:ml-2 text-blue-300 font-semibold text-[11px] sm:text-sm">
                   LapHub.pk
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-6">
                 Trusted by <span className="text-blue-400">40+ Customers</span>
               </h1>
-              <p className="text-xl text-gray-200 mb-8 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-sm sm:text-base md:text-lg xl:text-xl text-gray-200 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-2">
                 In just 4 months, we've helped 40+ customers find their perfect
                 laptop. Genuine products, honest advice, and exceptional support
                 - that's our promise.
               </p>
-              <div className="flex flex-wrap justify-center gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
                 {stats.map((stat, idx) => (
                   <div key={idx} className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-white">
+                    <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                       {stat.value}
                     </div>
-                    <div className="text-gray-300 text-sm mt-1">
+                    <div className="text-gray-300 text-[10px] sm:text-xs md:text-sm mt-0.5 sm:mt-1">
                       {stat.label}
                     </div>
-                    <div className="text-blue-300 text-xs mt-0.5">
+                    <div className="text-blue-300 text-[8px] sm:text-[10px] md:text-xs mt-0.5">
                       {stat.description}
                     </div>
                   </div>
@@ -148,40 +146,43 @@ const About = () => {
             </div>
           </div>
         </section>
-        {/* Real Customer Feedback Section */}
+
+        {/* Real Customer Feedback Section - Already using Testimonials component which is mobile optimized */}
         <Testimonials />
 
-        {/* Who We Are - Updated with Real Story */}
-        <section className="py-20 bg-white">
+        {/* Who We Are - Mobile Optimized */}
+        <section className="py-12 sm:py-16 md:py-20 bg-white">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-10 md:gap-12">
               <div className="lg:w-1/2">
                 <div className="relative">
-                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-xl"></div>
+                  <div className="absolute -inset-2 sm:-inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl sm:rounded-3xl blur-xl"></div>
                   <img
                     src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1600&auto=format&fit=crop"
                     alt="Laptop Selection"
-                    className="relative rounded-2xl shadow-2xl w-full"
+                    className="relative rounded-xl sm:rounded-2xl shadow-2xl w-full"
                   />
-                  <div className="absolute -bottom-6 -right-6 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
-                    <div className="flex items-center gap-2">
-                      <FiStar className="text-yellow-400" />
-                      <span className="font-semibold">4.9/5 Rating</span>
+                  <div className="absolute -bottom-3 -right-3 sm:-bottom-6 sm:-right-6 bg-blue-600 text-white px-2 py-1 sm:px-4 sm:py-2 rounded-lg shadow-lg">
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <FiStar className="text-yellow-400 text-xs sm:text-sm" />
+                      <span className="font-semibold text-xs sm:text-sm">
+                        4.9/5 Rating
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="lg:w-1/2">
-                <div className="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full mb-4">
-                  <span className="text-blue-600 text-sm font-semibold">
+                <div className="inline-flex items-center px-3 py-1 sm:px-4 sm:py-2 bg-blue-50 rounded-full mb-3 sm:mb-4">
+                  <span className="text-blue-600 text-[10px] sm:text-sm font-semibold">
                     Our Journey
                   </span>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
                   From Zero to 40+ Happy Customers
                 </h2>
-                <div className="space-y-4 text-gray-600">
+                <div className="space-y-3 sm:space-y-4 text-gray-600 text-sm sm:text-base">
                   <p>
                     <span className="font-semibold text-blue-600">
                       LapHub.pk
@@ -205,8 +206,8 @@ const About = () => {
                     </span>{" "}
                     Just honest advice and genuine laptops that work.
                   </p>
-                  <div className="bg-blue-50 p-4 rounded-lg mt-4">
-                    <p className="text-sm text-gray-700">
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg mt-3 sm:mt-4">
+                    <p className="text-xs sm:text-sm text-gray-700">
                       <span className="font-semibold">Fun Fact:</span> We've
                       received{" "}
                       <span className="font-semibold">0 complaints</span>
@@ -215,16 +216,16 @@ const About = () => {
                   </div>
                 </div>
 
-                <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
                   <div className="flex items-start">
-                    <div className="p-2 bg-blue-100 rounded-lg mr-4">
-                      <HiOutlineLightBulb className="text-blue-600 text-xl" />
+                    <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg mr-3 sm:mr-4">
+                      <HiOutlineLightBulb className="text-blue-600 text-base sm:text-xl" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">
+                      <h4 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">
                         Our Vision
                       </h4>
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 text-xs sm:text-sm">
                         To become Pakistan's most trusted laptop provider by
                         delivering genuine products, competitive prices, and
                         exceptional customer service.
@@ -237,40 +238,40 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Values - Same */}
-        <section className="py-20 bg-gray-50">
+        {/* Our Values - Mobile Optimized */}
+        <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full mb-4">
-                <span className="text-blue-600 text-sm font-semibold">
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center px-3 py-1 sm:px-4 sm:py-2 bg-blue-50 rounded-full mb-3 sm:mb-4">
+                <span className="text-blue-600 text-[10px] sm:text-sm font-semibold">
                   Our Core Values
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                 What Drives Us
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
                 These principles guide everything we do at LapHub.pk
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {values.map((value, idx) => (
                 <div
                   key={idx}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:-translate-y-1"
+                  className="bg-white p-5 sm:p-6 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:-translate-y-1"
                 >
                   <div
-                    className={`p-3 rounded-xl bg-${value.color}-50 w-fit mb-4 group-hover:scale-110 transition-transform`}
+                    className={`p-2 sm:p-3 rounded-xl bg-${value.color}-50 w-fit mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}
                   >
                     <value.icon
-                      className={`text-${value.color}-600 text-2xl`}
+                      className={`text-${value.color}-600 text-xl sm:text-2xl`}
                     />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-base sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2">
                     {value.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
                     {value.description}
                   </p>
                 </div>
@@ -279,24 +280,24 @@ const About = () => {
           </div>
         </section>
 
-        {/* Why Choose Us - Same */}
-        <section className="py-20 bg-white">
+        {/* Why Choose Us - Mobile Optimized */}
+        <section className="py-12 sm:py-16 md:py-20 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full mb-4">
-                <span className="text-blue-600 text-sm font-semibold">
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center px-3 py-1 sm:px-4 sm:py-2 bg-blue-50 rounded-full mb-3 sm:mb-4">
+                <span className="text-blue-600 text-[10px] sm:text-sm font-semibold">
                   Why Choose Us
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                 The LapHub.pk Difference
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
                 What sets us apart from other laptop stores
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {[
                 {
                   icon: MdVerifiedUser,
@@ -342,19 +343,19 @@ const About = () => {
               ].map((feature, idx) => (
                 <div
                   key={idx}
-                  className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+                  className="group bg-white p-5 sm:p-6 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
                 >
                   <div
-                    className={`p-3 rounded-xl bg-${feature.color}-50 w-fit mb-4`}
+                    className={`p-2 sm:p-3 rounded-xl bg-${feature.color}-50 w-fit mb-3 sm:mb-4`}
                   >
                     <feature.icon
-                      className={`text-${feature.color}-600 text-2xl`}
+                      className={`text-${feature.color}-600 text-xl sm:text-2xl`}
                     />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 sm:mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -363,100 +364,128 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Promise */}
-        <section className="py-20 bg-[#111827]">
+        {/* Our Promise - Mobile Optimized */}
+        <section className="py-12 sm:py-16 md:py-20 bg-[#111827]">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full mb-8">
-                <FiAward className="text-yellow-400 mr-3" size={24} />
-                <span className="text-white text-lg font-semibold">
+              <div className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 bg-white/10 backdrop-blur-sm rounded-full mb-6 sm:mb-8">
+                <FiAward
+                  className="text-yellow-400 mr-2 sm:mr-3"
+                  size={18}
+                  className="sm:w-6 sm:h-6"
+                />
+                <span className="text-white text-sm sm:text-lg font-semibold">
                   Our Commitment to You
                 </span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6 sm:mb-8">
                 The LapHub.pk Promise
               </h2>
 
-              <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                  <div className="space-y-6">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-6 sm:p-8 md:p-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-left">
+                  <div className="space-y-4 sm:space-y-6">
                     <div className="flex items-start">
-                      <div className="p-2 bg-green-100 rounded-lg mr-4">
-                        <FiThumbsUp className="text-green-600" size={20} />
+                      <div className="p-1.5 sm:p-2 bg-green-100 rounded-lg mr-3 sm:mr-4">
+                        <FiThumbsUp
+                          className="text-green-600"
+                          size={16}
+                          className="sm:w-5 sm:h-5"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">
+                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
                           100% Satisfaction
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-xs sm:text-sm">
                           Every laptop tested before delivery
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="p-2 bg-blue-100 rounded-lg mr-4">
-                        <FiShield className="text-blue-600" size={20} />
+                      <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg mr-3 sm:mr-4">
+                        <FiShield
+                          className="text-blue-600"
+                          size={16}
+                          className="sm:w-5 sm:h-5"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">
+                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
                           Warranty Protection
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-xs sm:text-sm">
                           Full manufacturer warranty on all products
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="p-2 bg-purple-100 rounded-lg mr-4">
-                        <FiClock className="text-purple-600" size={20} />
+                      <div className="p-1.5 sm:p-2 bg-purple-100 rounded-lg mr-3 sm:mr-4">
+                        <FiClock
+                          className="text-purple-600"
+                          size={16}
+                          className="sm:w-5 sm:h-5"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">
+                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
                           24/7 Support
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-xs sm:text-sm">
                           Quick response to all queries
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     <div className="flex items-start">
-                      <div className="p-2 bg-red-100 rounded-lg mr-4">
-                        <MdVerifiedUser className="text-red-600" size={20} />
+                      <div className="p-1.5 sm:p-2 bg-red-100 rounded-lg mr-3 sm:mr-4">
+                        <MdVerifiedUser
+                          className="text-red-600"
+                          size={16}
+                          className="sm:w-5 sm:h-5"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">
+                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
                           Price Match
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-xs sm:text-sm">
                           Found a better price? We'll match it
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="p-2 bg-orange-100 rounded-lg mr-4">
-                        <FiTarget className="text-orange-600" size={20} />
+                      <div className="p-1.5 sm:p-2 bg-orange-100 rounded-lg mr-3 sm:mr-4">
+                        <FiTarget
+                          className="text-orange-600"
+                          size={16}
+                          className="sm:w-5 sm:h-5"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">
+                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
                           Right Recommendation
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-xs sm:text-sm">
                           Honest advice tailored to your needs
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="p-2 bg-cyan-100 rounded-lg mr-4">
-                        <MdSupportAgent className="text-cyan-600" size={20} />
+                      <div className="p-1.5 sm:p-2 bg-cyan-100 rounded-lg mr-3 sm:mr-4">
+                        <MdSupportAgent
+                          className="text-cyan-600"
+                          size={16}
+                          className="sm:w-5 sm:h-5"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">
+                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
                           Setup Assistance
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-xs sm:text-sm">
                           Free basic setup guidance with every purchase
                         </p>
                       </div>
@@ -464,12 +493,12 @@ const About = () => {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-gray-200">
-                  <p className="text-gray-600 italic text-center">
+                <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-gray-200">
+                  <p className="text-gray-600 italic text-center text-sm sm:text-base">
                     "We're building this business one satisfied customer at a
                     time. Your trust is our most valuable asset."
                   </p>
-                  <p className="text-gray-500 text-sm text-center mt-3">
+                  <p className="text-gray-500 text-xs sm:text-sm text-center mt-2 sm:mt-3">
                     — Muhammad Usama, Founder LapHub.pk
                   </p>
                 </div>
@@ -478,104 +507,116 @@ const About = () => {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section className="py-20 bg-gray-50">
+        {/* Contact Section - Mobile Optimized */}
+        <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                 Ready to Join Our 40+ Happy Customers?
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
                 Find your perfect laptop today. We're here to help!
               </p>
             </div>
 
             <div className="max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
-                  <div className="p-8 text-center">
-                    <div className="p-3 bg-blue-100 rounded-full w-fit mx-auto mb-4">
-                      <MdPhone className="text-blue-600 text-2xl" />
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                    <div className="p-2 sm:p-3 bg-blue-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
+                      <MdPhone className="text-blue-600 text-xl sm:text-2xl" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Call or WhatsApp
                     </h3>
                     <a
                       href="tel:+923104082056"
-                      className="text-blue-600 hover:text-blue-700 text-lg font-medium"
+                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-lg font-medium"
                     >
                       +92 310 4082056
                     </a>
-                    <p className="text-gray-500 text-sm mt-2">
+                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
                       Mon-Sat, 10am-8pm
                     </p>
                   </div>
 
-                  <div className="p-8 text-center">
-                    <div className="p-3 bg-green-100 rounded-full w-fit mx-auto mb-4">
-                      <MdEmail className="text-green-600 text-2xl" />
+                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                    <div className="p-2 sm:p-3 bg-green-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
+                      <MdEmail className="text-green-600 text-xl sm:text-2xl" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Email Us
                     </h3>
                     <a
                       href="mailto:info@laphub.pk"
-                      className="text-blue-600 hover:text-blue-700 text-lg font-medium"
+                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-lg font-medium"
                     >
                       info@laphub.pk
                     </a>
-                    <p className="text-gray-500 text-sm mt-2">24/7 Response</p>
+                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
+                      24/7 Response
+                    </p>
                   </div>
 
-                  <div className="p-8 text-center">
-                    <div className="p-3 bg-purple-100 rounded-full w-fit mx-auto mb-4">
-                      <MdLocationOn className="text-purple-600 text-2xl" />
+                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                    <div className="p-2 sm:p-3 bg-purple-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
+                      <MdLocationOn className="text-purple-600 text-xl sm:text-2xl" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Based In
                     </h3>
-                    <p className="text-gray-600">Lahore, Pakistan</p>
-                    <p className="text-gray-500 text-sm mt-2">
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      Lahore, Pakistan
+                    </p>
+                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
                       Nationwide Shipping
                     </p>
                   </div>
 
-                  <div className="p-8 text-center">
-                    <div className="p-3 bg-orange-100 rounded-full w-fit mx-auto mb-4">
-                      <MdStorefront className="text-orange-600 text-2xl" />
+                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                    <div className="p-2 sm:p-3 bg-orange-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
+                      <MdStorefront className="text-orange-600 text-xl sm:text-2xl" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Browse Online
                     </h3>
                     <Link
                       to="/products"
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
                     >
                       Shop Now →
                     </Link>
-                    <p className="text-gray-500 text-sm mt-2">
+                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
                       40+ laptops sold
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 border-t border-gray-200">
-                  <p className="text-gray-600 text-center mb-6">
+                <div className="bg-gray-50 p-4 sm:p-6 border-t border-gray-200">
+                  <p className="text-gray-600 text-center text-sm sm:text-base mb-4 sm:mb-6">
                     Prefer to browse first? Check out our available laptops
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                     <Link
                       to="/products"
-                      className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-200"
+                      className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
                     >
-                      <MdComputer className="mr-2" />
+                      <MdComputer
+                        className="mr-2"
+                        size={16}
+                        className="sm:w-5 sm:h-5"
+                      />
                       Browse Laptops
                     </Link>
                     <Link
                       to="/contact"
-                      className="inline-flex items-center justify-center bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition duration-200"
+                      className="inline-flex items-center justify-center bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-5 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
                     >
-                      <FiArrowRight className="mr-2" />
+                      <FiArrowRight
+                        className="mr-2"
+                        size={16}
+                        className="sm:w-5 sm:h-5"
+                      />
                       Contact Form
                     </Link>
                   </div>
