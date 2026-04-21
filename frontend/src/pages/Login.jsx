@@ -138,20 +138,6 @@ const Login = () => {
           <div className="signup-link">
             Don't have an account? <a href="/signup">Sign Up</a>
           </div>
-
-          <div className="demo-credentials">
-            <div className="demo-title">Demo Credentials</div>
-            <div className="demo-row">
-              <span className="demo-role">Admin:</span>
-              <span> admin@laptopshop.com </span>
-              <span className="demo-pass">| admin123</span>
-            </div>
-            <div className="demo-row">
-              <span className="demo-role">User:</span>
-              <span> malikcs0310@gmail.com </span>
-              <span className="demo-pass">| 98230910</span>
-            </div>
-          </div>
         </form>
       </div>
     </div>
