@@ -149,13 +149,16 @@ const ViewProducts = () => {
               Add Laptop
             </button>
 
-            <button
-              onClick={handleBulkDelete}
-              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition flex items-center gap-1.5 text-sm"
-            >
-              <FiTrash2 size={14} />
-              Delete Selected
-            </button>
+            {/* Delete Selected Button - Only shows when at least one product is selected */}
+            {selectedProducts.length > 0 && (
+              <button
+                onClick={handleBulkDelete}
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition flex items-center gap-1.5 text-sm"
+              >
+                <FiTrash2 size={14} />
+                Delete Selected ({selectedProducts.length})
+              </button>
+            )}
           </div>
         </div>
 
