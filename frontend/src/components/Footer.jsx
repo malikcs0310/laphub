@@ -15,6 +15,8 @@ import {
   FiCheckCircle,
   FiClock,
   FiRefreshCw,
+  FiTrendingUp,
+  FiHeart,
 } from "react-icons/fi";
 import { MdComputer, MdSupport, MdVerifiedUser } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -39,6 +41,9 @@ const Footer = () => {
     { name: "Products", path: "/products" },
     { name: "About Us", path: "/about" },
     { name: "Contact", path: "/contact" },
+  ];
+
+  const policyLinks = [
     { name: "Privacy Policy", path: "/privacy" },
     { name: "Terms & Conditions", path: "/terms" },
     { name: "Return Policy", path: "/returns" },
@@ -52,8 +57,6 @@ const Footer = () => {
     { name: "Apple", count: 25 },
     { name: "ASUS", count: 28 },
     { name: "Acer", count: 22 },
-    { name: "Microsoft", count: 15 },
-    { name: "MSI", count: 12 },
   ];
 
   const socialLinks = [
@@ -107,104 +110,28 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-gray-300">
-      {/* Features Bar */}
-      <div className="border-b border-gray-800/50 py-6 sm:py-8">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div
-              className="flex items-center justify-start space-x-2 sm:space-x-3 group cursor-pointer"
-              onClick={scrollToTop}
-            >
-              <div className="bg-blue-600/20 p-2 sm:p-3 rounded-xl group-hover:bg-blue-600/30 transition">
-                <FiTruck className="text-blue-400" size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white text-xs sm:text-sm">
-                  Free Shipping
-                </h4>
-                <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block">
-                  Over Rs 50,000
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-start space-x-2 sm:space-x-3 group">
-              <div className="bg-green-600/20 p-2 sm:p-3 rounded-xl group-hover:bg-green-600/30 transition">
-                <MdVerifiedUser className="text-green-400" size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white text-xs sm:text-sm">
-                  100% Genuine
-                </h4>
-                <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block">
-                  Official Warranty
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-start space-x-2 sm:space-x-3 group">
-              <div className="bg-purple-600/20 p-2 sm:p-3 rounded-xl group-hover:bg-purple-600/30 transition">
-                <FiRefreshCw className="text-purple-400" size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white text-xs sm:text-sm">
-                  Easy Returns
-                </h4>
-                <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block">
-                  7 Days Policy
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-start space-x-2 sm:space-x-3 group">
-              <div className="bg-orange-600/20 p-2 sm:p-3 rounded-xl group-hover:bg-orange-600/30 transition">
-                <MdSupport className="text-orange-400" size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white text-xs sm:text-sm">
-                  24/7 Support
-                </h4>
-                <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block">
-                  We're Here
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Footer Content */}
-      <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 xl:gap-12">
-          {/* Brand & Info */}
+    <footer className="bg-gray-900 text-gray-300">
+      {/* Main Footer */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Brand Column */}
           <div>
             <div
-              className="flex items-center space-x-2 sm:space-x-3 mb-4 cursor-pointer"
+              className="flex items-center gap-2 mb-4 cursor-pointer"
               onClick={() => navigate("/")}
             >
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 sm:p-2.5 rounded-xl shadow-lg">
-                <MdComputer className="text-white" size={22} />
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <MdComputer className="text-white text-xl" />
               </div>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                  LapHub<span className="text-blue-400">.pk</span>
-                </h2>
-                <p className="text-[10px] sm:text-xs text-gray-500">
-                  Your Trusted Laptop Store
-                </p>
-              </div>
+              <span className="text-xl font-bold text-white">LapHub.pk</span>
             </div>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
-              Pakistan's fastest growing laptop store. We provide genuine
-              imported laptops with warranty, free shipping, and 24/7 customer
-              support.
+            <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+              Pakistan's trusted source for genuine imported laptops. Quality
+              products, honest prices, and exceptional support.
             </p>
-            <div className="space-y-2 sm:space-y-3">
-              <div className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm group">
-                <div className="bg-gray-800 p-1.5 sm:p-2 rounded-lg group-hover:bg-blue-600/20 transition">
-                  <FiPhone className="text-blue-400" size={14} />
-                </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 text-sm">
+                <FiPhone className="text-blue-400" />
                 <a
                   href="tel:+923104082056"
                   className="hover:text-white transition"
@@ -212,10 +139,8 @@ const Footer = () => {
                   +92 310 408 2056
                 </a>
               </div>
-              <div className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm group">
-                <div className="bg-gray-800 p-1.5 sm:p-2 rounded-lg group-hover:bg-blue-600/20 transition">
-                  <FiMail className="text-blue-400" size={14} />
-                </div>
+              <div className="flex items-center gap-3 text-sm">
+                <FiMail className="text-blue-400" />
                 <a
                   href="mailto:info@laphub.pk"
                   className="hover:text-white transition"
@@ -223,23 +148,21 @@ const Footer = () => {
                   info@laphub.pk
                 </a>
               </div>
-              <div className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm group">
-                <div className="bg-gray-800 p-1.5 sm:p-2 rounded-lg group-hover:bg-blue-600/20 transition">
-                  <FiMapPin className="text-blue-400" size={14} />
-                </div>
+              <div className="flex items-center gap-3 text-sm">
+                <FiMapPin className="text-blue-400" />
                 <span>Lahore, Pakistan</span>
               </div>
             </div>
-            <div className="flex space-x-2 sm:space-x-3 mt-4 sm:mt-6">
+            <div className="flex gap-3 mt-6">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`bg-gray-800 p-1.5 sm:p-2 rounded-lg hover:scale-110 transition-all duration-200 ${social.color} hover:text-white`}
+                  className={`bg-gray-800 p-2 rounded-lg hover:scale-110 transition-all duration-200 ${social.color} hover:text-white`}
                 >
-                  <social.icon size={14} />
+                  <social.icon size={16} />
                 </a>
               ))}
             </div>
@@ -247,150 +170,95 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-5 relative inline-block">
+            <h3 className="text-white font-semibold text-lg mb-4">
               Quick Links
-              <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-blue-500 rounded-full"></span>
             </h3>
-            <ul className="space-y-1 sm:space-y-2">
+            <ul className="space-y-2">
               {usefulLinks.map((link, index) => (
                 <li key={index}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-white transition text-xs sm:text-sm flex items-center group"
+                    className="text-gray-400 hover:text-white transition text-sm flex items-center gap-2"
                   >
-                    <span className="mr-2 opacity-0 group-hover:opacity-100 transition">
-                      →
-                    </span>
-                    {link.name}
+                    <span className="text-blue-400">›</span> {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Popular Brands */}
+          {/* Policies */}
           <div>
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-5 relative inline-block">
-              Popular Brands
-              <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-blue-500 rounded-full"></span>
-            </h3>
-            <div className="flex flex-wrap gap-1.5 sm:gap-2">
-              {popularBrands.map((brand, index) => (
-                <Link
-                  key={index}
-                  to={`/products?brand=${brand.name}`}
-                  className="group relative px-2 py-1 sm:px-3 sm:py-1.5 bg-gray-800 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-700 rounded-lg text-xs sm:text-sm transition-all duration-200"
-                >
-                  <span className="text-gray-400 group-hover:text-white transition">
-                    {brand.name}
-                  </span>
-                  <span className="absolute -top-1 -right-1 text-[8px] sm:text-[10px] bg-blue-500 text-white rounded-full w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center">
-                    {brand.count}
-                  </span>
-                </Link>
+            <h3 className="text-white font-semibold text-lg mb-4">Policies</h3>
+            <ul className="space-y-2">
+              {policyLinks.map((link, index) => (
+                <li key={index}>
+                  <Link
+                    to={link.path}
+                    className="text-gray-400 hover:text-white transition text-sm flex items-center gap-2"
+                  >
+                    <span className="text-blue-400">›</span> {link.name}
+                  </Link>
+                </li>
               ))}
-            </div>
-            <div className="mt-6 sm:mt-8">
-              <h4 className="font-medium text-white mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base">
-                <FiClock className="text-blue-400" size={14} />
+            </ul>
+            <div className="mt-6">
+              <h4 className="text-white font-semibold text-sm mb-2">
                 Business Hours
               </h4>
-              <div className="space-y-0.5 sm:space-y-1 text-xs sm:text-sm text-gray-400">
-                <div className="flex justify-between">
-                  <span>Mon - Sat:</span>
-                  <span className="text-white">10AM - 8PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sunday:</span>
-                  <span className="text-white">12PM - 6PM</span>
-                </div>
-                <div className="text-[10px] sm:text-xs text-gray-500 mt-1">
-                  24/7 Online Support
-                </div>
+              <div className="space-y-1 text-sm text-gray-400">
+                <p>Mon - Sat: 10AM - 8PM</p>
+                <p>Sunday: 12PM - 6PM</p>
               </div>
             </div>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-5 relative inline-block">
+            <h3 className="text-white font-semibold text-lg mb-4">
               Stay Updated
-              <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-blue-500 rounded-full"></span>
             </h3>
-            <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-5 leading-relaxed">
-              Subscribe to get exclusive deals, new arrivals, and special offers
-              directly to your inbox.
+            <p className="text-gray-400 text-sm mb-4">
+              Get exclusive deals and new arrivals directly in your inbox.
             </p>
-            <form onSubmit={handleSubscribe} className="mb-5 sm:mb-6">
+            <form onSubmit={handleSubscribe} className="mb-6">
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email address"
-                  className="flex-grow px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-xs sm:text-sm transition"
+                  className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   required
                 />
                 <button
                   type="submit"
                   disabled={subscribing}
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-1 sm:gap-2"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {subscribing ? (
-                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                   ) : (
-                    <FiSend size={12} />
+                    <FiSend size={14} />
                   )}
                   Subscribe
                 </button>
               </div>
             </form>
-            <div className="border-t border-gray-800 pt-4 sm:pt-5">
-              <h4 className="font-medium text-white mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base">
-                <FiShield className="text-green-400" size={14} />
-                We Accept
-              </h4>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                <span className="px-2 py-1 sm:px-3 sm:py-1 bg-gray-800 rounded-lg">
-                  Cash
-                </span>
-                <span className="px-2 py-1 sm:px-3 sm:py-1 bg-gray-800 rounded-lg">
-                  Bank Transfer
-                </span>
-                <span className="px-2 py-1 sm:px-3 sm:py-1 bg-gray-800 rounded-lg">
-                  EasyPaisa
-                </span>
-                <span className="px-2 py-1 sm:px-3 sm:py-1 bg-gray-800 rounded-lg">
-                  JazzCash
-                </span>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div>
+                <p className="text-xl font-bold text-white">40+</p>
+                <p className="text-[10px] text-gray-500">Customers</p>
               </div>
-            </div>
-            <div className="mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-gray-800">
-              <div className="flex justify-between text-xs sm:text-sm">
-                <div className="text-center">
-                  <p className="text-base sm:text-xl font-bold text-white">
-                    40+
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-gray-500">
-                    Happy Customers
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-base sm:text-xl font-bold text-white">
-                    35+
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-gray-500">
-                    Laptops Sold
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-base sm:text-xl font-bold text-white">
-                    100%
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-gray-500">
-                    Satisfaction
-                  </p>
-                </div>
+              <div>
+                <p className="text-xl font-bold text-white">35+</p>
+                <p className="text-[10px] text-gray-500">Laptops Sold</p>
+              </div>
+              <div>
+                <p className="text-xl font-bold text-white">100%</p>
+                <p className="text-[10px] text-gray-500">Satisfaction</p>
               </div>
             </div>
           </div>
@@ -398,31 +266,24 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-800/50 py-4 sm:py-5">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
-            <div className="text-gray-500 text-[10px] sm:text-sm text-center md:text-left">
-              © {currentYear}{" "}
-              <span className="text-white font-medium">LapHub.pk</span>. All
-              rights reserved.
+      <div className="border-t border-gray-800">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-center">
+            <p className="text-gray-500 text-sm">
+              © {currentYear} LapHub.pk. All rights reserved.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+              <span className="flex items-center gap-1">
+                🔒 Secure Checkout
+              </span>
+              <span className="flex items-center gap-1">
+                🚚 Free Shipping Over Rs 50k
+              </span>
+              <span className="flex items-center gap-1">✅ 100% Genuine</span>
             </div>
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500">
-                <FiShield className="text-green-400" size={12} />
-                <span>Secure SSL</span>
-              </div>
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500">
-                <MdVerifiedUser className="text-blue-400" size={12} />
-                <span>Verified</span>
-              </div>
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500">
-                <FiCheckCircle className="text-green-400" size={12} />
-                <span>100% Genuine</span>
-              </div>
-            </div>
-            <div className="text-gray-500 text-[10px] sm:text-sm text-center">
+            <p className="text-gray-600 text-xs">
               Made with <span className="text-red-500">❤️</span> in Pakistan
-            </div>
+            </p>
           </div>
         </div>
       </div>
@@ -431,11 +292,11 @@ const Footer = () => {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-blue-600 hover:bg-blue-700 text-white p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
+          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
           aria-label="Back to top"
         >
           <svg
-            className="w-4 h-4 sm:w-5 sm:h-5"
+            className="w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
