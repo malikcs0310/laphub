@@ -88,22 +88,22 @@ const Home = () => {
 
   const features = [
     {
-      icon: <MdVerifiedUser className="text-blue-600" size={28} />,
+      icon: <MdVerifiedUser className="text-blue-600" size={24} />,
       title: "Genuine Products",
       description: "100% authentic imported laptops with quality assurance.",
     },
     {
-      icon: <FiTruck className="text-green-600" size={28} />,
+      icon: <FiTruck className="text-green-600" size={24} />,
       title: "Fast Delivery",
       description: "Safe and reliable shipping available across Pakistan.",
     },
     {
-      icon: <FiShield className="text-purple-600" size={28} />,
+      icon: <FiShield className="text-purple-600" size={24} />,
       title: "Secure Payments",
       description: "Protected checkout process with trusted payment methods.",
     },
     {
-      icon: <MdHeadsetMic className="text-orange-500" size={28} />,
+      icon: <MdHeadsetMic className="text-orange-500" size={24} />,
       title: "Support Available",
       description:
         "Friendly customer support for guidance and after-sales help.",
@@ -130,7 +130,6 @@ const Home = () => {
 
   const current = heroSlides[currentSlide];
 
-  // Generate schema markup for SEO
   const schemaMarkup = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -169,7 +168,6 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        {/* Basic Meta Tags */}
         <title>
           LapHub.pk - Best Imported Laptops in Pakistan | Dell, HP, Lenovo,
           Apple
@@ -187,10 +185,8 @@ const Home = () => {
         <meta name="googlebot" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        {/* Canonical URL */}
         <link rel="canonical" href="https://laphub.pk" />
 
-        {/* Open Graph / Facebook Meta Tags */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://laphub.pk" />
         <meta
@@ -208,7 +204,6 @@ const Home = () => {
         <meta property="og:site_name" content="LapHub.pk" />
         <meta property="og:locale" content="en_PK" />
 
-        {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://laphub.pk" />
         <meta
@@ -224,13 +219,11 @@ const Home = () => {
           content="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=1200&auto=format"
         />
 
-        {/* Additional SEO Tags */}
         <meta name="geo.region" content="PK" />
         <meta name="geo.placename" content="Lahore" />
         <meta name="geo.position" content="31.5204;74.3587" />
         <meta name="ICBM" content="31.5204, 74.3587" />
 
-        {/* Schema Markup */}
         <script type="application/ld+json">
           {JSON.stringify(schemaMarkup)}
         </script>
@@ -238,7 +231,6 @@ const Home = () => {
           {JSON.stringify(organizationMarkup)}
         </script>
 
-        {/* Preconnect for faster loading */}
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </Helmet>
@@ -250,7 +242,7 @@ const Home = () => {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className="relative min-h-[92vh] w-full">
+          <div className="relative min-h-[80vh] sm:min-h-[92vh] w-full">
             {/* Background */}
             <div className="absolute inset-0">
               <img
@@ -265,33 +257,33 @@ const Home = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-20 mx-auto flex min-h-[92vh] max-w-7xl items-center px-4 py-16 sm:px-6 lg:px-8">
-              <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2">
+            <div className="relative z-20 mx-auto flex min-h-[80vh] sm:min-h-[92vh] max-w-7xl items-center px-4 py-8 sm:px-6 lg:px-8">
+              <div className="grid w-full grid-cols-1 items-center gap-6 lg:grid-cols-2">
                 {/* Left Side */}
                 <div className="text-white">
-                  <span className="mb-5 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-md">
-                    <MdLocalOffer className="mr-2" />
-                    Limited Time Deals on Imported Laptops
+                  <span className="mb-3 sm:mb-5 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2 py-1 sm:px-4 sm:py-2 text-[10px] sm:text-sm font-medium backdrop-blur-md">
+                    <MdLocalOffer className="mr-1 sm:mr-2" size={12} />
+                    Limited Time Deals
                   </span>
 
-                  <h1 className="max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
                     {current.title}
                   </h1>
 
-                  <h2 className="mt-4 text-xl font-medium text-blue-200 sm:text-2xl lg:text-3xl">
+                  <h2 className="mt-2 sm:mt-4 text-base sm:text-xl lg:text-2xl font-medium text-blue-200">
                     {current.subtitle}
                   </h2>
 
-                  <p className="mt-6 max-w-2xl text-base leading-7 text-gray-200 sm:text-lg">
+                  <p className="mt-3 sm:mt-6 text-sm sm:text-base leading-6 sm:leading-7 text-gray-200">
                     {current.description}
                   </p>
 
                   {/* chips */}
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {current.brands.map((brand, index) => (
+                  <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
+                    {current.brands.slice(0, 3).map((brand, index) => (
                       <span
                         key={index}
-                        className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white/95 backdrop-blur-sm"
+                        className="rounded-full border border-white/20 bg-white/10 px-2 py-0.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/95 backdrop-blur-sm"
                       >
                         {brand}
                       </span>
@@ -299,41 +291,45 @@ const Home = () => {
                   </div>
 
                   {/* info cards */}
-                  <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-                      <p className="text-sm text-gray-300">Import Source</p>
-                      <h3 className="mt-1 text-lg font-semibold">
-                        {current.origin}
+                  <div className="mt-4 sm:mt-8 grid grid-cols-2 gap-2 sm:gap-4">
+                    <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/10 p-2 sm:p-4 backdrop-blur-md">
+                      <p className="text-[10px] sm:text-sm text-gray-300">
+                        Import Source
+                      </p>
+                      <h3 className="mt-0.5 sm:mt-1 text-xs sm:text-lg font-semibold">
+                        {current.origin.split(" ")[0]}
                       </h3>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-                      <p className="text-sm text-gray-300">Price Range</p>
-                      <h3 className="mt-1 text-lg font-semibold">
-                        {current.priceRange}
+                    <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/10 p-2 sm:p-4 backdrop-blur-md">
+                      <p className="text-[10px] sm:text-sm text-gray-300">
+                        Price
+                      </p>
+                      <h3 className="mt-0.5 sm:mt-1 text-xs sm:text-lg font-semibold">
+                        {current.priceRange.split(" - ")[0]}
                       </h3>
                     </div>
                   </div>
 
                   {/* buttons */}
-                  <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                  <div className="mt-4 sm:mt-8 flex flex-col gap-2 sm:gap-4">
                     <Link
                       to="/products"
-                      className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:bg-blue-700"
+                      className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2 sm:px-8 sm:py-3.5 text-xs sm:text-base font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:bg-blue-700"
                     >
                       {current.buttonText}
-                      <FiArrowRight className="ml-2" />
+                      <FiArrowRight className="ml-1 sm:ml-2 text-sm sm:text-base" />
                     </Link>
 
                     <Link
                       to="/contact"
-                      className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                      className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-4 py-2 sm:px-8 sm:py-3.5 text-xs sm:text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                     >
                       Contact Us
                     </Link>
                   </div>
                 </div>
 
-                {/* Right Side */}
+                {/* Right Side - Hidden on mobile */}
                 <div className="hidden lg:flex justify-end">
                   <div className="relative w-full max-w-xl">
                     <div className="absolute -inset-4 rounded-[2rem] bg-white/10 blur-2xl"></div>
@@ -341,7 +337,7 @@ const Home = () => {
                       <img
                         src={current.image}
                         alt={current.title}
-                        className="h-[520px] w-full object-cover"
+                        className="h-[420px] w-full object-cover"
                       />
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
                         <p className="text-sm text-gray-200">
@@ -364,30 +360,30 @@ const Home = () => {
             <button
               onClick={prevSlide}
               aria-label="Previous slide"
-              className="absolute left-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 text-white backdrop-blur-md transition hover:bg-white/20"
+              className="absolute left-2 sm:left-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-1.5 sm:p-3 text-white backdrop-blur-md transition hover:bg-white/20"
             >
-              <FiChevronLeft size={24} />
+              <FiChevronLeft size={18} className="sm:w-6 sm:h-6" />
             </button>
 
             <button
               onClick={nextSlide}
               aria-label="Next slide"
-              className="absolute right-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 text-white backdrop-blur-md transition hover:bg-white/20"
+              className="absolute right-2 sm:right-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-1.5 sm:p-3 text-white backdrop-blur-md transition hover:bg-white/20"
             >
-              <FiChevronRight size={24} />
+              <FiChevronRight size={18} className="sm:w-6 sm:h-6" />
             </button>
 
             {/* dots */}
-            <div className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 gap-2">
+            <div className="absolute bottom-4 sm:bottom-8 left-1/2 z-30 flex -translate-x-1/2 gap-1.5 sm:gap-2">
               {heroSlides.map((_, index) => (
                 <button
                   key={index}
                   aria-label={`Go to slide ${index + 1}`}
                   onClick={() => setCurrentSlide(index)}
-                  className={`h-3 rounded-full transition-all duration-300 ${
+                  className={`h-1.5 sm:h-3 rounded-full transition-all duration-300 ${
                     index === currentSlide
-                      ? "w-8 bg-blue-500"
-                      : "w-3 bg-white/50 hover:bg-white/80"
+                      ? "w-6 sm:w-8 bg-blue-500"
+                      : "w-1.5 sm:w-3 bg-white/50 hover:bg-white/80"
                   }`}
                 />
               ))}
@@ -396,35 +392,34 @@ const Home = () => {
         </section>
 
         {/* Why Choose Us */}
-        <section className="bg-white py-20">
+        <section className="bg-white py-10 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto mb-14 max-w-3xl text-center">
-              <span className="inline-block rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+            <div className="mx-auto mb-8 sm:mb-14 max-w-3xl text-center">
+              <span className="inline-block rounded-full bg-blue-50 px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-blue-700">
                 Why Choose Us
               </span>
-              <h2 className="mt-4 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              <h2 className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900">
                 Trusted Store for Imported Laptops
               </h2>
-              <p className="mt-4 text-base leading-7 text-gray-600 sm:text-lg">
+              <p className="mt-3 sm:mt-4 text-sm sm:text-base leading-6 sm:leading-7 text-gray-600">
                 We provide carefully selected laptops with professional support,
-                quality checking, and a smooth buying experience for students,
-                freelancers, and professionals.
+                quality checking, and a smooth buying experience.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {features.map((feature, idx) => (
                 <div
                   key={idx}
-                  className="group rounded-3xl border border-gray-100 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  className="group rounded-2xl sm:rounded-3xl border border-gray-100 bg-white p-4 sm:p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <div className="mb-6 inline-flex rounded-2xl bg-gray-50 p-4 transition group-hover:scale-105">
+                  <div className="mb-3 sm:mb-6 inline-flex rounded-xl sm:rounded-2xl bg-gray-50 p-2 sm:p-4 transition group-hover:scale-105">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-base sm:text-xl font-bold text-gray-900">
                     {feature.title}
                   </h3>
-                  <p className="mt-3 text-gray-600 leading-7">
+                  <p className="mt-2 sm:mt-3 text-xs sm:text-base text-gray-600 leading-6 sm:leading-7">
                     {feature.description}
                   </p>
                 </div>
@@ -434,42 +429,42 @@ const Home = () => {
         </section>
 
         {/* Trust Section */}
-        <section className="bg-gray-50 py-20">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-3 lg:px-8">
-            <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
-              <div className="mb-4 inline-flex rounded-2xl bg-blue-50 p-4">
-                <FiAward className="text-blue-600" size={28} />
+        <section className="bg-gray-50 py-10 sm:py-20">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 px-4 sm:px-6 lg:px-8">
+            <div className="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-8 shadow-sm border border-gray-100">
+              <div className="mb-3 sm:mb-4 inline-flex rounded-xl sm:rounded-2xl bg-blue-50 p-2 sm:p-4">
+                <FiAward className="text-blue-600" size={20} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-900">
                 Quality Checked
               </h3>
-              <p className="mt-3 text-gray-600 leading-7">
+              <p className="mt-2 sm:mt-3 text-xs sm:text-base text-gray-600 leading-6 sm:leading-7">
                 Every laptop is properly checked for performance, battery,
                 display, keyboard, and overall condition before listing.
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
-              <div className="mb-4 inline-flex rounded-2xl bg-green-50 p-4">
-                <FiRefreshCw className="text-green-600" size={28} />
+            <div className="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-8 shadow-sm border border-gray-100">
+              <div className="mb-3 sm:mb-4 inline-flex rounded-xl sm:rounded-2xl bg-green-50 p-2 sm:p-4">
+                <FiRefreshCw className="text-green-600" size={20} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
-                Easy Buying Experience
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-900">
+                Easy Buying
               </h3>
-              <p className="mt-3 text-gray-600 leading-7">
+              <p className="mt-2 sm:mt-3 text-xs sm:text-base text-gray-600 leading-6 sm:leading-7">
                 Browse products, compare prices, and choose the best laptop for
                 office, study, gaming, or professional work.
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm border border-gray-100">
-              <div className="mb-4 inline-flex rounded-2xl bg-purple-50 p-4">
-                <FiShield className="text-purple-600" size={28} />
+            <div className="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-8 shadow-sm border border-gray-100">
+              <div className="mb-3 sm:mb-4 inline-flex rounded-xl sm:rounded-2xl bg-purple-50 p-2 sm:p-4">
+                <FiShield className="text-purple-600" size={20} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-900">
                 Safe & Reliable
               </h3>
-              <p className="mt-3 text-gray-600 leading-7">
+              <p className="mt-2 sm:mt-3 text-xs sm:text-base text-gray-600 leading-6 sm:leading-7">
                 Our goal is to make laptop shopping more reliable, transparent,
                 and comfortable for every customer in Pakistan.
               </p>
@@ -477,7 +472,7 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Customer Testimonials - Using Testimonials Component */}
+        {/* Customer Testimonials */}
         <Testimonials />
 
         {/* Featured Products */}
