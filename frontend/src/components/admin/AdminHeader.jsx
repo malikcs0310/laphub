@@ -24,9 +24,8 @@ const AdminHeader = ({ setMobileSidebarOpen }) => {
   };
 
   return (
-    // Header - higher z-index than sidebar
     <header className="fixed top-0 right-0 left-0 lg:left-72 z-50 bg-white border-b shadow-sm">
-      <div className="flex items-center justify-between px-3 sm:px-4 py-3 lg:px-6">
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 lg:px-6">
         {/* Left - Mobile Menu Button */}
         <button
           onClick={() => setMobileSidebarOpen(true)}
@@ -54,7 +53,7 @@ const AdminHeader = ({ setMobileSidebarOpen }) => {
             placeholder="Search products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-1.5 sm:py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+            className="w-full pl-9 pr-4 py-1.5 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none text-sm"
           />
         </form>
 
@@ -81,7 +80,7 @@ const AdminHeader = ({ setMobileSidebarOpen }) => {
 
       {/* Mobile Search Bar */}
       {mobileSearchOpen && (
-        <form onSubmit={handleSearch} className="md:hidden px-3 sm:px-4 pb-3">
+        <form onSubmit={handleSearch} className="md:hidden px-3 sm:px-4 pb-2">
           <div className="relative">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
             <input
