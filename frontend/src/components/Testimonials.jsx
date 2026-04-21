@@ -398,7 +398,7 @@ const Testimonials = () => {
 
       {/* Testimonial Form - Mobile Optimized */}
       {showForm && (
-        <div className="max-w-2xl mx-auto mt-6 sm:mt-8 bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-8 mx-3 sm:mx-auto">
+        <div className="max-w-2xl mx-auto mt-6 sm:mt-8 bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-8">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
             Share Your Experience
           </h3>
