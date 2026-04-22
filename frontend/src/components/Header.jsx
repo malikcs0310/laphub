@@ -174,9 +174,10 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50">
-        {/* Top Bar - Contact Info (Always solid color) */}
-        <div className="hidden md:block bg-gray-900 text-gray-300 text-sm relative z-10">
+      {/* PURE HEADER - Fully Sticky */}
+      <div className="sticky top-0 z-50">
+        {/* Top Bar - Solid Color (Sticky bhi ho ga) */}
+        <div className="hidden md:block bg-gray-900 text-gray-300 text-sm">
           <div className="max-w-7xl mx-auto px-4 py-2">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-6">
@@ -418,7 +419,9 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 bg-white/95 backdrop-blur-md border-t ${isMenuOpen ? "max-h-96" : "max-h-0"}`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 bg-white/95 backdrop-blur-md border-t ${
+            isMenuOpen ? "max-h-96" : "max-h-0"
+          }`}
         >
           <div className="px-4 py-3 space-y-1">
             {navLinks.map((link) => (
@@ -452,11 +455,13 @@ const Header = () => {
             )}
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Cart Drawer */}
       <div
-        className={`fixed right-0 top-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed right-0 top-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ${
+          isCartOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-bold">Your Cart ({cartCount})</h2>
