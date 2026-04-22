@@ -6,14 +6,14 @@ html {
   font-size: 85%;
 }
 
-/* Mobile phones pe normal rakho */
+//Mobile phones pe normal rakho
 @media (max-width: 768px) {
   html {
     font-size: 100%;
   }
 }
 
-/* Laptop screens pe thoda adjust */
+//Laptop screens pe thoda adjust
 @media (min-width: 1280px) and (max-width: 1920px) {
   html {
     font-size: 80%;
