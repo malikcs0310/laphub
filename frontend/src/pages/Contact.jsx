@@ -180,7 +180,7 @@ const Contact = () => {
                         href="mailto:info@laphub.pk"
                         className="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
                       >
-                        info@laphub.pk
+                        malikcs0310@gmail.com
                       </a>
                       <p className="text-gray-500 text-[10px] sm:text-xs mt-0.5 sm:mt-1">
                         We respond within 2-4 hours

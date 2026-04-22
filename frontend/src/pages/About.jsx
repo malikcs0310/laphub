@@ -551,7 +551,7 @@ const About = () => {
                       href="mailto:info@laphub.pk"
                       className="text-blue-600 hover:text-blue-700 text-sm sm:text-lg font-medium"
                     >
-                      info@laphub.pk
+                      malikcs0310@gmail.com
                     </a>
                     <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
                       24/7 Response

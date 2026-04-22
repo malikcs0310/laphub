@@ -145,7 +145,7 @@ const Footer = () => {
                   href="mailto:info@laphub.pk"
                   className="hover:text-white transition"
                 >
-                  info@laphub.pk
+                  malikcs0310@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm">
