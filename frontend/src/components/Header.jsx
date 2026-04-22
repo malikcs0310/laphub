@@ -174,13 +174,9 @@ const Header = () => {
 
   return (
     <>
-      <header
-        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
-          isScrolled ? "shadow-md" : "shadow-sm"
-        }`}
-      >
-        {/* Top Bar - Contact Info */}
-        <div className="hidden md:block bg-gray-900 text-gray-300 text-sm">
+      <header className="sticky top-0 z-50">
+        {/* Top Bar - Contact Info (Always solid color) */}
+        <div className="hidden md:block bg-gray-900 text-gray-300 text-sm relative z-10">
           <div className="max-w-7xl mx-auto px-4 py-2">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-6">
@@ -214,214 +210,222 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Main Header */}
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-4">
-            {/* Logo */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
-              >
-                {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-              </button>
-              <Link
-                to="/"
-                className="flex items-center gap-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
-                  <MdLaptop className="text-white text-xl" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">
-                    LapHub<span className="text-blue-600">.pk</span>
-                  </h1>
-                  <p className="text-[10px] text-gray-500 hidden sm:block">
-                    Trusted Laptops Store
-                  </p>
-                </div>
-              </Link>
-            </div>
+        {/* Main Header - Transparent with Blur */}
+        <div
+          className={`transition-all duration-300 ${
+            isScrolled
+              ? "bg-white/95 backdrop-blur-md shadow-md"
+              : "bg-white/80 backdrop-blur-sm"
+          }`}
+        >
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            <div className="flex items-center justify-between gap-4">
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                </button>
+                <Link
+                  to="/"
+                  className="flex items-center gap-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
+                    <MdLaptop className="text-white text-xl" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold text-gray-900">
+                      LapHub<span className="text-blue-600">.pk</span>
+                    </h1>
+                    <p className="text-[10px] text-gray-500 hidden sm:block">
+                      Trusted Laptops Store
+                    </p>
+                  </div>
+                </Link>
+              </div>
 
-            {/* Desktop Search */}
-            <div className="hidden lg:flex flex-1 max-w-lg relative">
-              <FiSearch
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={18}
-              />
-              <input
-                type="text"
-                placeholder="Search laptops, brands, specs..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              />
-              <button
-                onClick={handleSearch}
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm transition"
-              >
-                Search
-              </button>
-            </div>
-
-            {/* Right Icons */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              {/* Mobile Search Toggle */}
-              <button
-                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
-              >
-                <FiSearch size={18} />
-              </button>
-
-              {/* Wishlist */}
-              <Link
-                to="/user/wishlist"
-                className="p-2 rounded-lg hover:bg-gray-100 transition"
-              >
-                <FiHeart size={18} />
-              </Link>
-
-              {/* Cart */}
-              <button
-                onClick={openCartDrawer}
-                className="relative p-2 rounded-lg hover:bg-gray-100 transition"
-              >
-                <FiShoppingCart size={18} />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Profile / Login */}
-              {isLoggedIn ? (
-                <div className="relative">
-                  <button
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex items-center gap-1 p-1 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-sm">
-                      {getUserInitials()}
-                    </div>
-                  </button>
-
-                  {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
-                      <div className="px-4 py-3 border-b bg-gray-50">
-                        <p className="font-semibold text-gray-900">
-                          {user?.name}
-                        </p>
-                        <p className="text-xs text-gray-500">{user?.email}</p>
-                      </div>
-                      <div className="py-2">
-                        <Link
-                          to="/user/dashboard"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <FiGrid size={16} /> Dashboard
-                        </Link>
-                        <Link
-                          to="/user/orders"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <FiPackage size={16} /> My Orders
-                        </Link>
-                        <Link
-                          to="/user/wishlist"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <FiHeart size={16} /> Wishlist
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                        >
-                          <FiLogOut size={16} /> Logout
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="hidden sm:flex items-center gap-2">
-                  <Link
-                    to="/login"
-                    className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="px-4 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
-                  >
-                    Signup
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile Search Bar */}
-          {mobileSearchOpen && (
-            <div className="lg:hidden mt-3">
-              <div className="relative">
+              {/* Desktop Search */}
+              <div className="hidden lg:flex flex-1 max-w-lg relative">
                 <FiSearch
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  size={16}
+                  size={18}
                 />
                 <input
                   type="text"
-                  placeholder="Search laptops..."
+                  placeholder="Search laptops, brands, specs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/90 backdrop-blur-sm"
                 />
                 <button
                   onClick={handleSearch}
-                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm transition"
                 >
-                  Go
+                  Search
                 </button>
               </div>
-            </div>
-          )}
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1 border-t mt-3 pt-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition ${
-                  isActive(link.path)
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+              {/* Right Icons */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                {/* Mobile Search Toggle */}
+                <button
+                  onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <FiSearch size={18} />
+                </button>
+
+                {/* Wishlist */}
+                <Link
+                  to="/user/wishlist"
+                  className="p-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <FiHeart size={18} />
+                </Link>
+
+                {/* Cart */}
+                <button
+                  onClick={openCartDrawer}
+                  className="relative p-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <FiShoppingCart size={18} />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Profile / Login */}
+                {isLoggedIn ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsProfileOpen(!isProfileOpen)}
+                      className="flex items-center gap-1 p-1 rounded-lg hover:bg-gray-100 transition"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-sm">
+                        {getUserInitials()}
+                      </div>
+                    </button>
+
+                    {isProfileOpen && (
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
+                        <div className="px-4 py-3 border-b bg-gray-50">
+                          <p className="font-semibold text-gray-900">
+                            {user?.name}
+                          </p>
+                          <p className="text-xs text-gray-500">{user?.email}</p>
+                        </div>
+                        <div className="py-2">
+                          <Link
+                            to="/user/dashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            <FiGrid size={16} /> Dashboard
+                          </Link>
+                          <Link
+                            to="/user/orders"
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            <FiPackage size={16} /> My Orders
+                          </Link>
+                          <Link
+                            to="/user/wishlist"
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            <FiHeart size={16} /> Wishlist
+                          </Link>
+                          <button
+                            onClick={handleLogout}
+                            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                          >
+                            <FiLogOut size={16} /> Logout
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="hidden sm:flex items-center gap-2">
+                    <Link
+                      to="/login"
+                      className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="px-4 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                    >
+                      Signup
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Search Bar */}
+            {mobileSearchOpen && (
+              <div className="lg:hidden mt-3">
+                <div className="relative">
+                  <FiSearch
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={16}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search laptops..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/90 backdrop-blur-sm"
+                  />
+                  <button
+                    onClick={handleSearch}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                  >
+                    Go
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-1 border-t border-gray-200/50 mt-3 pt-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition ${
+                    isActive(link.path)
+                      ? "text-blue-600 bg-blue-50/80 backdrop-blur-sm"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-gray-100/80"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 border-t bg-white ${isMenuOpen ? "max-h-96" : "max-h-0"}`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 bg-white/95 backdrop-blur-md border-t ${isMenuOpen ? "max-h-96" : "max-h-0"}`}
         >
           <div className="px-4 py-3 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className="flex items-center justify-between py-3 px-2 text-gray-700 hover:bg-gray-50 rounded-lg"
+                className="flex items-center justify-between py-3 px-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <span>{link.name}</span>
@@ -432,7 +436,7 @@ const Header = () => {
               <div className="pt-2 border-t mt-2">
                 <Link
                   to="/login"
-                  className="block py-3 px-2 text-gray-700 hover:bg-gray-50 rounded-lg"
+                  className="block py-3 px-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
