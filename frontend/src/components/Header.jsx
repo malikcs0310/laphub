@@ -342,7 +342,7 @@ const Header = () => {
           )}
 
           {/* Navigation Links */}
-          <div className="hidden lg:flex items-center gap-1 mt-3 pt-3 border-t">
+          <div className="hidden lg:flex items-center justify-center gap-1 mt-3 pt-3 border-t">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
