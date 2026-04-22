@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "Shop", path: "/products" },
+  { name: "Products", path: "/products" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
 ];
@@ -48,7 +48,7 @@ const Header = () => {
     const updatedCart = removeFromCart(id);
     setCartItems(updatedCart);
     window.dispatchEvent(new Event("cartUpdated"));
-    toast.success("Item removed");
+    toast.success("Item removed from cart");
   }, []);
 
   const totalPrice = useMemo(() => {
@@ -61,7 +61,7 @@ const Header = () => {
   const cartCount = useMemo(() => cartItems.length, [cartItems]);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    const handleScroll = () => setIsScrolled(window.scrollY > 8);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -149,7 +149,7 @@ const Header = () => {
     setIsLoggedIn(false);
     setUser(null);
     setIsProfileOpen(false);
-    toast.success("Logged out");
+    toast.success("Logged out successfully");
     navigate("/");
   }, [navigate]);
 
@@ -171,58 +171,60 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
-          isScrolled ? "shadow-md shadow-gray-100" : "border-b border-gray-100"
-        }`}
+        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${isScrolled ? "shadow-md" : "shadow-sm"} border-b`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+        {/* Main Header - Single Row */}
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4">
+            {/* Logo + Mobile Menu */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
               >
-                {isMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+                {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
               </button>
               <Link
                 to="/"
                 className="flex items-center gap-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <div className="bg-blue-600 p-1.5 rounded-lg">
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
                   <MdLaptop className="text-white text-xl" />
                 </div>
-                <span className="text-xl font-bold text-gray-800">
-                  LapHub<span className="text-blue-600">.pk</span>
-                </span>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">
+                    LapHub<span className="text-blue-600">.pk</span>
+                  </h1>
+                  <p className="text-[10px] text-gray-500 hidden sm:block">
+                    Trusted Laptops Store
+                  </p>
+                </div>
               </Link>
             </div>
 
-            {/* Desktop Search - Centered */}
-            <div className="hidden lg:flex flex-1 max-w-md mx-8">
-              <div className="relative w-full">
-                <FiSearch
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  size={18}
-                />
-                <input
-                  type="text"
-                  placeholder="Search for laptops..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm"
-                />
-              </div>
+            {/* Desktop Search */}
+            <div className="hidden lg:flex flex-1 max-w-md relative">
+              <FiSearch
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="Search laptops..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              />
             </div>
 
             {/* Right Icons */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 sm:gap-2">
               {/* Mobile Search */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="lg:hidden p-2 rounded-full hover:bg-gray-100 transition"
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
               >
                 <FiSearch size={18} />
               </button>
@@ -230,7 +232,7 @@ const Header = () => {
               {/* Wishlist */}
               <Link
                 to="/user/wishlist"
-                className="p-2 rounded-full hover:bg-gray-100 transition"
+                className="p-2 rounded-lg hover:bg-gray-100 transition"
               >
                 <FiHeart size={18} />
               </Link>
@@ -238,22 +240,22 @@ const Header = () => {
               {/* Cart */}
               <button
                 onClick={openCartDrawer}
-                className="relative p-2 rounded-full hover:bg-gray-100 transition"
+                className="relative p-2 rounded-lg hover:bg-gray-100 transition"
               >
                 <FiShoppingCart size={18} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
               </button>
 
-              {/* Profile */}
+              {/* Profile / Login */}
               {isLoggedIn ? (
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="p-1 rounded-full hover:bg-gray-100 transition"
+                    className="flex items-center gap-1 p-1 rounded-lg hover:bg-gray-100 transition"
                   >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-sm">
                       {getUserInitials()}
@@ -262,13 +264,13 @@ const Header = () => {
 
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
-                      <div className="px-4 py-3 border-b">
+                      <div className="px-4 py-3 border-b bg-gray-50">
                         <p className="font-semibold text-gray-900">
                           {user?.name}
                         </p>
                         <p className="text-xs text-gray-500">{user?.email}</p>
                       </div>
-                      <div className="py-1">
+                      <div className="py-2">
                         <Link
                           to="/user/dashboard"
                           className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -281,7 +283,14 @@ const Header = () => {
                           className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                           onClick={() => setIsProfileOpen(false)}
                         >
-                          <FiPackage size={16} /> Orders
+                          <FiPackage size={16} /> My Orders
+                        </Link>
+                        <Link
+                          to="/user/wishlist"
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <FiHeart size={16} /> Wishlist
                         </Link>
                         <button
                           onClick={handleLogout}
@@ -294,20 +303,27 @@ const Header = () => {
                   )}
                 </div>
               ) : (
-                <Link
-                  to="/login"
-                  className="hidden sm:flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition"
-                >
-                  <FiUser size={16} />
-                  <span>Account</span>
-                </Link>
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link
+                    to="/login"
+                    className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="px-4 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                  >
+                    Signup
+                  </Link>
+                </div>
               )}
             </div>
           </div>
 
           {/* Mobile Search Bar */}
           {mobileSearchOpen && (
-            <div className="lg:hidden py-3">
+            <div className="lg:hidden mt-3">
               <div className="relative">
                 <FiSearch
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -319,22 +335,22 @@ const Header = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm"
+                  className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
             </div>
           )}
 
-          {/* Navigation Bar */}
-          <div className="hidden lg:flex items-center justify-center gap-1 border-t pt-2 mt-0">
+          {/* Navigation Links */}
+          <div className="hidden lg:flex items-center gap-1 mt-3 pt-3 border-t">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`px-4 py-2 text-sm font-medium transition ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition ${
                   isActive(link.path)
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600"
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                 }`}
               >
                 {link.name}
@@ -345,17 +361,18 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 bg-white border-t ${isMenuOpen ? "max-h-96" : "max-h-0"}`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 border-t bg-white ${isMenuOpen ? "max-h-96" : "max-h-0"}`}
         >
           <div className="px-4 py-3 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className="block py-3 px-2 text-gray-700 hover:bg-gray-50 rounded-lg"
+                className="flex items-center justify-between py-3 px-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {link.name}
+                <span>{link.name}</span>
+                <FiChevronRight size={16} />
               </Link>
             ))}
             {!isLoggedIn && (
@@ -385,10 +402,10 @@ const Header = () => {
         className={`fixed right-0 top-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Your Cart ({cartCount})</h2>
+          <h2 className="text-lg font-bold">Your Cart ({cartCount})</h2>
           <button
             onClick={() => setIsCartOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="p-2 rounded-lg hover:bg-gray-100"
           >
             <FiX size={20} />
           </button>
