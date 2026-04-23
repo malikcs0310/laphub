@@ -85,13 +85,17 @@ const Header = () => {
     }
   }, [location.pathname]);
 
+  // Fixed: Better click outside handling
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isProfileOpen && !event.target.closest(".profile-dropdown")) {
         setIsProfileOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+    // Add delay to avoid immediate closing
+    setTimeout(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+    }, 0);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isProfileOpen]);
 
@@ -152,6 +156,15 @@ const Header = () => {
     toast.success("Logged out successfully");
     navigate("/");
   }, [navigate]);
+
+  // Fixed navigation handlers
+  const handleNavigation = useCallback(
+    (path) => {
+      setIsProfileOpen(false);
+      navigate(path);
+    },
+    [navigate],
+  );
 
   const getImageUrl = useCallback(
     (imagePath) => {
@@ -252,7 +265,7 @@ const Header = () => {
 
               {/* Profile / Login */}
               {isLoggedIn ? (
-                <div className="relative">
+                <div className="relative profile-dropdown">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-1 p-1 rounded-lg hover:bg-gray-100 transition"
@@ -271,27 +284,25 @@ const Header = () => {
                         <p className="text-xs text-gray-500">{user?.email}</p>
                       </div>
                       <div className="py-2">
-                        <Link
-                          to="/user/dashboard"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsProfileOpen(false)}
+                        {/* FIXED: Using onClick handlers instead of Link directly */}
+                        <button
+                          onClick={() => handleNavigation("/user/dashboard")}
+                          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
                           <FiGrid size={16} /> Dashboard
-                        </Link>
-                        <Link
-                          to="/user/orders"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsProfileOpen(false)}
+                        </button>
+                        <button
+                          onClick={() => handleNavigation("/user/orders")}
+                          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
                           <FiPackage size={16} /> My Orders
-                        </Link>
-                        <Link
-                          to="/user/wishlist"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                          onClick={() => setIsProfileOpen(false)}
+                        </button>
+                        <button
+                          onClick={() => handleNavigation("/user/wishlist")}
+                          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
                           <FiHeart size={16} /> Wishlist
-                        </Link>
+                        </button>
                         <button
                           onClick={handleLogout}
                           className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
