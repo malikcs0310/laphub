@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiFilter, FiX } from "react-icons/fi";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/admin/ProductCard";
 import ProductFilters from "../components/ProductFilters";
 import toast from "react-hot-toast";
 
