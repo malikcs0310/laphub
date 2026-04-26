@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaBolt } from "react-icons/fa";
+import { FaBolt, FaWhatsapp } from "react-icons/fa";
+import OrderOnWhatsApp from "../components/OrderOnWhatsApp";
+import ImageZoom from "react-image-zooom"; // For zoom feature
+
 import {
   FiStar,
   FiShoppingCart,
@@ -9,10 +12,79 @@ import {
   FiAlertCircle,
   FiThumbsUp,
   FiThumbsDown,
+  FiZoomIn,
+  FiCpu,
+  FiHardDrive,
+  FiMemory,
+  FiMonitor,
 } from "react-icons/fi";
 import { addToCart } from "../../../utils/cartUtils";
 import toast from "react-hot-toast";
 import ProductReviews from "../../../components/ProductReviews";
+
+// NEW: Product Specs Table Component
+const ProductSpecsTable = ({ laptop }) => {
+  const specs = [
+    { label: "Brand", value: laptop.brand, icon: <FiMonitor /> },
+    { label: "Model", value: laptop.model, icon: <FiMonitor /> },
+    { label: "Processor", value: laptop.processor, icon: <FiCpu /> },
+    {
+      label: "Processor Generation",
+      value: laptop.generation || "Not Specified",
+      icon: <FiCpu />,
+    },
+    { label: "RAM", value: laptop.ram, icon: <FiMemory /> },
+    { label: "Storage", value: laptop.storage, icon: <FiHardDrive /> },
+    { label: "Screen Size", value: laptop.screenSize, icon: <FiMonitor /> },
+    {
+      label: "Display Type",
+      value: laptop.displayType || "Standard",
+      icon: <FiMonitor />,
+    },
+    {
+      label: "Graphics",
+      value: laptop.graphics || "Integrated",
+      icon: <FiMonitor />,
+    },
+    {
+      label: "Battery Health",
+      value: laptop.batteryHealth || "80-90%",
+      icon: <FiMonitor />,
+    },
+    { label: "Condition", value: laptop.condition, icon: <FiCheckCircle /> },
+    {
+      label: "Warranty",
+      value: laptop.warranty || "7 Days Check Warranty",
+      icon: <FiCheckCircle />,
+    },
+    { label: "Location", value: laptop.location, icon: <FiMonitor /> },
+  ];
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <tbody>
+          {specs.map((spec, index) => (
+            <tr
+              key={index}
+              className={`border-b ${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+            >
+              <td className="px-4 py-3 font-semibold text-gray-700 w-1/3">
+                <div className="flex items-center gap-2">
+                  {spec.icon}
+                  {spec.label}
+                </div>
+              </td>
+              <td className="px-4 py-3 text-gray-600">
+                {spec.value || "Not Specified"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -21,6 +93,8 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [zoomImage, setZoomImage] = useState("");
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -93,12 +167,18 @@ const ProductDetail = () => {
 
   const handleWhatsAppOrder = () => {
     const phoneNumber = "923104082056";
-    const message = `🖥️ *Laptop Inquiry - LapHub.pk* 🖥️\n\n*Product:* ${laptop.title}\n*Price:* Rs ${laptop.price}\n*Brand:* ${laptop.brand}\n*Model:* ${laptop.model}\n*Processor:* ${laptop.processor}\n*RAM:* ${laptop.ram}\n*Storage:* ${laptop.storage}\n*Condition:* ${laptop.condition}\n*Location:* ${laptop.location}\n\n*Product Link:* ${window.location.href}\n\nI'm interested in this laptop. Please share more details.`;
+    const message = `🖥️ *Laptop Inquiry - LapHub.pk* 🖥️\n\n*Product:* ${laptop.title}\n*Price:* Rs ${laptop.price?.toLocaleString()}\n*Brand:* ${laptop.brand}\n*Model:* ${laptop.model}\n*Processor:* ${laptop.processor}\n*RAM:* ${laptop.ram}\n*Storage:* ${laptop.storage}\n*Condition:* ${laptop.condition}\n*Location:* ${laptop.location}\n\n*Product Link:* ${window.location.href}\n\nI'm interested in this laptop. Please share more details.`;
     window.open(
       `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
       "_blank",
     );
     toast.success("Opening WhatsApp...", { icon: "💬", duration: 2000 });
+  };
+
+  // Open zoom modal
+  const openZoom = (imageUrl) => {
+    setZoomImage(imageUrl);
+    setIsZoomOpen(true);
   };
 
   if (!laptop) {
@@ -135,17 +215,25 @@ const ProductDetail = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         {/* Product Main Info */}
         <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 lg:p-10 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
-          {/* Left Side - Images */}
+          {/* Left Side - Images with Zoom */}
           <div>
-            <div className="bg-[#f7f7f7] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden flex items-center justify-center h-[280px] sm:h-[360px] md:h-[420px] lg:h-[520px]">
+            {/* Main Image with Zoom Button */}
+            <div className="relative bg-[#f7f7f7] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden flex items-center justify-center h-[280px] sm:h-[360px] md:h-[420px] lg:h-[520px] group">
               <img
                 src={
                   selectedImage ||
                   "https://via.placeholder.com/500x400?text=No+Image"
                 }
                 alt={laptop.title}
-                className="max-h-full max-w-full object-contain"
+                className="max-h-full max-w-full object-contain cursor-zoom-in"
+                onClick={() => openZoom(selectedImage)}
               />
+              <button
+                onClick={() => openZoom(selectedImage)}
+                className="absolute bottom-4 right-4 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition"
+              >
+                <FiZoomIn className="text-gray-700 text-xl" />
+              </button>
             </div>
 
             {/* Thumbnail Images */}
@@ -272,7 +360,6 @@ const ProductDetail = () => {
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
               >
                 <FiMessageCircle className="text-sm sm:text-base md:text-lg" />
-                {/* <span className="hidden xs:inline">WhatsApp</span> */}
                 WhatsApp
               </button>
             </div>
@@ -310,7 +397,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Tabs for Description and Reviews */}
+        {/* Tabs for Description, Specs and Reviews */}
         <div className="mt-6 sm:mt-8">
           <div className="border-b border-gray-200">
             <nav className="flex gap-4 sm:gap-6 md:gap-8">
@@ -323,6 +410,17 @@ const ProductDetail = () => {
                 }`}
               >
                 Description
+              </button>
+              {/* NEW: Specifications Tab */}
+              <button
+                onClick={() => setActiveTab("specifications")}
+                className={`pb-3 sm:pb-4 text-sm sm:text-base md:text-lg font-semibold transition ${
+                  activeTab === "specifications"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Specifications
               </button>
               <button
                 onClick={() => setActiveTab("reviews")}
@@ -358,6 +456,31 @@ const ProductDetail = () => {
             </div>
           )}
 
+          {/* NEW: Specifications Tab with Full Specs Table */}
+          {activeTab === "specifications" && (
+            <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 mt-4 sm:mt-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
+                Complete Specifications
+              </h3>
+              <ProductSpecsTable laptop={laptop} />
+
+              {/* Delivery Info */}
+              <div className="mt-8 p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-semibold text-blue-800 mb-2">
+                  📦 Delivery Information
+                </h4>
+                <p className="text-sm text-blue-700">
+                  🚚 Nationwide delivery available
+                  <br />
+                  ⏱️ Delivery time: 2-4 business days
+                  <br />
+                  🔒 Secure packaging with bubble wrap
+                  <br />✅ Cash on Delivery available
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Reviews Tab */}
           {activeTab === "reviews" && (
             <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 mt-4 sm:mt-6">
@@ -366,6 +489,28 @@ const ProductDetail = () => {
           )}
         </div>
       </div>
+
+      {/* Zoom Modal */}
+      {isZoomOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+          onClick={() => setIsZoomOpen(false)}
+        >
+          <div className="relative max-w-5xl w-full">
+            <button
+              onClick={() => setIsZoomOpen(false)}
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 text-2xl"
+            >
+              ✕ Close
+            </button>
+            <img
+              src={zoomImage}
+              alt="Zoomed view"
+              className="w-full h-auto max-h-[90vh] object-contain"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
