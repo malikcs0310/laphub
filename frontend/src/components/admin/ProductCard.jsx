@@ -15,7 +15,7 @@ import {
 import { FaBolt } from "react-icons/fa";
 import { addToCart } from "../../utils/cartUtils";
 import toast from "react-hot-toast";
-import ProductFilters from "./ProductFilters";
+import ProductFilters from "../ProductFilters";
 
 const ProductCard = () => {
   const [products, setProducts] = useState([]);
