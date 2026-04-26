@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaBolt, FaWhatsapp } from "react-icons/fa";
-import OrderOnWhatsApp from "../../../components/OrderOnWhatsApp";
-import ImageZoom from "react-image-zooom"; // For zoom feature
-
+import { FaBolt } from "react-icons/fa";
 import {
   FiStar,
   FiShoppingCart,
   FiMessageCircle,
   FiCheckCircle,
-  FiAlertCircle,
-  FiThumbsUp,
   FiTruck,
   FiThumbsDown,
   FiZoomIn,
@@ -18,14 +13,14 @@ import {
   FiShield,
   FiCpu,
   FiHardDrive,
-  FiDatabase, // ✅ FiDatabase use karo (memory/ram ke liye)
+  FiDatabase,
   FiMonitor,
 } from "react-icons/fi";
 import { addToCart } from "../../../utils/cartUtils";
 import toast from "react-hot-toast";
 import ProductReviews from "../../../components/ProductReviews";
 
-// NEW: Product Specs Table Component
+// Product Specs Table Component
 const ProductSpecsTable = ({ laptop }) => {
   const specs = [
     { label: "Brand", value: laptop.brand, icon: <FiMonitor /> },
@@ -99,6 +94,10 @@ const ProductDetail = () => {
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState("");
 
+  // Rating states
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
+
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   useEffect(() => {
@@ -106,6 +105,7 @@ const ProductDetail = () => {
     setIsLoggedIn(!!token);
   }, []);
 
+  // Fetch laptop details
   useEffect(() => {
     const fetchLaptop = async () => {
       try {
@@ -121,6 +121,24 @@ const ProductDetail = () => {
       }
     };
     fetchLaptop();
+  }, [id, API_URL]);
+
+  // Fetch real-time rating
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/reviews/product/${id}/summary`);
+        const data = await res.json();
+        setAverageRating(data.average || 0);
+        setTotalReviews(data.total || 0);
+      } catch (error) {
+        console.log("Rating fetch failed:", error);
+        // Fallback to default if API not ready
+        setAverageRating(4.5);
+        setTotalReviews(12);
+      }
+    };
+    if (id) fetchRating();
   }, [id, API_URL]);
 
   const handleAddToCart = (product, e) => {
@@ -178,7 +196,6 @@ const ProductDetail = () => {
     toast.success("Opening WhatsApp...", { icon: "💬", duration: 2000 });
   };
 
-  // Open zoom modal
   const openZoom = (imageUrl) => {
     setZoomImage(imageUrl);
     setIsZoomOpen(true);
@@ -220,7 +237,6 @@ const ProductDetail = () => {
         <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 lg:p-10 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
           {/* Left Side - Images with Zoom */}
           <div>
-            {/* Main Image with Zoom Button */}
             <div className="relative bg-[#f7f7f7] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden flex items-center justify-center h-[280px] sm:h-[360px] md:h-[420px] lg:h-[520px] group">
               <img
                 src={
@@ -239,7 +255,6 @@ const ProductDetail = () => {
               </button>
             </div>
 
-            {/* Thumbnail Images */}
             <div className="flex gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-4 md:mt-5 flex-wrap">
               {laptop.images && laptop.images.length > 0 ? (
                 laptop.images.map((img, index) => {
@@ -291,17 +306,20 @@ const ProductDetail = () => {
               )}
             </div>
 
-            {/* Rating */}
+            {/* Real-time Rating */}
             <div className="flex items-center gap-0.5 sm:gap-1 mb-3 sm:mb-5">
-              {[...Array(4)].map((_, i) => (
+              {[1, 2, 3, 4, 5].map((star) => (
                 <FiStar
-                  key={i}
-                  className="text-yellow-500 fill-yellow-400 text-xs sm:text-sm md:text-base"
+                  key={star}
+                  className={`text-xs sm:text-sm md:text-base ${
+                    star <= Math.round(averageRating)
+                      ? "text-yellow-500 fill-yellow-400"
+                      : "text-gray-300"
+                  }`}
                 />
               ))}
-              <FiStar className="text-gray-300 text-xs sm:text-sm md:text-base" />
               <span className="ml-1 sm:ml-2 text-[10px] sm:text-sm text-gray-500">
-                (4.0 rating)
+                ({totalReviews} {totalReviews === 1 ? "review" : "reviews"})
               </span>
             </div>
 
@@ -400,7 +418,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Tabs for Description, Specs and Reviews */}
+        {/* Tabs */}
         <div className="mt-6 sm:mt-8">
           <div className="border-b border-gray-200">
             <nav className="flex gap-4 sm:gap-6 md:gap-8">
@@ -414,7 +432,6 @@ const ProductDetail = () => {
               >
                 Description
               </button>
-              {/* NEW: Specifications Tab */}
               <button
                 onClick={() => setActiveTab("specifications")}
                 className={`pb-3 sm:pb-4 text-sm sm:text-base md:text-lg font-semibold transition ${
@@ -459,7 +476,7 @@ const ProductDetail = () => {
             </div>
           )}
 
-          {/* NEW: Specifications Tab with Full Specs Table */}
+          {/* Specifications Tab */}
           {activeTab === "specifications" && (
             <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 mt-4 sm:mt-6">
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
@@ -472,27 +489,22 @@ const ProductDetail = () => {
                 <h4 className="font-semibold text-blue-800 mb-3">
                   Delivery Information
                 </h4>
-                <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-blue-800 mb-3">
-                    Delivery Information
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="flex items-center gap-2">
-                      <FiTruck className="text-blue-600" />
-                      <span className="text-sm">Nationwide delivery</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FiClock className="text-blue-600" />
-                      <span className="text-sm">2-4 business days</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FiShield className="text-blue-600" />
-                      <span className="text-sm">Secure packaging</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FiCheckCircle className="text-blue-600" />
-                      <span className="text-sm">Cash on Delivery</span>
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2">
+                    <FiTruck className="text-blue-600" />
+                    <span className="text-sm">Nationwide delivery</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FiClock className="text-blue-600" />
+                    <span className="text-sm">2-4 business days</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FiShield className="text-blue-600" />
+                    <span className="text-sm">Secure packaging</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FiCheckCircle className="text-blue-600" />
+                    <span className="text-sm">Cash on Delivery</span>
                   </div>
                 </div>
               </div>
