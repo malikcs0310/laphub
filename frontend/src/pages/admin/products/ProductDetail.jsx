@@ -5,6 +5,7 @@ import OrderOnWhatsApp from "../../../components/OrderOnWhatsApp";
 import ImageZoom from "react-image-zooom"; // For zoom feature
 
 import {
+  FiMemory,
   FiStar,
   FiShoppingCart,
   FiMessageCircle,
