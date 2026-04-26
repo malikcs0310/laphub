@@ -289,10 +289,11 @@ const Footer = () => {
       </div>
 
       {/* Back to Top Button */}
+      {/* Back to Top Button - Ab WhatsApp ke upar hoga */}
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
+          className="fixed bottom-24 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
           aria-label="Back to top"
         >
           <svg
