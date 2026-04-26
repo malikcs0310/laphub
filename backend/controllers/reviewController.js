@@ -227,3 +227,32 @@ export const deleteReview = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// @desc    Get product rating summary only
+// @route   GET /api/reviews/product/:productId/summary
+// @access  Public
+export const getProductRatingSummary = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const objectId = new mongoose.Types.ObjectId(productId);
+
+    const result = await ProductReview.aggregate([
+      { $match: { productId: objectId, status: "approved" } },
+      {
+        $group: {
+          _id: null,
+          average: { $avg: "$rating" },
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.json({
+      success: true,
+      average: Number(result[0]?.average?.toFixed(1)) || 0,
+      total: result[0]?.total || 0,
+    });
+  } catch (error) {
+    console.error("Rating summary error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

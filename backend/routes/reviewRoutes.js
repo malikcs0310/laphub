@@ -2,6 +2,7 @@ import express from "express";
 import {
   addReview,
   getProductReviews,
+  getProductRatingSummary, // ✅ Add this import
   markHelpful,
   getAllReviews,
   updateReviewStatus,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 // Public routes
 router.get("/product/:productId", getProductReviews);
+router.get("/product/:productId/summary", getProductRatingSummary); // ✅ Add this route
 
 // Protected routes
 router.post("/", protect, addReview);
