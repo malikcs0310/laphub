@@ -11,8 +11,11 @@ import {
   FiCheckCircle,
   FiAlertCircle,
   FiThumbsUp,
+  FiTruck,
   FiThumbsDown,
   FiZoomIn,
+  FiClock,
+  FiShield,
   FiCpu,
   FiHardDrive,
   FiDatabase, // ✅ FiDatabase use karo (memory/ram ke liye)
@@ -466,17 +469,32 @@ const ProductDetail = () => {
 
               {/* Delivery Info */}
               <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">
-                  📦 Delivery Information
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Delivery Information
                 </h4>
-                <p className="text-sm text-blue-700">
-                  🚚 Nationwide delivery available
-                  <br />
-                  ⏱️ Delivery time: 2-4 business days
-                  <br />
-                  🔒 Secure packaging with bubble wrap
-                  <br />✅ Cash on Delivery available
-                </p>
+                <div className="mt-8 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-semibold text-blue-800 mb-3">
+                    Delivery Information
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex items-center gap-2">
+                      <FiTruck className="text-blue-600" />
+                      <span className="text-sm">Nationwide delivery</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FiClock className="text-blue-600" />
+                      <span className="text-sm">2-4 business days</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FiShield className="text-blue-600" />
+                      <span className="text-sm">Secure packaging</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FiCheckCircle className="text-blue-600" />
+                      <span className="text-sm">Cash on Delivery</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
