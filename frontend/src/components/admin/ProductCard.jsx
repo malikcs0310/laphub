@@ -8,11 +8,14 @@ import {
   FiHeart,
   FiFilter,
   FiX,
+  FiCpu,
+  FiHardDrive,
+  FiDatabase,
 } from "react-icons/fi";
 import { FaBolt } from "react-icons/fa";
 import { addToCart } from "../../utils/cartUtils";
 import toast from "react-hot-toast";
-import ProductFilters from "../ProductFilters";
+import ProductFilters from "./ProductFilters";
 
 const ProductCard = () => {
   const [products, setProducts] = useState([]);
@@ -212,6 +215,7 @@ const ProductCard = () => {
                 <div className="p-2 space-y-2">
                   <div className="h-3 bg-gray-200 animate-pulse rounded w-1/3"></div>
                   <div className="h-4 bg-gray-200 animate-pulse rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-200 animate-pulse rounded w-2/3"></div>
                   <div className="h-5 bg-gray-200 animate-pulse rounded w-1/2"></div>
                   <div className="flex gap-2">
                     <div className="h-8 bg-gray-200 animate-pulse rounded flex-1"></div>
@@ -334,13 +338,39 @@ const ProductCard = () => {
                             : product.title}
                         </h3>
 
+                        {/* Specs - Processor, RAM, Storage */}
+                        <div className="space-y-0.5 mb-1.5">
+                          {product.processor && (
+                            <div className="flex items-center gap-1 text-[9px] text-gray-500">
+                              <FiCpu size={9} />
+                              <span className="line-clamp-1">
+                                {product.processor}
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-2">
+                            {product.ram && (
+                              <div className="flex items-center gap-1 text-[9px] text-gray-500">
+                                <FiDatabase size={9} />
+                                <span>{product.ram}</span>
+                              </div>
+                            )}
+                            {product.storage && (
+                              <div className="flex items-center gap-1 text-[9px] text-gray-500">
+                                <FiHardDrive size={9} />
+                                <span>{product.storage}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
                         {/* Dynamic Rating */}
-                        <div className="flex items-center gap-1 mb-1">
+                        <div className="flex items-center gap-1 mb-1.5">
                           <div className="flex items-center">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <FiStar
                                 key={star}
-                                size={10}
+                                size={9}
                                 className={`${
                                   star <= Math.round(rating.average)
                                     ? "text-yellow-400 fill-yellow-400"
@@ -350,7 +380,7 @@ const ProductCard = () => {
                             ))}
                           </div>
                           {rating.total > 0 && (
-                            <span className="text-[9px] text-gray-500">
+                            <span className="text-[8px] text-gray-400">
                               ({rating.total})
                             </span>
                           )}
