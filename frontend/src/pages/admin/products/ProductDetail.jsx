@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaBolt, FaWhatsapp } from "react-icons/fa";
-import OrderOnWhatsApp from "../components/OrderOnWhatsApp";
+import OrderOnWhatsApp from "../../../components/OrderOnWhatsApp";
 import ImageZoom from "react-image-zooom"; // For zoom feature
 
 import {
@@ -15,8 +15,8 @@ import {
   FiZoomIn,
   FiCpu,
   FiHardDrive,
-  FiMemory,
   FiMonitor,
+  FiDatabase, // RAM ke liye (alternative)
 } from "react-icons/fi";
 import { addToCart } from "../../../utils/cartUtils";
 import toast from "react-hot-toast";
