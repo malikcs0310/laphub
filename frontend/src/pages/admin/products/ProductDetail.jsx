@@ -5,7 +5,6 @@ import OrderOnWhatsApp from "../../../components/OrderOnWhatsApp";
 import ImageZoom from "react-image-zooom"; // For zoom feature
 
 import {
-  FiMemory,
   FiStar,
   FiShoppingCart,
   FiMessageCircle,
@@ -16,8 +15,8 @@ import {
   FiZoomIn,
   FiCpu,
   FiHardDrive,
+  FiDatabase, // ✅ FiDatabase use karo (memory/ram ke liye)
   FiMonitor,
-  FiDatabase, // RAM ke liye (alternative)
 } from "react-icons/fi";
 import { addToCart } from "../../../utils/cartUtils";
 import toast from "react-hot-toast";
@@ -34,7 +33,7 @@ const ProductSpecsTable = ({ laptop }) => {
       value: laptop.generation || "Not Specified",
       icon: <FiCpu />,
     },
-    { label: "RAM", value: laptop.ram, icon: <FiMemory /> },
+    { label: "RAM", value: laptop.ram, icon: <FiDatabase /> },
     { label: "Storage", value: laptop.storage, icon: <FiHardDrive /> },
     { label: "Screen Size", value: laptop.screenSize, icon: <FiMonitor /> },
     {
