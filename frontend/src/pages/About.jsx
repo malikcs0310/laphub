@@ -490,48 +490,52 @@ const About = () => {
               </p>
             </div>
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden">
+                {/* Grid - Responsive layout */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
-                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                  {/* Call/WhatsApp */}
+                  <div className="p-5 sm:p-6 md:p-8 text-center hover:bg-gray-50 transition">
                     <div className="p-2 sm:p-3 bg-blue-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
-                      <MdPhone className="text-blue-600 text-xl sm:text-2xl" />
+                      <MdPhone className="text-blue-600 text-2xl sm:text-2xl" />
                     </div>
                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Call or WhatsApp
                     </h3>
                     <a
                       href="tel:+923104082056"
-                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-lg font-medium"
+                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium break-words inline-block"
                     >
                       +92 310 4082056
                     </a>
-                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
+                    <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2">
                       Mon-Sat, 10am-8pm
                     </p>
                   </div>
 
-                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                  {/* Email */}
+                  <div className="p-5 sm:p-6 md:p-8 text-center hover:bg-gray-50 transition">
                     <div className="p-2 sm:p-3 bg-green-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
-                      <MdEmail className="text-green-600 text-xl sm:text-2xl" />
+                      <MdEmail className="text-green-600 text-2xl sm:text-2xl" />
                     </div>
                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Email Us
                     </h3>
                     <a
-                      href="mailto:info@laphub.pk"
-                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-lg font-medium"
+                      href="mailto:malikcs0310@gmail.com"
+                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium break-words inline-block max-w-full"
                     >
                       malikcs0310@gmail.com
                     </a>
-                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
+                    <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2">
                       24/7 Response
                     </p>
                   </div>
 
-                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                  {/* Location */}
+                  <div className="p-5 sm:p-6 md:p-8 text-center hover:bg-gray-50 transition">
                     <div className="p-2 sm:p-3 bg-purple-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
-                      <MdLocationOn className="text-purple-600 text-xl sm:text-2xl" />
+                      <MdLocationOn className="text-purple-600 text-2xl sm:text-2xl" />
                     </div>
                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Based In
@@ -539,47 +543,49 @@ const About = () => {
                     <p className="text-gray-600 text-sm sm:text-base">
                       Lahore, Pakistan
                     </p>
-                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
+                    <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2">
                       Nationwide Shipping
                     </p>
                   </div>
 
-                  <div className="p-5 sm:p-6 md:p-8 text-center">
+                  {/* Browse Online */}
+                  <div className="p-5 sm:p-6 md:p-8 text-center hover:bg-gray-50 transition">
                     <div className="p-2 sm:p-3 bg-orange-100 rounded-full w-fit mx-auto mb-3 sm:mb-4">
-                      <MdStorefront className="text-orange-600 text-xl sm:text-2xl" />
+                      <MdStorefront className="text-orange-600 text-2xl sm:text-2xl" />
                     </div>
                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2">
                       Browse Online
                     </h3>
                     <Link
                       to="/products"
-                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium"
+                      className="text-blue-600 hover:text-blue-700 text-sm sm:text-base font-medium inline-block"
                     >
                       Shop Now →
                     </Link>
-                    <p className="text-gray-500 text-[10px] sm:text-sm mt-1 sm:mt-2">
+                    <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2">
                       40+ laptops sold
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-4 sm:p-6 border-t border-gray-200">
+                {/* Bottom Section */}
+                <div className="bg-gray-50 p-5 sm:p-6 border-t border-gray-200">
                   <p className="text-gray-600 text-center text-sm sm:text-base mb-4 sm:mb-6">
                     Prefer to browse first? Check out our available laptops
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                     <Link
                       to="/products"
-                      className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
+                      className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
                     >
-                      <MdComputer className="mr-2" size={16} />
+                      <MdComputer className="mr-2" size={18} />
                       Browse Laptops
                     </Link>
                     <Link
                       to="/contact"
-                      className="inline-flex items-center justify-center bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-5 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
+                      className="inline-flex items-center justify-center bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
                     >
-                      <FiArrowRight className="mr-2" size={16} />
+                      <FiArrowRight className="mr-2" size={18} />
                       Contact Form
                     </Link>
                   </div>
