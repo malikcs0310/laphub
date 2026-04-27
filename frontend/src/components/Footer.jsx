@@ -11,8 +11,8 @@ import {
   FiLinkedin,
   FiSend,
 } from "react-icons/fi";
-import { MdComputer, MdLaptop } from "react-icons/md";
 import toast from "react-hot-toast";
+import Logo from "./Logo";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -98,26 +98,11 @@ const Footer = () => {
       {/* Main Footer */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand Column - Strong Brand Identity */}
+          {/* Brand Column - Using Logo Component */}
           <div>
-            <div
-              className="flex items-center gap-2 mb-4 cursor-pointer group"
-              onClick={() => navigate("/")}
-            >
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
-                <MdLaptop className="text-white text-xl" />
-              </div>
-              <div>
-                <span className="text-xl font-bold text-white">
-                  LapHub<span className="text-blue-400">.pk</span>
-                </span>
-                <p className="text-[9px] text-gray-400 -mt-0.5">
-                  Trusted Laptops Store
-                </p>
-              </div>
-            </div>
+            <Logo variant="footer" />
 
-            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+            <p className="text-gray-400 text-sm mb-6 leading-relaxed mt-4">
               Pakistan's trusted source for genuine imported laptops. Quality
               products, honest prices, and exceptional support.
             </p>
@@ -281,7 +266,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar - Brand Strong */}
+      {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-center">
