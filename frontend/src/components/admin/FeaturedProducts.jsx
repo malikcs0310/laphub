@@ -48,6 +48,10 @@ const FeaturedProducts = () => {
 
   const handleBuyNow = (product, e) => {
     e.stopPropagation();
+    if (!product || !product._id) {
+      toast.error("Product not found");
+      return;
+    }
     if (!isLoggedIn) {
       toast.error("Please login or signup to continue");
       setTimeout(() => {
@@ -97,18 +101,12 @@ const FeaturedProducts = () => {
     setProductRatings(ratingsMap);
   };
 
-  // Get image URL (supports both local uploads and Cloudinary)
+  // Simple image URL - Cloudinary URLs work directly
   const getImageUrl = (product) => {
     if (!product.images || product.images.length === 0) {
       return "https://via.placeholder.com/300x200?text=No+Image";
     }
-    const image = product.images[0];
-    // If it's already a full URL (Cloudinary), return as is
-    if (image.startsWith("http://") || image.startsWith("https://")) {
-      return image;
-    }
-    // Otherwise, it's a local upload
-    return `${API_URL}/uploads/${image}`;
+    return product.images[0];
   };
 
   useEffect(() => {
@@ -172,7 +170,6 @@ const FeaturedProducts = () => {
   return (
     <section className="py-6 bg-gray-50">
       <div className="container mx-auto px-3">
-        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-base sm:text-xl font-bold text-gray-900">
@@ -190,7 +187,6 @@ const FeaturedProducts = () => {
           </Link>
         </div>
 
-        {/* Products Grid - 2 columns on mobile, 4 on desktop */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
           {products.map((product) => {
             const rating = productRatings[product._id] || {
@@ -203,7 +199,6 @@ const FeaturedProducts = () => {
                 onClick={() => navigate(`/product/${product._id}`)}
                 className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
               >
-                {/* Image - Fixed height for mobile */}
                 <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
                   <img
                     src={getImageUrl(product)}
@@ -217,7 +212,6 @@ const FeaturedProducts = () => {
                     }}
                   />
 
-                  {/* Badges */}
                   <div className="absolute top-1 left-1 flex flex-col gap-0.5">
                     {product.condition && (
                       <span className="bg-blue-600 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
@@ -231,7 +225,6 @@ const FeaturedProducts = () => {
                     )}
                   </div>
 
-                  {/* Wishlist Button */}
                   <button
                     onClick={(e) => toggleWishlist(product, e)}
                     className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm"
@@ -246,7 +239,6 @@ const FeaturedProducts = () => {
                     />
                   </button>
 
-                  {/* Stock Badge */}
                   {product.stock <= 0 && (
                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                       <span className="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
@@ -256,23 +248,19 @@ const FeaturedProducts = () => {
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="p-2">
-                  {/* Brand */}
                   <div className="mb-1">
                     <span className="text-[8px] sm:text-[10px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
                       {product.brand || "Laptop"}
                     </span>
                   </div>
 
-                  {/* Title */}
                   <h3 className="text-[10px] sm:text-xs font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[28px] sm:min-h-[32px]">
                     {product.title.length > 40
                       ? `${product.title.substring(0, 40)}...`
                       : product.title}
                   </h3>
 
-                  {/* Processor */}
                   {product.processor && (
                     <div className="hidden sm:flex items-center gap-1 mb-0.5 text-[8px] text-gray-500">
                       <FiCpu size={9} />
@@ -280,14 +268,12 @@ const FeaturedProducts = () => {
                     </div>
                   )}
 
-                  {/* Generation */}
                   {product.generation && (
                     <div className="hidden sm:block text-[7px] text-gray-400 mb-0.5">
                       {product.generation}
                     </div>
                   )}
 
-                  {/* RAM and Storage */}
                   <div className="flex items-center gap-1 sm:gap-2 mb-1">
                     {product.ram && (
                       <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
@@ -303,7 +289,6 @@ const FeaturedProducts = () => {
                     )}
                   </div>
 
-                  {/* Rating */}
                   <div className="flex items-center gap-0.5 mb-1">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -325,7 +310,6 @@ const FeaturedProducts = () => {
                     )}
                   </div>
 
-                  {/* Price */}
                   <div className="mb-1.5">
                     <span className="text-xs sm:text-sm font-bold text-gray-900">
                       Rs {product.price?.toLocaleString()}
@@ -337,7 +321,6 @@ const FeaturedProducts = () => {
                     )}
                   </div>
 
-                  {/* Buttons */}
                   <div className="flex gap-1">
                     <button
                       onClick={(e) => handleBuyNow(product, e)}
