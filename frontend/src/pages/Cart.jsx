@@ -26,12 +26,22 @@ const Cart = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    // Otherwise, it's a local upload
+    return `${API_URL}/uploads/${imagePath}`;
+  };
+
   useEffect(() => {
     loadCart();
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
 
-    // Listen for cart updates
     const handleCartUpdate = () => loadCart();
     window.addEventListener("cartUpdated", handleCartUpdate);
     return () => window.removeEventListener("cartUpdated", handleCartUpdate);
@@ -47,7 +57,7 @@ const Cart = () => {
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
     window.dispatchEvent(new Event("cartUpdated"));
-    toast.success("Item removed from cart", { icon: "🗑️", duration: 2000 });
+    toast.success("Item removed from cart");
   };
 
   const updateQuantity = (id, newQuantity) => {
@@ -62,16 +72,12 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
-      toast.error("Your cart is empty", { icon: "🛒", duration: 2000 });
+      toast.error("Your cart is empty");
       return;
     }
 
     if (!isLoggedIn) {
-      toast.error("Please login to checkout", {
-        icon: "🔐",
-        duration: 3000,
-        style: { background: "linear-gradient(135deg, #991b1b, #ef4444)" },
-      });
+      toast.error("Please login to checkout");
       setTimeout(
         () => navigate("/login", { state: { from: "/checkout" } }),
         500,
@@ -80,10 +86,7 @@ const Cart = () => {
     }
 
     setIsProcessing(true);
-    toast.success("Redirecting to secure checkout...", {
-      icon: "💨",
-      duration: 1500,
-    });
+    toast.success("Redirecting to secure checkout...");
     setTimeout(() => {
       setIsProcessing(false);
       navigate("/checkout");
@@ -92,7 +95,7 @@ const Cart = () => {
 
   const handleBuyNow = (product) => {
     if (!isLoggedIn) {
-      toast.error("Please login to buy", { icon: "🔐", duration: 2000 });
+      toast.error("Please login to buy");
       setTimeout(
         () =>
           navigate("/login", { state: { from: `/product/${product._id}` } }),
@@ -108,27 +111,23 @@ const Cart = () => {
       existingCart.push({ ...product, quantity: 1 });
       localStorage.setItem("cart", JSON.stringify(existingCart));
       window.dispatchEvent(new Event("cartUpdated"));
-      toast.success("Product added to cart", { icon: "✨", duration: 1500 });
+      toast.success("Product added to cart");
     }
     setTimeout(() => navigate("/checkout"), 800);
   };
 
   const moveToWishlist = (product) => {
-    // Remove from cart
     removeFromCart(product._id);
-
-    // Add to wishlist
     const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
     if (!wishlist.includes(product._id)) {
       wishlist.push(product._id);
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
-      toast.success("Moved to wishlist", { icon: "❤️", duration: 2000 });
+      toast.success("Moved to wishlist");
     } else {
-      toast.info("Already in wishlist", { duration: 1500 });
+      toast.info("Already in wishlist");
     }
   };
 
-  // Calculate totals
   const subtotal = cartItems.reduce(
     (total, item) => total + (Number(item.price) || 0) * (item.quantity || 1),
     0,
@@ -146,7 +145,6 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
       <div className="container mx-auto px-3 sm:px-4 max-w-7xl">
-        {/* Header */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
             Your Cart
@@ -159,7 +157,6 @@ const Cart = () => {
         </div>
 
         {cartItems.length === 0 ? (
-          // Empty Cart State
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-8 sm:p-12 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full mb-4 sm:mb-6">
               <FiShoppingCart className="text-gray-400 text-3xl sm:text-4xl" />
@@ -180,7 +177,6 @@ const Cart = () => {
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
-            {/* Cart Items */}
             <div className="lg:flex-[2] space-y-3 sm:space-y-4">
               {cartItems.map((item) => {
                 const isLowStock = item.stock > 0 && item.stock <= 3;
@@ -195,20 +191,23 @@ const Cart = () => {
                         : "border-gray-100"
                     }`}
                   >
-                    {/* Product Image */}
                     <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex-shrink-0 bg-gray-50 rounded-lg sm:rounded-xl overflow-hidden">
                       <img
                         src={
                           item.images && item.images.length > 0
-                            ? `${API_URL}/uploads/${item.images[0]}`
+                            ? getImageUrl(item.images[0])
                             : "https://via.placeholder.com/150x150?text=No+Image"
                         }
                         alt={item.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://via.placeholder.com/150x150?text=No+Image";
+                        }}
                       />
                     </div>
 
-                    {/* Product Details */}
                     <div className="flex-1 w-full text-center sm:text-left">
                       <Link
                         to={`/product/${item._id}`}
@@ -220,7 +219,6 @@ const Cart = () => {
                         {item.brand} {item.model}
                       </p>
 
-                      {/* Specs */}
                       <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-1.5 sm:mt-2 justify-center sm:justify-start">
                         {item.processor && (
                           <span className="text-[10px] sm:text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded flex items-center gap-0.5">
@@ -249,7 +247,6 @@ const Cart = () => {
                         )}
                       </div>
 
-                      {/* Stock Warning */}
                       {isLowStock && !isOutOfStock && (
                         <div className="flex items-center gap-1 mt-1.5 justify-center sm:justify-start">
                           <FiAlertCircle
@@ -270,7 +267,6 @@ const Cart = () => {
                         </div>
                       )}
 
-                      {/* Price */}
                       <p className="text-base sm:text-lg md:text-xl font-bold text-blue-600 mt-2 sm:mt-3">
                         {formatPrice(item.price)}
                         {item.quantity && item.quantity > 1 && (
@@ -281,7 +277,6 @@ const Cart = () => {
                       </p>
                     </div>
 
-                    {/* Quantity Selector */}
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
@@ -309,7 +304,6 @@ const Cart = () => {
                       </button>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex flex-row sm:flex-col gap-2">
                       <button
                         onClick={() => moveToWishlist(item)}
@@ -346,7 +340,6 @@ const Cart = () => {
               })}
             </div>
 
-            {/* Order Summary */}
             <div className="lg:flex-1">
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-6 sticky top-24 border border-gray-100">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 pb-2 border-b">
@@ -433,7 +426,6 @@ const Cart = () => {
                   )}
                 </button>
 
-                {/* Trust Badges */}
                 <div className="mt-4 pt-3 border-t">
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="flex flex-col items-center">
