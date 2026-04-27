@@ -191,7 +191,7 @@ const ViewProducts = () => {
   return (
     <div className="p-3 sm:p-4 md:p-6 bg-gray-100 min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 sm:top-20 z-20 bg-gray-100/95 backdrop-blur border-b border-gray-200 pb-3 sm:pb-4 pt-2 mb-4 sm:mb-6">
+      <div className="sticky top-0 z-20 bg-gray-100/95 backdrop-blur border-b border-gray-200 pb-3 sm:pb-4 pt-2 mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold">Admin Products</h2>
@@ -243,156 +243,161 @@ const ViewProducts = () => {
         </div>
       </div>
 
-      {/* Products Table */}
-      <div className="overflow-x-auto bg-white rounded-lg sm:rounded-xl shadow">
-        <table className="w-full min-w-[1000px] sm:min-w-full text-sm">
-          <thead className="bg-gray-200 text-gray-700 sticky top-16 sm:top-24 z-10">
-            <tr>
-              <th className="p-2 sm:p-3 text-center w-12">#</th>
-              <th className="p-2 sm:p-3 w-16">Image</th>
-              <th className="p-2 sm:p-3">Title</th>
-              <th className="p-2 sm:p-3">Brand</th>
-              <th className="p-2 sm:p-3">Model</th>
-              <th className="p-2 sm:p-3">Price</th>
-              <th className="p-2 sm:p-3 hidden md:table-cell">Processor</th>
-              <th className="p-2 sm:p-3 hidden lg:table-cell">RAM/Storage</th>
-              <th className="p-2 sm:p-3">Stock</th>
-              <th className="p-2 sm:p-3 hidden xl:table-cell">Status</th>
-              <th className="p-2 sm:p-3">Actions</th>
-              <th className="p-2 sm:p-3 text-center w-10">
-                <input
-                  type="checkbox"
-                  checked={
-                    filteredLaptops.length > 0 &&
-                    selectedProducts.length === filteredLaptops.length
-                  }
-                  onChange={handleSelectAll}
-                  className="w-4 h-4 cursor-pointer"
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredLaptops.length > 0 ? (
-              filteredLaptops.map((lap, index) => (
-                <tr
-                  key={lap._id}
-                  className="border-b hover:bg-gray-50 transition"
-                >
-                  <td className="p-2 sm:p-3 font-medium text-center text-xs sm:text-sm">
-                    {index + 1}
-                  </td>
-                  <td className="p-2 sm:p-3">
-                    {lap.images && lap.images.length > 0 ? (
-                      <img
-                        src={`${API_URL}/uploads/${lap.images[0]}`}
-                        alt="laptop"
-                        className="w-12 h-10 sm:w-14 sm:h-11 object-cover rounded"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-12 h-10 sm:w-14 sm:h-11 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
-                        No img
+      {/* Products Table - Fixed Sticky Header */}
+      <div className="bg-white rounded-lg sm:rounded-xl shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1000px] sm:min-w-full text-sm">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr className="sticky top-[120px] sm:top-[136px] z-10 bg-gray-200">
+                <th className="p-2 sm:p-3 text-center w-12">#</th>
+                <th className="p-2 sm:p-3 w-16">Image</th>
+                <th className="p-2 sm:p-3">Title</th>
+                <th className="p-2 sm:p-3">Brand</th>
+                <th className="p-2 sm:p-3">Model</th>
+                <th className="p-2 sm:p-3">Price</th>
+                <th className="p-2 sm:p-3 hidden md:table-cell">Processor</th>
+                <th className="p-2 sm:p-3 hidden lg:table-cell">RAM/Storage</th>
+                <th className="p-2 sm:p-3">Stock</th>
+                <th className="p-2 sm:p-3 hidden xl:table-cell">Status</th>
+                <th className="p-2 sm:p-3">Actions</th>
+                <th className="p-2 sm:p-3 text-center w-10">
+                  <input
+                    type="checkbox"
+                    checked={
+                      filteredLaptops.length > 0 &&
+                      selectedProducts.length === filteredLaptops.length
+                    }
+                    onChange={handleSelectAll}
+                    className="w-4 h-4 cursor-pointer"
+                  />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredLaptops.length > 0 ? (
+                filteredLaptops.map((lap, index) => (
+                  <tr
+                    key={lap._id}
+                    className="border-b hover:bg-gray-50 transition"
+                  >
+                    <td className="p-2 sm:p-3 font-medium text-center text-xs sm:text-sm">
+                      {index + 1}
+                    </td>
+                    <td className="p-2 sm:p-3">
+                      {lap.images && lap.images.length > 0 ? (
+                        <img
+                          src={`${API_URL}/uploads/${lap.images[0]}`}
+                          alt="laptop"
+                          className="w-12 h-10 sm:w-14 sm:h-11 object-cover rounded"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-12 h-10 sm:w-14 sm:h-11 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+                          No img
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-2 sm:p-3">
+                      <div>
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
+                          {lap.title.length > 35
+                            ? `${lap.title.substring(0, 35)}...`
+                            : lap.title}
+                        </p>
+                        {lap.featured && (
+                          <span className="inline-block bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded mt-1">
+                            Featured
+                          </span>
+                        )}
                       </div>
-                    )}
-                  </td>
-                  <td className="p-2 sm:p-3">
-                    <div>
-                      <p className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
-                        {lap.title.length > 35
-                          ? `${lap.title.substring(0, 35)}...`
-                          : lap.title}
-                      </p>
-                      {lap.featured && (
-                        <span className="inline-block bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded mt-1">
-                          Featured
+                    </td>
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
+                      {lap.brand}
+                    </td>
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm">
+                      {lap.model}
+                    </td>
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm font-bold text-blue-600 whitespace-nowrap">
+                      {formatPrice(lap.price)}
+                    </td>
+                    <td className="p-2 sm:p-3 text-xs hidden md:table-cell">
+                      <div className="flex items-center gap-1">
+                        <FiCpu size={12} className="text-gray-400" />
+                        <span>
+                          {lap.processor?.split(" ").slice(0, 2).join(" ") ||
+                            "-"}
+                        </span>
+                      </div>
+                      {lap.generation && (
+                        <span className="text-[10px] text-gray-400 block">
+                          {lap.generation}
                         </span>
                       )}
+                    </td>
+                    <td className="p-2 sm:p-3 text-xs hidden lg:table-cell">
+                      <div className="space-y-0.5">
+                        {lap.ram && (
+                          <div className="flex items-center gap-1">
+                            <FiDatabase size={10} className="text-gray-400" />
+                            <span>{lap.ram}</span>
+                          </div>
+                        )}
+                        {lap.storage && (
+                          <div className="flex items-center gap-1">
+                            <FiHardDrive size={10} className="text-gray-400" />
+                            <span>{lap.storage}</span>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-2 sm:p-3">{getStockBadge(lap.stock)}</td>
+                    <td className="p-2 sm:p-3 hidden xl:table-cell">
+                      {getStatusBadge(lap.status)}
+                    </td>
+                    <td className="p-2 sm:p-3">
+                      <div className="flex gap-1.5 sm:gap-2">
+                        <button
+                          onClick={() => handleDelete(lap._id)}
+                          className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition"
+                          title="Delete"
+                        >
+                          <FiTrash2 size={12} />
+                        </button>
+                        <button
+                          onClick={() =>
+                            navigate(`/admin/edit-laptop/${lap._id}`)
+                          }
+                          className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition"
+                          title="Edit"
+                        >
+                          <FiEdit2 size={12} />
+                        </button>
+                      </div>
+                    </td>
+                    <td className="p-2 sm:p-3 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedProducts.includes(lap._id)}
+                        onChange={() => handleSelectProduct(lap._id)}
+                        className="w-4 h-4 cursor-pointer"
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="12" className="text-center py-8 sm:py-12">
+                    <div className="text-gray-500 text-sm sm:text-base">
+                      {searchTerm
+                        ? `No products found for "${searchTerm}"`
+                        : "No products found. Click 'Add Laptop' to add your first product."}
                     </div>
-                  </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
-                    {lap.brand}
-                  </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm">{lap.model}</td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm font-bold text-blue-600 whitespace-nowrap">
-                    {formatPrice(lap.price)}
-                  </td>
-                  <td className="p-2 sm:p-3 text-xs hidden md:table-cell">
-                    <div className="flex items-center gap-1">
-                      <FiCpu size={12} className="text-gray-400" />
-                      <span>
-                        {lap.processor?.split(" ").slice(0, 2).join(" ") || "-"}
-                      </span>
-                    </div>
-                    {lap.generation && (
-                      <span className="text-[10px] text-gray-400 block">
-                        {lap.generation}
-                      </span>
-                    )}
-                  </td>
-                  <td className="p-2 sm:p-3 text-xs hidden lg:table-cell">
-                    <div className="space-y-0.5">
-                      {lap.ram && (
-                        <div className="flex items-center gap-1">
-                          <FiDatabase size={10} className="text-gray-400" />
-                          <span>{lap.ram}</span>
-                        </div>
-                      )}
-                      {lap.storage && (
-                        <div className="flex items-center gap-1">
-                          <FiHardDrive size={10} className="text-gray-400" />
-                          <span>{lap.storage}</span>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-2 sm:p-3">{getStockBadge(lap.stock)}</td>
-                  <td className="p-2 sm:p-3 hidden xl:table-cell">
-                    {getStatusBadge(lap.status)}
-                  </td>
-                  <td className="p-2 sm:p-3">
-                    <div className="flex gap-1.5 sm:gap-2">
-                      <button
-                        onClick={() => handleDelete(lap._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition"
-                        title="Delete"
-                      >
-                        <FiTrash2 size={12} />
-                      </button>
-                      <button
-                        onClick={() =>
-                          navigate(`/admin/edit-laptop/${lap._id}`)
-                        }
-                        className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition"
-                        title="Edit"
-                      >
-                        <FiEdit2 size={12} />
-                      </button>
-                    </div>
-                  </td>
-                  <td className="p-2 sm:p-3 text-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedProducts.includes(lap._id)}
-                      onChange={() => handleSelectProduct(lap._id)}
-                      className="w-4 h-4 cursor-pointer"
-                    />
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="12" className="text-center py-8 sm:py-12">
-                  <div className="text-gray-500 text-sm sm:text-base">
-                    {searchTerm
-                      ? `No products found for "${searchTerm}"`
-                      : "No products found. Click 'Add Laptop' to add your first product."}
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Stats */}
