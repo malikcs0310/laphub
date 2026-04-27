@@ -11,7 +11,6 @@ import {
   FiCpu,
   FiHardDrive,
   FiDatabase,
-  FiBarChart2,
 } from "react-icons/fi";
 import { FaBolt } from "react-icons/fa";
 import { addToCart } from "../../utils/cartUtils";
@@ -110,12 +109,10 @@ const ProductCard = () => {
   useEffect(() => {
     let filtered = [...products];
 
-    // Brand filter
     if (filters.brand.length > 0) {
       filtered = filtered.filter((p) => filters.brand.includes(p.brand));
     }
 
-    // Processor filter
     if (filters.processor.length > 0) {
       filtered = filtered.filter((p) => {
         if (!p.processor) return false;
@@ -127,7 +124,6 @@ const ProductCard = () => {
       });
     }
 
-    // Generation filter
     if (filters.generation?.length > 0) {
       filtered = filtered.filter((p) => {
         if (!p.generation) return false;
@@ -137,7 +133,6 @@ const ProductCard = () => {
       });
     }
 
-    // RAM filter
     if (filters.ram.length > 0) {
       filtered = filtered.filter((p) => {
         if (!p.ram) return false;
@@ -150,7 +145,6 @@ const ProductCard = () => {
       });
     }
 
-    // Storage filter
     if (filters.storage.length > 0) {
       filtered = filtered.filter((p) => {
         if (!p.storage) return false;
@@ -172,7 +166,6 @@ const ProductCard = () => {
       });
     }
 
-    // Price filter
     filtered = filtered.filter(
       (p) => p.price >= filters.minPrice && p.price <= filters.maxPrice,
     );
@@ -234,6 +227,20 @@ const ProductCard = () => {
     (filters.generation?.length || 0) +
     filters.ram.length +
     filters.storage.length;
+
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (product) => {
+    if (!product.images || product.images.length === 0) {
+      return "https://via.placeholder.com/300x300?text=No+Image";
+    }
+    const image = product.images[0];
+    // If it's already a full URL (Cloudinary), return as is
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image;
+    }
+    // Otherwise, it's a local upload
+    return `${API_URL}/uploads/${image}`;
+  };
 
   // Loading Skeleton
   if (loading) {
@@ -324,14 +331,15 @@ const ProductCard = () => {
                       {/* Image Section */}
                       <div className="relative overflow-hidden bg-gray-100 aspect-square">
                         <img
-                          src={
-                            product.images && product.images.length > 0
-                              ? `${API_URL}/uploads/${product.images[0]}`
-                              : "https://via.placeholder.com/300x300?text=No+Image"
-                          }
+                          src={getImageUrl(product)}
                           alt={product.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src =
+                              "https://via.placeholder.com/300x300?text=No+Image";
+                          }}
                         />
 
                         {/* Badges */}
