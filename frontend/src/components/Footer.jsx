@@ -4,21 +4,14 @@ import {
   FiMail,
   FiPhone,
   FiMapPin,
-  FiShield,
-  FiTruck,
   FiFacebook,
   FiInstagram,
   FiTwitter,
   FiYoutube,
   FiLinkedin,
   FiSend,
-  FiCheckCircle,
-  FiClock,
-  FiRefreshCw,
-  FiTrendingUp,
-  FiHeart,
 } from "react-icons/fi";
-import { MdComputer, MdSupport, MdVerifiedUser } from "react-icons/md";
+import { MdComputer, MdLaptop } from "react-icons/md";
 import toast from "react-hot-toast";
 
 const Footer = () => {
@@ -48,15 +41,6 @@ const Footer = () => {
     { name: "Terms & Conditions", path: "/terms" },
     { name: "Return Policy", path: "/returns" },
     { name: "FAQ", path: "/faq" },
-  ];
-
-  const popularBrands = [
-    { name: "Dell", count: 45 },
-    { name: "HP", count: 38 },
-    { name: "Lenovo", count: 32 },
-    { name: "Apple", count: 25 },
-    { name: "ASUS", count: 28 },
-    { name: "Acer", count: 22 },
   ];
 
   const socialLinks = [
@@ -114,24 +98,36 @@ const Footer = () => {
       {/* Main Footer */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand Column */}
+          {/* Brand Column - Strong Brand Identity */}
           <div>
             <div
-              className="flex items-center gap-2 mb-4 cursor-pointer"
+              className="flex items-center gap-2 mb-4 cursor-pointer group"
               onClick={() => navigate("/")}
             >
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <MdComputer className="text-white text-xl" />
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+                <MdLaptop className="text-white text-xl" />
               </div>
-              <span className="text-xl font-bold text-white">LapHub.pk</span>
+              <div>
+                <span className="text-xl font-bold text-white">
+                  LapHub<span className="text-blue-400">.pk</span>
+                </span>
+                <p className="text-[9px] text-gray-400 -mt-0.5">
+                  Trusted Laptops Store
+                </p>
+              </div>
             </div>
-            <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+
+            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
               Pakistan's trusted source for genuine imported laptops. Quality
               products, honest prices, and exceptional support.
             </p>
-            <div className="space-y-2">
+
+            {/* Contact Info */}
+            <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm">
-                <FiPhone className="text-blue-400" />
+                <div className="bg-gray-800 p-2 rounded-lg">
+                  <FiPhone className="text-blue-400" size={14} />
+                </div>
                 <a
                   href="tel:+923104082056"
                   className="hover:text-white transition"
@@ -140,7 +136,9 @@ const Footer = () => {
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm">
-                <FiMail className="text-blue-400" />
+                <div className="bg-gray-800 p-2 rounded-lg">
+                  <FiMail className="text-blue-400" size={14} />
+                </div>
                 <a
                   href="mailto:info@laphub.pk"
                   className="hover:text-white transition"
@@ -149,18 +147,22 @@ const Footer = () => {
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm">
-                <FiMapPin className="text-blue-400" />
+                <div className="bg-gray-800 p-2 rounded-lg">
+                  <FiMapPin className="text-blue-400" size={14} />
+                </div>
                 <span>Lahore, Pakistan</span>
               </div>
             </div>
-            <div className="flex gap-3 mt-6">
+
+            {/* Social Links */}
+            <div className="flex gap-2 mt-6">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`bg-gray-800 p-2 rounded-lg hover:scale-110 transition-all duration-200 ${social.color} hover:text-white`}
+                  className={`bg-gray-800 p-2.5 rounded-lg hover:scale-110 transition-all duration-200 ${social.color} hover:text-white`}
                 >
                   <social.icon size={16} />
                 </a>
@@ -178,42 +180,51 @@ const Footer = () => {
                 <li key={index}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-white transition text-sm flex items-center gap-2"
+                    className="text-gray-400 hover:text-white transition text-sm flex items-center gap-2 group"
                   >
-                    <span className="text-blue-400">›</span> {link.name}
+                    <span className="text-blue-400 group-hover:translate-x-1 transition">
+                      ›
+                    </span>
+                    {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Policies */}
+          {/* Policies & Business Hours */}
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Policies</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 mb-6">
               {policyLinks.map((link, index) => (
                 <li key={index}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-white transition text-sm flex items-center gap-2"
+                    className="text-gray-400 hover:text-white transition text-sm flex items-center gap-2 group"
                   >
-                    <span className="text-blue-400">›</span> {link.name}
+                    <span className="text-blue-400 group-hover:translate-x-1 transition">
+                      ›
+                    </span>
+                    {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            <div className="mt-6">
-              <h4 className="text-white font-semibold text-sm mb-2">
-                Business Hours
+
+            {/* Business Hours */}
+            <div className="border-t border-gray-800 pt-4">
+              <h4 className="text-white font-semibold text-sm mb-3">
+                🕐 Business Hours
               </h4>
               <div className="space-y-1 text-sm text-gray-400">
-                <p>Mon - Sat: 10AM - 8PM</p>
+                <p>Monday - Saturday: 10AM - 8PM</p>
                 <p>Sunday: 12PM - 6PM</p>
+                <p className="text-blue-400 mt-2">24/7 Online Support</p>
               </div>
             </div>
           </div>
 
-          {/* Newsletter */}
+          {/* Newsletter & Stats */}
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">
               Stay Updated
@@ -246,40 +257,49 @@ const Footer = () => {
               </div>
             </form>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div>
-                <p className="text-xl font-bold text-white">40+</p>
-                <p className="text-[10px] text-gray-500">Customers</p>
-              </div>
-              <div>
-                <p className="text-xl font-bold text-white">35+</p>
-                <p className="text-[10px] text-gray-500">Laptops Sold</p>
-              </div>
-              <div>
-                <p className="text-xl font-bold text-white">100%</p>
-                <p className="text-[10px] text-gray-500">Satisfaction</p>
+            {/* Trust Stats */}
+            <div className="bg-gray-800/50 rounded-xl p-4">
+              <h4 className="text-white font-semibold text-sm mb-3 text-center">
+                Our Trust Score
+              </h4>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <p className="text-xl font-bold text-blue-400">40+</p>
+                  <p className="text-[9px] text-gray-400">Happy Customers</p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-blue-400">35+</p>
+                  <p className="text-[9px] text-gray-400">Laptops Sold</p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-blue-400">100%</p>
+                  <p className="text-[9px] text-gray-400">Satisfaction</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
+      {/* Bottom Bar - Brand Strong */}
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-center">
             <p className="text-gray-500 text-sm">
-              © {currentYear} LapHub.pk. All rights reserved.
+              © {currentYear}{" "}
+              <span className="text-white font-medium">LapHub.pk</span>. All
+              rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
-              <span className="flex items-center gap-1">
+            <div className="flex flex-wrap justify-center gap-4 text-xs">
+              <span className="flex items-center gap-1 text-gray-500">
                 🔒 Secure Checkout
               </span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 text-gray-500">
                 🚚 Free Shipping Over Rs 50k
               </span>
-              <span className="flex items-center gap-1">✅ 100% Genuine</span>
+              <span className="flex items-center gap-1 text-gray-500">
+                ✅ 100% Genuine
+              </span>
             </div>
             <p className="text-gray-600 text-xs">
               Made with <span className="text-red-500">❤️</span> in Pakistan
@@ -289,7 +309,6 @@ const Footer = () => {
       </div>
 
       {/* Back to Top Button */}
-      {/* Back to Top Button - Ab WhatsApp ke upar hoga */}
       {showBackToTop && (
         <button
           onClick={scrollToTop}
