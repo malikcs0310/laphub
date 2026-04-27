@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   FiTruck,
   FiMapPin,
@@ -13,7 +13,7 @@ import {
   FiCreditCard,
   FiShield,
   FiCheckCircle,
-  FiAlertCircle,
+  FiShoppingCart,
 } from "react-icons/fi";
 import { getCartItems, clearCart } from "../utils/cartUtils";
 import toast from "react-hot-toast";
@@ -41,7 +41,6 @@ const Checkout = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  // Get image URL (supports both local uploads and Cloudinary)
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
@@ -154,6 +153,11 @@ const Checkout = () => {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
+    if (!cartItems || cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
     const outOfStockItems = cartItems.filter((item) => item.stock <= 0);
     if (outOfStockItems.length > 0) {
       toast.error(
@@ -253,6 +257,33 @@ const Checkout = () => {
     (count, item) => count + (item.quantity || 1),
     0,
   );
+
+  // Early return if cart is empty
+  if (!cartItems || cartItems.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
+        <div className="container mx-auto px-3 sm:px-4 max-w-7xl">
+          <div className="bg-white rounded-xl shadow-lg p-8 sm:p-12 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+              <FiShoppingCart className="text-gray-400 text-3xl" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
+              Your cart is empty
+            </h2>
+            <p className="text-gray-500 mb-6">
+              Add some products to your cart before checkout.
+            </p>
+            <Link
+              to="/products"
+              className="inline-flex bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
@@ -536,54 +567,60 @@ const Checkout = () => {
               </h2>
 
               <div className="space-y-3 sm:space-y-4 max-h-60 sm:max-h-80 overflow-y-auto mb-3 sm:mb-4">
-                {cartItems.map((item) => (
-                  <div
-                    key={item._id}
-                    className="flex gap-2 sm:gap-3 pb-3 sm:pb-4 border-b"
-                  >
-                    <img
-                      src={
-                        item.images && item.images.length > 0
-                          ? getImageUrl(item.images[0])
-                          : "https://via.placeholder.com/60x60?text=No+Image"
-                      }
-                      alt={item.title}
-                      className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src =
-                          "https://via.placeholder.com/60x60?text=No+Image";
-                      }}
-                    />
-                    <div className="flex-1">
-                      <h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
-                        {item.title.length > 40
-                          ? `${item.title.substring(0, 40)}...`
-                          : item.title}
-                      </h3>
-                      <div className="flex flex-wrap gap-1 mt-0.5">
-                        {item.processor && (
-                          <span className="text-[8px] sm:text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded">
-                            {item.processor.substring(0, 15)}
-                          </span>
-                        )}
-                        {item.ram && (
-                          <span className="text-[8px] sm:text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded">
-                            {item.ram}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex justify-between items-center mt-1">
-                        <p className="text-xs sm:text-sm font-semibold text-blue-600">
-                          {formatPrice(item.price)}
-                        </p>
-                        <p className="text-[10px] sm:text-xs text-gray-500">
-                          Qty: {item.quantity || 1}
-                        </p>
+                {cartItems && cartItems.length > 0 ? (
+                  cartItems.map((item) => (
+                    <div
+                      key={item._id}
+                      className="flex gap-2 sm:gap-3 pb-3 sm:pb-4 border-b"
+                    >
+                      <img
+                        src={
+                          item.images && item.images.length > 0
+                            ? getImageUrl(item.images[0])
+                            : "https://via.placeholder.com/60x60?text=No+Image"
+                        }
+                        alt={item.title}
+                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://via.placeholder.com/60x60?text=No+Image";
+                        }}
+                      />
+                      <div className="flex-1">
+                        <h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
+                          {item.title.length > 40
+                            ? `${item.title.substring(0, 40)}...`
+                            : item.title}
+                        </h3>
+                        <div className="flex flex-wrap gap-1 mt-0.5">
+                          {item.processor && (
+                            <span className="text-[8px] sm:text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded">
+                              {item.processor.substring(0, 15)}
+                            </span>
+                          )}
+                          {item.ram && (
+                            <span className="text-[8px] sm:text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded">
+                              {item.ram}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex justify-between items-center mt-1">
+                          <p className="text-xs sm:text-sm font-semibold text-blue-600">
+                            {formatPrice(item.price)}
+                          </p>
+                          <p className="text-[10px] sm:text-xs text-gray-500">
+                            Qty: {item.quantity || 1}
+                          </p>
+                        </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4 text-gray-500">
+                    No items in cart
                   </div>
-                ))}
+                )}
               </div>
 
               <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t">
