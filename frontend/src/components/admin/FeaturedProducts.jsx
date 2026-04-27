@@ -97,6 +97,20 @@ const FeaturedProducts = () => {
     setProductRatings(ratingsMap);
   };
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (product) => {
+    if (!product.images || product.images.length === 0) {
+      return "https://via.placeholder.com/300x200?text=No+Image";
+    }
+    const image = product.images[0];
+    // If it's already a full URL (Cloudinary), return as is
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image;
+    }
+    // Otherwise, it's a local upload
+    return `${API_URL}/uploads/${image}`;
+  };
+
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
@@ -192,14 +206,15 @@ const FeaturedProducts = () => {
                 {/* Image - Fixed height for mobile */}
                 <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
                   <img
-                    src={
-                      product.images && product.images.length > 0
-                        ? `${API_URL}/uploads/${product.images[0]}`
-                        : "https://via.placeholder.com/300x200?text=No+Image"
-                    }
+                    src={getImageUrl(product)}
                     alt={product.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/300x200?text=No+Image";
+                    }}
                   />
 
                   {/* Badges */}
