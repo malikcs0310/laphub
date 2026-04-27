@@ -106,7 +106,7 @@ const About = () => {
       </Helmet>
 
       <div className="min-h-screen bg-white">
-        {/* Hero Section - Mobile Optimized */}
+        {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&auto=format')] bg-cover bg-center opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
@@ -147,10 +147,9 @@ const About = () => {
           </div>
         </section>
 
-        {/* Real Customer Feedback Section - Already using Testimonials component which is mobile optimized */}
         <Testimonials />
 
-        {/* Who We Are - Mobile Optimized */}
+        {/* Who We Are */}
         <section className="py-12 sm:py-16 md:py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-10 md:gap-12">
@@ -238,7 +237,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Values - Mobile Optimized */}
+        {/* Our Values */}
         <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-8 sm:mb-12">
@@ -280,7 +279,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Why Choose Us - Mobile Optimized */}
+        {/* Why Choose Us */}
         <section className="py-12 sm:py-16 md:py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-8 sm:mb-12">
@@ -364,16 +363,12 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Promise - Mobile Optimized */}
+        {/* Our Promise */}
         <section className="py-12 sm:py-16 md:py-20 bg-[#111827]">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 bg-white/10 backdrop-blur-sm rounded-full mb-6 sm:mb-8">
-                <FiAward
-                  className="text-yellow-400 mr-2 sm:mr-3"
-                  size={18}
-                  className="sm:w-6 sm:h-6"
-                />
+                <FiAward className="text-yellow-400 mr-2 sm:mr-3" size={18} />
                 <span className="text-white text-sm sm:text-lg font-semibold">
                   Our Commitment to You
                 </span>
@@ -388,11 +383,7 @@ const About = () => {
                   <div className="space-y-4 sm:space-y-6">
                     <div className="flex items-start">
                       <div className="p-1.5 sm:p-2 bg-green-100 rounded-lg mr-3 sm:mr-4">
-                        <FiThumbsUp
-                          className="text-green-600"
-                          size={16}
-                          className="sm:w-5 sm:h-5"
-                        />
+                        <FiThumbsUp className="text-green-600" size={16} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
@@ -405,11 +396,7 @@ const About = () => {
                     </div>
                     <div className="flex items-start">
                       <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg mr-3 sm:mr-4">
-                        <FiShield
-                          className="text-blue-600"
-                          size={16}
-                          className="sm:w-5 sm:h-5"
-                        />
+                        <FiShield className="text-blue-600" size={16} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
@@ -422,11 +409,7 @@ const About = () => {
                     </div>
                     <div className="flex items-start">
                       <div className="p-1.5 sm:p-2 bg-purple-100 rounded-lg mr-3 sm:mr-4">
-                        <FiClock
-                          className="text-purple-600"
-                          size={16}
-                          className="sm:w-5 sm:h-5"
-                        />
+                        <FiClock className="text-purple-600" size={16} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
@@ -441,11 +424,7 @@ const About = () => {
                   <div className="space-y-4 sm:space-y-6">
                     <div className="flex items-start">
                       <div className="p-1.5 sm:p-2 bg-red-100 rounded-lg mr-3 sm:mr-4">
-                        <MdVerifiedUser
-                          className="text-red-600"
-                          size={16}
-                          className="sm:w-5 sm:h-5"
-                        />
+                        <MdVerifiedUser className="text-red-600" size={16} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
@@ -458,11 +437,7 @@ const About = () => {
                     </div>
                     <div className="flex items-start">
                       <div className="p-1.5 sm:p-2 bg-orange-100 rounded-lg mr-3 sm:mr-4">
-                        <FiTarget
-                          className="text-orange-600"
-                          size={16}
-                          className="sm:w-5 sm:h-5"
-                        />
+                        <FiTarget className="text-orange-600" size={16} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
@@ -475,11 +450,7 @@ const About = () => {
                     </div>
                     <div className="flex items-start">
                       <div className="p-1.5 sm:p-2 bg-cyan-100 rounded-lg mr-3 sm:mr-4">
-                        <MdSupportAgent
-                          className="text-cyan-600"
-                          size={16}
-                          className="sm:w-5 sm:h-5"
-                        />
+                        <MdSupportAgent className="text-cyan-600" size={16} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 sm:mb-1">
@@ -507,7 +478,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Contact Section - Mobile Optimized */}
+        {/* Contact Section */}
         <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-8 sm:mb-12">
@@ -601,22 +572,14 @@ const About = () => {
                       to="/products"
                       className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
                     >
-                      <MdComputer
-                        className="mr-2"
-                        size={16}
-                        className="sm:w-5 sm:h-5"
-                      />
+                      <MdComputer className="mr-2" size={16} />
                       Browse Laptops
                     </Link>
                     <Link
                       to="/contact"
                       className="inline-flex items-center justify-center bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-5 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold transition duration-200 text-sm sm:text-base"
                     >
-                      <FiArrowRight
-                        className="mr-2"
-                        size={16}
-                        className="sm:w-5 sm:h-5"
-                      />
+                      <FiArrowRight className="mr-2" size={16} />
                       Contact Form
                     </Link>
                   </div>
