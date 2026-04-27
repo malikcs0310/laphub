@@ -13,9 +13,9 @@ import {
   FiPackage,
   FiChevronRight,
 } from "react-icons/fi";
-import { MdLaptop } from "react-icons/md";
 import { getCartItems, removeFromCart } from "../utils/cartUtils";
 import toast from "react-hot-toast";
+import Logo from "./Logo"; // ✅ Add this import
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -85,14 +85,12 @@ const Header = () => {
     }
   }, [location.pathname]);
 
-  // Fixed: Better click outside handling
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isProfileOpen && !event.target.closest(".profile-dropdown")) {
         setIsProfileOpen(false);
       }
     };
-    // Add delay to avoid immediate closing
     setTimeout(() => {
       document.addEventListener("mousedown", handleClickOutside);
     }, 0);
@@ -157,7 +155,6 @@ const Header = () => {
     navigate("/");
   }, [navigate]);
 
-  // Fixed navigation handlers
   const handleNavigation = useCallback(
     (path) => {
       setIsProfileOpen(false);
@@ -186,7 +183,6 @@ const Header = () => {
       <header
         className={`sticky top-0 z-50 bg-white transition-all duration-300 ${isScrolled ? "shadow-md" : "shadow-sm"} border-b`}
       >
-        {/* Main Header - Single Row */}
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Logo + Mobile Menu */}
@@ -197,23 +193,9 @@ const Header = () => {
               >
                 {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
               </button>
-              <Link
-                to="/"
-                className="flex items-center gap-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 rounded-xl">
-                  <MdLaptop className="text-white text-xl" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">
-                    LapHub<span className="text-blue-600">.pk</span>
-                  </h1>
-                  <p className="text-[10px] text-gray-500 hidden sm:block">
-                    Trusted Laptops Store
-                  </p>
-                </div>
-              </Link>
+
+              {/* ✅ Using Logo Component */}
+              <Logo />
             </div>
 
             {/* Desktop Search */}
@@ -232,9 +214,8 @@ const Header = () => {
               />
             </div>
 
-            {/* Right Icons */}
+            {/* Right Icons - Same as before */}
             <div className="flex items-center gap-1 sm:gap-2">
-              {/* Mobile Search */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
@@ -242,7 +223,6 @@ const Header = () => {
                 <FiSearch size={18} />
               </button>
 
-              {/* Wishlist */}
               <Link
                 to="/user/wishlist"
                 className="p-2 rounded-lg hover:bg-gray-100 transition"
@@ -250,7 +230,6 @@ const Header = () => {
                 <FiHeart size={18} />
               </Link>
 
-              {/* Cart */}
               <button
                 onClick={openCartDrawer}
                 className="relative p-2 rounded-lg hover:bg-gray-100 transition"
@@ -263,7 +242,6 @@ const Header = () => {
                 )}
               </button>
 
-              {/* Profile / Login */}
               {isLoggedIn ? (
                 <div className="relative profile-dropdown">
                   <button
@@ -284,7 +262,6 @@ const Header = () => {
                         <p className="text-xs text-gray-500">{user?.email}</p>
                       </div>
                       <div className="py-2">
-                        {/* FIXED: Using onClick handlers instead of Link directly */}
                         <button
                           onClick={() => handleNavigation("/user/dashboard")}
                           className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -408,10 +385,11 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Cart Drawer */}
+      {/* Cart Drawer - Same as before */}
       <div
         className={`fixed right-0 top-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"}`}
       >
+        {/* ... cart drawer content same as before ... */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-bold">Your Cart ({cartCount})</h2>
           <button
