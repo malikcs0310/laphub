@@ -102,7 +102,9 @@ const FeaturedProducts = () => {
       try {
         const res = await fetch(`${API_URL}/api/laptops/featured`);
         const data = await res.json();
-        const productsData = Array.isArray(data) ? data : data.data || [];
+        const productsData = Array.isArray(data)
+          ? data
+          : data.laptops || data.data || [];
         setProducts(productsData);
         if (productsData.length > 0) {
           await fetchRatings(productsData);
@@ -200,12 +202,19 @@ const FeaturedProducts = () => {
                     loading="lazy"
                   />
 
-                  {/* Condition Badge */}
-                  {product.condition && (
-                    <span className="absolute top-1 left-1 bg-blue-600 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
-                      {product.condition}
-                    </span>
-                  )}
+                  {/* Badges */}
+                  <div className="absolute top-1 left-1 flex flex-col gap-0.5">
+                    {product.condition && (
+                      <span className="bg-blue-600 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
+                        {product.condition}
+                      </span>
+                    )}
+                    {product.featured && (
+                      <span className="bg-yellow-500 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
+                        Featured
+                      </span>
+                    )}
+                  </div>
 
                   {/* Wishlist Button */}
                   <button
@@ -221,6 +230,15 @@ const FeaturedProducts = () => {
                       }
                     />
                   </button>
+
+                  {/* Stock Badge */}
+                  {product.stock <= 0 && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <span className="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                        Out of Stock
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -239,11 +257,18 @@ const FeaturedProducts = () => {
                       : product.title}
                   </h3>
 
-                  {/* Processor - Small screens hide */}
+                  {/* Processor */}
                   {product.processor && (
-                    <div className="hidden sm:flex items-center gap-1 mb-1 text-[8px] text-gray-500">
+                    <div className="hidden sm:flex items-center gap-1 mb-0.5 text-[8px] text-gray-500">
                       <FiCpu size={9} />
                       <span className="truncate">{product.processor}</span>
+                    </div>
+                  )}
+
+                  {/* Generation */}
+                  {product.generation && (
+                    <div className="hidden sm:block text-[7px] text-gray-400 mb-0.5">
+                      {product.generation}
                     </div>
                   )}
 
@@ -290,19 +315,34 @@ const FeaturedProducts = () => {
                     <span className="text-xs sm:text-sm font-bold text-gray-900">
                       Rs {product.price?.toLocaleString()}
                     </span>
+                    {product.stock > 0 && product.stock <= 3 && (
+                      <span className="ml-1 text-[7px] text-orange-500">
+                        Only {product.stock} left
+                      </span>
+                    )}
                   </div>
 
                   {/* Buttons */}
                   <div className="flex gap-1">
                     <button
                       onClick={(e) => handleBuyNow(product, e)}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition"
+                      disabled={product.stock <= 0}
+                      className={`flex-1 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition ${
+                        product.stock > 0
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "bg-gray-400 cursor-not-allowed"
+                      }`}
                     >
-                      Buy
+                      {product.stock > 0 ? "Buy" : "Sold Out"}
                     </button>
                     <button
                       onClick={(e) => handleAddToCart(product, e)}
-                      className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 text-[8px] sm:text-[10px] font-medium py-1 rounded transition flex items-center justify-center gap-0.5"
+                      disabled={product.stock <= 0}
+                      className={`flex-1 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition flex items-center justify-center gap-0.5 ${
+                        product.stock > 0
+                          ? "bg-gray-800 hover:bg-gray-900"
+                          : "bg-gray-400 cursor-not-allowed"
+                      }`}
                     >
                       <FiShoppingCart size={8} /> Add
                     </button>
