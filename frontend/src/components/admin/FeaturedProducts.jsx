@@ -209,6 +209,7 @@ const FeaturedProducts = () => {
                   onClick={() => navigate(`/product/${product._id}`)}
                   className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
                 >
+                  {/* Image */}
                   <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
                     <img
                       src={getImageUrl(product)}
