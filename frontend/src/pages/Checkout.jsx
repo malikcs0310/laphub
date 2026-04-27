@@ -10,6 +10,10 @@ import {
   FiArrowLeft,
   FiClock,
   FiPackage,
+  FiCreditCard,
+  FiShield,
+  FiCheckCircle,
+  FiAlertCircle,
 } from "react-icons/fi";
 import { getCartItems, clearCart } from "../utils/cartUtils";
 import toast from "react-hot-toast";
@@ -21,6 +25,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -30,7 +35,6 @@ const Checkout = () => {
     city: "",
     postalCode: "",
     notes: "",
-    paymentMethod: "cod",
   });
 
   const [errors, setErrors] = useState({});
@@ -78,7 +82,7 @@ const Checkout = () => {
     try {
       const res = await fetch(`${API_URL}/api/laptops/${id}`);
       const data = await res.json();
-      setCartItems([data]);
+      setCartItems([{ ...data, quantity: 1 }]);
     } catch (error) {
       console.error("Error fetching product:", error);
       toast.error("Failed to load product");
@@ -134,8 +138,20 @@ const Checkout = () => {
     }
   };
 
+  const handlePaymentMethodChange = (method) => {
+    setSelectedPaymentMethod(method);
+  };
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
+
+    const outOfStockItems = cartItems.filter((item) => item.stock <= 0);
+    if (outOfStockItems.length > 0) {
+      toast.error(
+        `${outOfStockItems.length} item(s) are out of stock. Please remove them from cart.`,
+      );
+      return;
+    }
 
     if (!validateForm()) {
       toast.error("Please fill all required fields");
@@ -146,7 +162,8 @@ const Checkout = () => {
 
     const subtotal = cartItems.reduce((total, item) => {
       const price = Number(item.price);
-      return total + (isNaN(price) ? 0 : price);
+      const quantity = item.quantity || 1;
+      return total + (isNaN(price) ? 0 : price * quantity);
     }, 0);
     const shipping = subtotal > 50000 ? 0 : 300;
     const total = subtotal + shipping;
@@ -156,8 +173,12 @@ const Checkout = () => {
         productId: item._id,
         title: item.title,
         price: item.price,
-        quantity: 1,
+        quantity: item.quantity || 1,
         image: item.images?.[0],
+        processor: item.processor,
+        ram: item.ram,
+        storage: item.storage,
+        generation: item.generation,
       })),
       subtotal,
       shipping,
@@ -171,7 +192,7 @@ const Checkout = () => {
         postalCode: formData.postalCode,
       },
       notes: formData.notes,
-      paymentMethod: formData.paymentMethod,
+      paymentMethod: selectedPaymentMethod,
     };
 
     try {
@@ -192,10 +213,7 @@ const Checkout = () => {
       }
 
       clearCart();
-      toast.success("Order placed successfully!", {
-        icon: "🎉",
-        duration: 4000,
-      });
+      toast.success("Order placed successfully!");
       setTimeout(
         () => navigate("/order-success", { state: { order: data.order } }),
         1500,
@@ -216,11 +234,16 @@ const Checkout = () => {
 
   const subtotal = cartItems.reduce((total, item) => {
     const price = Number(item.price);
-    return total + (isNaN(price) ? 0 : price);
+    const quantity = item.quantity || 1;
+    return total + (isNaN(price) ? 0 : price * quantity);
   }, 0);
   const shipping = subtotal > 50000 ? 0 : 300;
   const total = subtotal + shipping;
   const remainingForFreeShipping = subtotal > 50000 ? 0 : 50000 - subtotal;
+  const itemCount = cartItems.reduce(
+    (count, item) => count + (item.quantity || 1),
+    0,
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
@@ -234,7 +257,6 @@ const Checkout = () => {
             <FiArrowLeft
               className="mr-1 sm:mr-2 group-hover:-translate-x-1 transition-transform"
               size={14}
-              className="sm:w-4 sm:h-4"
             />
             Back to Cart
           </button>
@@ -275,7 +297,6 @@ const Checkout = () => {
                       <FiUser
                         className="inline mr-1 sm:mr-2 text-gray-400"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       Full Name
                     </label>
@@ -301,7 +322,6 @@ const Checkout = () => {
                       <FiMail
                         className="inline mr-1 sm:mr-2 text-gray-400"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       Email Address
                     </label>
@@ -328,7 +348,6 @@ const Checkout = () => {
                     <FiPhone
                       className="inline mr-1 sm:mr-2 text-gray-400"
                       size={12}
-                      className="sm:w-3.5 sm:h-3.5"
                     />
                     Phone Number
                   </label>
@@ -354,7 +373,6 @@ const Checkout = () => {
                     <FiMapPin
                       className="inline mr-1 sm:mr-2 text-gray-400"
                       size={12}
-                      className="sm:w-3.5 sm:h-3.5"
                     />
                     Street Address
                   </label>
@@ -438,13 +456,19 @@ const Checkout = () => {
                     Payment Method
                   </h3>
                   <div className="space-y-2 sm:space-y-3">
-                    <label className="flex items-center p-3 sm:p-4 border rounded-lg sm:rounded-xl cursor-pointer hover:bg-gray-50 transition-all">
+                    <label
+                      className={`flex items-center p-3 sm:p-4 border rounded-lg sm:rounded-xl cursor-pointer transition-all ${
+                        selectedPaymentMethod === "cod"
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
                       <input
                         type="radio"
                         name="paymentMethod"
                         value="cod"
-                        checked={formData.paymentMethod === "cod"}
-                        onChange={handleChange}
+                        checked={selectedPaymentMethod === "cod"}
+                        onChange={() => handlePaymentMethodChange("cod")}
                         className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"
                       />
                       <div className="ml-3 sm:ml-4 flex-1">
@@ -452,7 +476,6 @@ const Checkout = () => {
                           <FiDollarSign
                             className="text-green-600 mr-1 sm:mr-2"
                             size={14}
-                            className="sm:w-4 sm:h-4"
                           />
                           <span className="font-medium text-sm sm:text-base">
                             Cash on Delivery
@@ -460,6 +483,37 @@ const Checkout = () => {
                         </div>
                         <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
                           Pay with cash when your order arrives
+                        </p>
+                      </div>
+                    </label>
+
+                    <label
+                      className={`flex items-center p-3 sm:p-4 border rounded-lg sm:rounded-xl cursor-pointer transition-all ${
+                        selectedPaymentMethod === "card"
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="card"
+                        checked={selectedPaymentMethod === "card"}
+                        onChange={() => handlePaymentMethodChange("card")}
+                        className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"
+                      />
+                      <div className="ml-3 sm:ml-4 flex-1">
+                        <div className="flex items-center">
+                          <FiCreditCard
+                            className="text-purple-600 mr-1 sm:mr-2"
+                            size={14}
+                          />
+                          <span className="font-medium text-sm sm:text-base">
+                            Credit / Debit Card
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
+                          Pay securely via card (Visa, Mastercard)
                         </p>
                       </div>
                     </label>
@@ -473,12 +527,8 @@ const Checkout = () => {
           <div className="lg:flex-1">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-6 sticky top-24 border border-gray-100">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 pb-2 border-b">
-                <FiPackage
-                  className="text-blue-600"
-                  size={16}
-                  className="sm:w-4 sm:h-4"
-                />
-                Order Summary
+                <FiPackage className="text-blue-600" size={16} />
+                Order Summary ({itemCount} {itemCount === 1 ? "item" : "items"})
               </h2>
 
               <div className="space-y-3 sm:space-y-4 max-h-60 sm:max-h-80 overflow-y-auto mb-3 sm:mb-4">
@@ -502,9 +552,26 @@ const Checkout = () => {
                           ? `${item.title.substring(0, 40)}...`
                           : item.title}
                       </h3>
-                      <p className="text-xs sm:text-sm font-semibold text-blue-600 mt-0.5 sm:mt-1">
-                        {formatPrice(item.price)}
-                      </p>
+                      <div className="flex flex-wrap gap-1 mt-0.5">
+                        {item.processor && (
+                          <span className="text-[8px] sm:text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded">
+                            {item.processor.substring(0, 15)}
+                          </span>
+                        )}
+                        {item.ram && (
+                          <span className="text-[8px] sm:text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded">
+                            {item.ram}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex justify-between items-center mt-1">
+                        <p className="text-xs sm:text-sm font-semibold text-blue-600">
+                          {formatPrice(item.price)}
+                        </p>
+                        <p className="text-[10px] sm:text-xs text-gray-500">
+                          Qty: {item.quantity || 1}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -517,7 +584,7 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-between text-gray-600 text-sm sm:text-base">
                   <div className="flex items-center gap-1">
-                    <FiTruck size={12} className="sm:w-3.5 sm:h-3.5" />
+                    <FiTruck size={12} />
                     <span>Shipping</span>
                   </div>
                   <span>
@@ -532,13 +599,13 @@ const Checkout = () => {
                 {remainingForFreeShipping > 0 && (
                   <div className="bg-blue-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm">
                     <div className="flex items-center gap-1.5 sm:gap-2 text-blue-700">
-                      <FiTruck size={12} className="sm:w-3.5 sm:h-3.5" />
+                      <FiTruck size={12} />
                       <span className="font-medium">
                         Add {formatPrice(remainingForFreeShipping)} more for
                         free shipping
                       </span>
                     </div>
-                    <div className="w-full bg-blue-200 rounded-full h-1 mt-1.5 sm:mt-2">
+                    <div className="w-full bg-blue-200 rounded-full h-1 mt-1.5">
                       <div
                         className="bg-blue-600 h-1 rounded-full transition-all"
                         style={{
@@ -568,25 +635,25 @@ const Checkout = () => {
                     Placing Order...
                   </div>
                 ) : (
-                  "Place Order"
+                  `Place Order ${selectedPaymentMethod === "cod" ? "(Cash on Delivery)" : "(Card Payment)"}`
                 )}
               </button>
 
               <div className="mt-3 sm:mt-4 flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-500">
-                <FiClock size={10} className="sm:w-2.5 sm:h-2.5" />
+                <FiClock size={10} />
                 <span>Estimated delivery: 3-5 business days</span>
               </div>
 
               <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
                 <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-gray-500">
                   <span className="flex items-center gap-1">
-                    ✅ Secure Checkout
+                    <FiShield size={10} /> Secure Checkout
                   </span>
                   <span className="flex items-center gap-1">
-                    🚚 Free Shipping Over Rs 50k
+                    <FiTruck size={10} /> Free Shipping Over Rs 50k
                   </span>
                   <span className="flex items-center gap-1">
-                    🛡️ 1 Year Warranty
+                    <FiCheckCircle size={10} /> 1 Year Warranty
                   </span>
                 </div>
               </div>
