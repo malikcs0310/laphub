@@ -28,6 +28,15 @@ const OrderSuccess = () => {
     });
   };
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/60x60?text=No+Image";
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    return `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/uploads/${imagePath}`;
+  };
+
   if (!order) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -41,11 +50,7 @@ const OrderSuccess = () => {
             className="inline-flex items-center mt-3 sm:mt-4 text-blue-600 hover:text-blue-700 text-sm sm:text-base"
           >
             Go to Home
-            <FiArrowRight
-              className="ml-1 sm:ml-2"
-              size={14}
-              className="sm:w-4 sm:h-4"
-            />
+            <FiArrowRight className="ml-1 sm:ml-2" size={14} />
           </Link>
         </div>
       </div>
@@ -115,11 +120,7 @@ const OrderSuccess = () => {
             {/* Order Summary */}
             <div className="mb-5 sm:mb-6">
               <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-1.5 sm:gap-2">
-                <FiPackage
-                  className="text-blue-600"
-                  size={16}
-                  className="sm:w-4 sm:h-4"
-                />
+                <FiPackage className="text-blue-600" size={16} />
                 Order Summary
               </h2>
               <div className="space-y-2 sm:space-y-3">
@@ -129,13 +130,14 @@ const OrderSuccess = () => {
                     className="flex gap-2 sm:gap-3 pb-2 sm:pb-3 border-b"
                   >
                     <img
-                      src={
-                        item.image
-                          ? `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/uploads/${item.image}`
-                          : "https://via.placeholder.com/60x60?text=No+Image"
-                      }
+                      src={getImageUrl(item.image)}
                       alt={item.title}
                       className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/60x60?text=No+Image";
+                      }}
                     />
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 text-xs sm:text-sm md:text-base">
@@ -184,11 +186,7 @@ const OrderSuccess = () => {
             {/* Delivery Info */}
             <div className="bg-gray-50 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-5 sm:mb-6">
               <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-1.5 sm:gap-2">
-                <FiPackage
-                  className="text-blue-600"
-                  size={16}
-                  className="sm:w-4 sm:h-4"
-                />
+                <FiPackage className="text-blue-600" size={16} />
                 Delivery Information
               </h2>
               <div className="space-y-1 sm:space-y-2 text-sm sm:text-base">
@@ -235,33 +233,21 @@ const OrderSuccess = () => {
                 to="/user/orders"
                 className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition text-sm sm:text-base"
               >
-                <FiPackage
-                  className="mr-1 sm:mr-2"
-                  size={14}
-                  className="sm:w-4 sm:h-4"
-                />
+                <FiPackage className="mr-1 sm:mr-2" size={14} />
                 Track Order
               </Link>
               <Link
                 to="/products"
                 className="inline-flex items-center justify-center border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition text-sm sm:text-base"
               >
-                <FiHome
-                  className="mr-1 sm:mr-2"
-                  size={14}
-                  className="sm:w-4 sm:h-4"
-                />
+                <FiHome className="mr-1 sm:mr-2" size={14} />
                 Continue Shopping
               </Link>
               <button
                 onClick={() => window.print()}
                 className="inline-flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition text-sm sm:text-base"
               >
-                <FiPrinter
-                  className="mr-1 sm:mr-2"
-                  size={14}
-                  className="sm:w-4 sm:h-4"
-                />
+                <FiPrinter className="mr-1 sm:mr-2" size={14} />
                 Print Receipt
               </button>
             </div>
@@ -269,8 +255,8 @@ const OrderSuccess = () => {
             {/* Email Note */}
             <div className="mt-5 sm:mt-6 text-center">
               <p className="text-[10px] sm:text-xs text-gray-500 flex items-center justify-center gap-1">
-                <FiMail size={12} className="sm:w-3.5 sm:h-3.5" />A confirmation
-                email has been sent to your email address
+                <FiMail size={12} />A confirmation email has been sent to your
+                email address
               </p>
             </div>
           </div>
