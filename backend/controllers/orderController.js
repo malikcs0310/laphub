@@ -1,4 +1,35 @@
 import Order from "../models/Order.js";
+import Laptop from "../models/Laptop.js"; // ✅ Add this import
+
+// Helper function to update stock when order placed
+const updateStockOnOrder = async (items) => {
+  for (const item of items) {
+    const product = await Laptop.findById(item.productId);
+    if (product) {
+      const newStock = product.stock - item.quantity;
+      await Laptop.findByIdAndUpdate(item.productId, {
+        stock: newStock,
+        status: newStock <= 0 ? "sold" : "available",
+      });
+      console.log(`📦 Stock updated: ${product.title} → ${newStock} left`);
+    }
+  }
+};
+
+// Helper function to restore stock when order cancelled
+const restoreStockOnCancel = async (items) => {
+  for (const item of items) {
+    const product = await Laptop.findById(item.productId);
+    if (product) {
+      const newStock = product.stock + item.quantity;
+      await Laptop.findByIdAndUpdate(item.productId, {
+        stock: newStock,
+        status: "available",
+      });
+      console.log(`🔄 Stock restored: ${product.title} → ${newStock} left`);
+    }
+  }
+};
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -32,7 +63,22 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Customer information required" });
     }
 
-    // Create order - no pre-save hook needed
+    // ✅ CHECK STOCK BEFORE CREATING ORDER
+    for (const item of items) {
+      const product = await Laptop.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({
+          message: `Product ${item.title} not found`,
+        });
+      }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({
+          message: `${product.title} only ${product.stock} left in stock. Please reduce quantity.`,
+        });
+      }
+    }
+
+    // Create order
     const order = new Order({
       user: req.user.id,
       items: items.map((item) => ({
@@ -59,6 +105,9 @@ export const createOrder = async (req, res) => {
 
     await order.save();
     console.log("✅ Order saved successfully:", order.orderNumber);
+
+    // ✅ UPDATE STOCK AFTER ORDER
+    await updateStockOnOrder(items);
 
     res.status(201).json({
       success: true,
@@ -164,6 +213,13 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    const previousStatus = order.orderStatus;
+
+    // ✅ If cancelling order, restore stock
+    if (orderStatus === "cancelled" && previousStatus !== "cancelled") {
+      await restoreStockOnCancel(order.items);
+    }
+
     if (orderStatus) {
       order.orderStatus = orderStatus;
     }
@@ -185,7 +241,7 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
-// @desc    Cancel order
+// @desc    Cancel order (User)
 // @route   PUT /api/orders/:id/cancel
 // @access  Private
 export const cancelOrder = async (req, res) => {
@@ -206,12 +262,15 @@ export const cancelOrder = async (req, res) => {
       return res.status(400).json({ message: "Order cannot be cancelled" });
     }
 
+    // ✅ Restore stock when user cancels
+    await restoreStockOnCancel(order.items);
+
     order.orderStatus = "cancelled";
     await order.save();
 
     res.json({
       success: true,
-      message: "Order cancelled successfully",
+      message: "Order cancelled successfully. Stock has been restored.",
       order,
     });
   } catch (error) {
