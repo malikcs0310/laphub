@@ -31,7 +31,7 @@ const ViewProducts = () => {
         },
       });
       const data = await res.json();
-      console.log("Fetched laptops:", data); // Debug log
+      console.log("Fetched laptops:", data);
 
       if (Array.isArray(data)) {
         setLaptops(data);
@@ -131,10 +131,18 @@ const ViewProducts = () => {
 
   const formatPrice = (price) => `Rs ${Number(price).toLocaleString()}`;
 
-  // Update getStockBadge function:
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    // Otherwise, it's a local upload
+    return `${API_URL}/uploads/${imagePath}`;
+  };
 
   const getStockBadge = (stock) => {
-    // Check if stock is undefined or null
     if (stock === undefined || stock === null) {
       return (
         <span className="text-gray-600 text-xs font-semibold">
@@ -197,7 +205,6 @@ const ViewProducts = () => {
     }
   };
 
-  // Fix for edit button - navigate with id
   const handleEdit = (id) => {
     console.log("Editing product with id:", id);
     navigate(`/admin/edit-laptop/${id}`);
@@ -309,10 +316,15 @@ const ViewProducts = () => {
                     <td className="p-2 sm:p-3">
                       {lap.images && lap.images.length > 0 ? (
                         <img
-                          src={`${API_URL}/uploads/${lap.images[0]}`}
+                          src={getImageUrl(lap.images[0])}
                           alt="laptop"
                           className="w-12 h-10 sm:w-14 sm:h-11 object-cover rounded"
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src =
+                              "https://via.placeholder.com/80x60?text=No+Image";
+                          }}
                         />
                       ) : (
                         <div className="w-12 h-10 sm:w-14 sm:h-11 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
