@@ -105,40 +105,88 @@ const ProductCard = () => {
   };
 
   // Apply filters
+  // Apply filters - COMPLETELY FIXED
   useEffect(() => {
     let filtered = [...products];
 
+    console.log("Applying filters:", filters);
+    console.log("Total products:", products.length);
+
+    // Brand filter
     if (filters.brand.length > 0) {
       filtered = filtered.filter((p) => filters.brand.includes(p.brand));
+      console.log("After brand filter:", filtered.length);
     }
 
+    // Processor filter - Case insensitive partial match
     if (filters.processor.length > 0) {
       filtered = filtered.filter((p) => {
-        return filters.processor.some((proc) =>
-          p.processor?.toLowerCase().includes(proc.toLowerCase()),
-        );
+        if (!p.processor) return false;
+        const processorLower = p.processor.toLowerCase();
+        return filters.processor.some((proc) => {
+          const procLower = proc.toLowerCase();
+          // Match i3, i5, i7, i9 or amd ryzen
+          if (procLower.includes("i3") && processorLower.includes("i3"))
+            return true;
+          if (procLower.includes("i5") && processorLower.includes("i5"))
+            return true;
+          if (procLower.includes("i7") && processorLower.includes("i7"))
+            return true;
+          if (procLower.includes("i9") && processorLower.includes("i9"))
+            return true;
+          if (procLower.includes("ryzen") && processorLower.includes("ryzen"))
+            return true;
+          return processorLower.includes(procLower);
+        });
       });
+      console.log("After processor filter:", filtered.length);
     }
 
+    // RAM filter - Extract number from string
     if (filters.ram.length > 0) {
       filtered = filtered.filter((p) => {
-        return filters.ram.some((ram) =>
-          p.ram?.toLowerCase().includes(ram.toLowerCase()),
-        );
+        if (!p.ram) return false;
+        // Extract number from RAM string (e.g., "8GB" -> 8)
+        const ramMatch = p.ram.match(/(\d+)/);
+        const productRam = ramMatch ? parseInt(ramMatch[1]) : 0;
+        return filters.ram.some((ram) => {
+          const filterRam = parseInt(ram);
+          return productRam === filterRam;
+        });
       });
+      console.log("After RAM filter:", filtered.length);
     }
 
+    // Storage filter - Extract size
     if (filters.storage.length > 0) {
       filtered = filtered.filter((p) => {
-        return filters.storage.some((storage) =>
-          p.storage?.toLowerCase().includes(storage.toLowerCase()),
-        );
+        if (!p.storage) return false;
+        const storageLower = p.storage.toLowerCase();
+        return filters.storage.some((storage) => {
+          const filterLower = storage.toLowerCase();
+          // Check for 1TB (1000GB) match
+          if (
+            filterLower === "1tb" &&
+            (storageLower === "1tb" || storageLower.includes("1000gb"))
+          )
+            return true;
+          if (filterLower === "512gb" && storageLower.includes("512"))
+            return true;
+          if (filterLower === "256gb" && storageLower.includes("256"))
+            return true;
+          if (filterLower === "128gb" && storageLower.includes("128"))
+            return true;
+          return storageLower.includes(filterLower.replace("gb", ""));
+        });
       });
+      console.log("After storage filter:", filtered.length);
     }
 
+    // Price filter
     filtered = filtered.filter(
       (p) => p.price >= filters.minPrice && p.price <= filters.maxPrice,
     );
+    console.log("After price filter:", filtered.length);
 
     setFilteredProducts(filtered);
   }, [filters, products]);
