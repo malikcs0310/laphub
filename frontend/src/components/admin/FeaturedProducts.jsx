@@ -101,9 +101,8 @@ const FeaturedProducts = () => {
     setProductRatings(ratingsMap);
   };
 
-  // Simple image URL - Cloudinary URLs work directly
   const getImageUrl = (product) => {
-    if (!product.images || product.images.length === 0) {
+    if (!product?.images || product.images.length === 0) {
       return "https://via.placeholder.com/300x200?text=No+Image";
     }
     return product.images[0];
@@ -114,10 +113,20 @@ const FeaturedProducts = () => {
       try {
         const res = await fetch(`${API_URL}/api/laptops/featured`);
         const data = await res.json();
-        const productsData = Array.isArray(data)
-          ? data
-          : data.laptops || data.data || [];
+        console.log("API Response:", data);
+
+        let productsData = [];
+        if (data.laptops && Array.isArray(data.laptops)) {
+          productsData = data.laptops;
+        } else if (Array.isArray(data)) {
+          productsData = data;
+        } else if (data.data && Array.isArray(data.data)) {
+          productsData = data.data;
+        }
+
+        console.log("Products data:", productsData);
         setProducts(productsData);
+
         if (productsData.length > 0) {
           await fetchRatings(productsData);
         }
@@ -187,169 +196,175 @@ const FeaturedProducts = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-          {products.map((product) => {
-            const rating = productRatings[product._id] || {
-              average: 0,
-              total: 0,
-            };
-            return (
-              <div
-                key={product._id}
-                onClick={() => navigate(`/product/${product._id}`)}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
-              >
-                <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
-                  <img
-                    src={getImageUrl(product)}
-                    alt={product.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/300x200?text=No+Image";
-                    }}
-                  />
-
-                  <div className="absolute top-1 left-1 flex flex-col gap-0.5">
-                    {product.condition && (
-                      <span className="bg-blue-600 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
-                        {product.condition}
-                      </span>
-                    )}
-                    {product.featured && (
-                      <span className="bg-yellow-500 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={(e) => toggleWishlist(product, e)}
-                    className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm"
-                  >
-                    <FiHeart
-                      size={12}
-                      className={
-                        wishlist.includes(product._id)
-                          ? "fill-red-500 text-red-500"
-                          : "text-gray-500"
-                      }
+        {products && products.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+            {products.map((product) => {
+              const rating = productRatings[product._id] || {
+                average: 0,
+                total: 0,
+              };
+              return (
+                <div
+                  key={product._id}
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
+                >
+                  <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
+                    <img
+                      src={getImageUrl(product)}
+                      alt={product.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/300x200?text=No+Image";
+                      }}
                     />
-                  </button>
 
-                  {product.stock <= 0 && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                      <span className="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-                        Out of Stock
-                      </span>
+                    <div className="absolute top-1 left-1 flex flex-col gap-0.5">
+                      {product.condition && (
+                        <span className="bg-blue-600 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
+                          {product.condition}
+                        </span>
+                      )}
+                      {product.featured && (
+                        <span className="bg-yellow-500 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
+                          Featured
+                        </span>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                <div className="p-2">
-                  <div className="mb-1">
-                    <span className="text-[8px] sm:text-[10px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
-                      {product.brand || "Laptop"}
-                    </span>
-                  </div>
+                    <button
+                      onClick={(e) => toggleWishlist(product, e)}
+                      className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm"
+                    >
+                      <FiHeart
+                        size={12}
+                        className={
+                          wishlist.includes(product._id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-500"
+                        }
+                      />
+                    </button>
 
-                  <h3 className="text-[10px] sm:text-xs font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[28px] sm:min-h-[32px]">
-                    {product.title.length > 40
-                      ? `${product.title.substring(0, 40)}...`
-                      : product.title}
-                  </h3>
-
-                  {product.processor && (
-                    <div className="hidden sm:flex items-center gap-1 mb-0.5 text-[8px] text-gray-500">
-                      <FiCpu size={9} />
-                      <span className="truncate">{product.processor}</span>
-                    </div>
-                  )}
-
-                  {product.generation && (
-                    <div className="hidden sm:block text-[7px] text-gray-400 mb-0.5">
-                      {product.generation}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-1 sm:gap-2 mb-1">
-                    {product.ram && (
-                      <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
-                        <FiDatabase size={7} />
-                        <span>{product.ram}</span>
-                      </div>
-                    )}
-                    {product.storage && (
-                      <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
-                        <FiHardDrive size={7} />
-                        <span>{product.storage}</span>
+                    {product.stock <= 0 && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <span className="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                          Out of Stock
+                        </span>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-0.5 mb-1">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <FiStar
-                          key={star}
-                          size={8}
-                          className={
-                            star <= Math.round(rating.average)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }
-                        />
-                      ))}
+                  <div className="p-2">
+                    <div className="mb-1">
+                      <span className="text-[8px] sm:text-[10px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
+                        {product.brand || "Laptop"}
+                      </span>
                     </div>
-                    {rating.total > 0 && (
-                      <span className="text-[6px] sm:text-[8px] text-gray-400">
-                        ({rating.total})
-                      </span>
-                    )}
-                  </div>
 
-                  <div className="mb-1.5">
-                    <span className="text-xs sm:text-sm font-bold text-gray-900">
-                      Rs {product.price?.toLocaleString()}
-                    </span>
-                    {product.stock > 0 && product.stock <= 3 && (
-                      <span className="ml-1 text-[7px] text-orange-500">
-                        Only {product.stock} left
-                      </span>
-                    )}
-                  </div>
+                    <h3 className="text-[10px] sm:text-xs font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[28px] sm:min-h-[32px]">
+                      {product.title.length > 40
+                        ? `${product.title.substring(0, 40)}...`
+                        : product.title}
+                    </h3>
 
-                  <div className="flex gap-1">
-                    <button
-                      onClick={(e) => handleBuyNow(product, e)}
-                      disabled={product.stock <= 0}
-                      className={`flex-1 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition ${
-                        product.stock > 0
-                          ? "bg-blue-600 hover:bg-blue-700"
-                          : "bg-gray-400 cursor-not-allowed"
-                      }`}
-                    >
-                      {product.stock > 0 ? "Buy" : "Sold Out"}
-                    </button>
-                    <button
-                      onClick={(e) => handleAddToCart(product, e)}
-                      disabled={product.stock <= 0}
-                      className={`flex-1 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition flex items-center justify-center gap-0.5 ${
-                        product.stock > 0
-                          ? "bg-gray-800 hover:bg-gray-900"
-                          : "bg-gray-400 cursor-not-allowed"
-                      }`}
-                    >
-                      <FiShoppingCart size={8} /> Add
-                    </button>
+                    {product.processor && (
+                      <div className="hidden sm:flex items-center gap-1 mb-0.5 text-[8px] text-gray-500">
+                        <FiCpu size={9} />
+                        <span className="truncate">{product.processor}</span>
+                      </div>
+                    )}
+
+                    {product.generation && (
+                      <div className="hidden sm:block text-[7px] text-gray-400 mb-0.5">
+                        {product.generation}
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-1 sm:gap-2 mb-1">
+                      {product.ram && (
+                        <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
+                          <FiDatabase size={7} />
+                          <span>{product.ram}</span>
+                        </div>
+                      )}
+                      {product.storage && (
+                        <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
+                          <FiHardDrive size={7} />
+                          <span>{product.storage}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-0.5 mb-1">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <FiStar
+                            key={star}
+                            size={8}
+                            className={
+                              star <= Math.round(rating.average)
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300"
+                            }
+                          />
+                        ))}
+                      </div>
+                      {rating.total > 0 && (
+                        <span className="text-[6px] sm:text-[8px] text-gray-400">
+                          ({rating.total})
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mb-1.5">
+                      <span className="text-xs sm:text-sm font-bold text-gray-900">
+                        Rs {product.price?.toLocaleString()}
+                      </span>
+                      {product.stock > 0 && product.stock <= 3 && (
+                        <span className="ml-1 text-[7px] text-orange-500">
+                          Only {product.stock} left
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex gap-1">
+                      <button
+                        onClick={(e) => handleBuyNow(product, e)}
+                        disabled={product.stock <= 0}
+                        className={`flex-1 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition ${
+                          product.stock > 0
+                            ? "bg-blue-600 hover:bg-blue-700"
+                            : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        {product.stock > 0 ? "Buy" : "Sold Out"}
+                      </button>
+                      <button
+                        onClick={(e) => handleAddToCart(product, e)}
+                        disabled={product.stock <= 0}
+                        className={`flex-1 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition flex items-center justify-center gap-0.5 ${
+                          product.stock > 0
+                            ? "bg-gray-800 hover:bg-gray-900"
+                            : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        <FiShoppingCart size={8} /> Add
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-10 bg-white rounded-lg">
+            <p className="text-gray-500">No featured products available</p>
+          </div>
+        )}
       </div>
     </section>
   );
