@@ -11,6 +11,7 @@ import {
   FiCpu,
   FiHardDrive,
   FiDatabase,
+  FiBarChart2,
 } from "react-icons/fi";
 import { FaBolt } from "react-icons/fa";
 import { addToCart } from "../../utils/cartUtils";
@@ -28,6 +29,7 @@ const ProductCard = () => {
   const [filters, setFilters] = useState({
     brand: [],
     processor: [],
+    generation: [],
     ram: [],
     storage: [],
     minPrice: 0,
@@ -64,11 +66,11 @@ const ProductCard = () => {
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
-        const productsData = Array.isArray(data) ? data : data.data || [];
+        const productsData = Array.isArray(data)
+          ? data
+          : data.laptops || data.data || [];
         setProducts(productsData);
         setFilteredProducts(productsData);
-
-        // Fetch ratings for all products
         await fetchRatings(productsData);
       } catch (error) {
         console.log("Error fetching products:", error);
@@ -105,7 +107,6 @@ const ProductCard = () => {
   };
 
   // Apply filters
-  // Apply filters - COMPLETELY FIXED STORAGE
   useEffect(() => {
     let filtered = [...products];
 
@@ -121,18 +122,18 @@ const ProductCard = () => {
         const processorLower = p.processor.toLowerCase();
         return filters.processor.some((proc) => {
           const procLower = proc.toLowerCase();
-          if (procLower.includes("i3") && processorLower.includes("i3"))
-            return true;
-          if (procLower.includes("i5") && processorLower.includes("i5"))
-            return true;
-          if (procLower.includes("i7") && processorLower.includes("i7"))
-            return true;
-          if (procLower.includes("i9") && processorLower.includes("i9"))
-            return true;
-          if (procLower.includes("ryzen") && processorLower.includes("ryzen"))
-            return true;
           return processorLower.includes(procLower);
         });
+      });
+    }
+
+    // Generation filter
+    if (filters.generation?.length > 0) {
+      filtered = filtered.filter((p) => {
+        if (!p.generation) return false;
+        return filters.generation.some((gen) =>
+          p.generation?.toLowerCase().includes(gen.toLowerCase()),
+        );
       });
     }
 
@@ -149,31 +150,23 @@ const ProductCard = () => {
       });
     }
 
-    // STORAGE FILTER - FIXED
+    // Storage filter
     if (filters.storage.length > 0) {
       filtered = filtered.filter((p) => {
         if (!p.storage) return false;
-
-        // Extract number from product storage
         const productMatch = p.storage.match(/(\d+)/);
         if (!productMatch) return false;
-
         let productSize = parseInt(productMatch[1]);
-        // Convert TB to GB (1TB = 1024GB, using 1000 for simplicity)
         if (p.storage.toLowerCase().includes("tb")) {
           productSize = productSize * 1000;
         }
-
         return filters.storage.some((selectedStorage) => {
-          // Extract number from selected filter
           const selectedMatch = selectedStorage.match(/(\d+)/);
           if (!selectedMatch) return false;
-
           let selectedSize = parseInt(selectedMatch[1]);
           if (selectedStorage.toLowerCase().includes("tb")) {
             selectedSize = selectedSize * 1000;
           }
-
           return productSize === selectedSize;
         });
       });
@@ -201,7 +194,6 @@ const ProductCard = () => {
 
   const handleBuyNow = (product, e) => {
     e.stopPropagation();
-
     if (!isLoggedIn) {
       toast.error("🔒 Please login to continue shopping!");
       setTimeout(() => {
@@ -209,7 +201,6 @@ const ProductCard = () => {
       }, 1000);
       return;
     }
-
     toast.success("🚀 Redirecting to secure checkout...");
     setTimeout(() => {
       navigate(`/checkout?product=${product._id}`);
@@ -225,7 +216,6 @@ const ProductCard = () => {
       }, 1000);
       return;
     }
-
     let updatedWishlist;
     if (wishlist.includes(product._id)) {
       updatedWishlist = wishlist.filter((id) => id !== product._id);
@@ -240,7 +230,8 @@ const ProductCard = () => {
 
   const activeFilterCount =
     filters.brand.length +
-    filters.processor.length +
+    (filters.processor?.length || 0) +
+    (filters.generation?.length || 0) +
     filters.ram.length +
     filters.storage.length;
 
@@ -343,12 +334,19 @@ const ProductCard = () => {
                           loading="lazy"
                         />
 
-                        {/* Condition Badge */}
-                        {product.condition && (
-                          <span className="absolute top-1 left-1 bg-blue-600 text-white px-1.5 py-0.5 rounded text-[9px] font-semibold">
-                            {product.condition}
-                          </span>
-                        )}
+                        {/* Badges */}
+                        <div className="absolute top-1 left-1 flex flex-col gap-0.5">
+                          {product.condition && (
+                            <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded text-[9px] font-semibold">
+                              {product.condition}
+                            </span>
+                          )}
+                          {product.featured && (
+                            <span className="bg-yellow-500 text-white px-1.5 py-0.5 rounded text-[9px] font-semibold">
+                              Featured
+                            </span>
+                          )}
+                        </div>
 
                         {/* Wishlist Button */}
                         <button
@@ -364,6 +362,15 @@ const ProductCard = () => {
                             }`}
                           />
                         </button>
+
+                        {/* Stock Badge */}
+                        {product.stock <= 0 && (
+                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                            <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                              Out of Stock
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Content Section */}
@@ -382,7 +389,7 @@ const ProductCard = () => {
                             : product.title}
                         </h3>
 
-                        {/* Specs - Processor, RAM, Storage */}
+                        {/* Specs */}
                         <div className="space-y-0.5 mb-1.5">
                           {product.processor && (
                             <div className="flex items-center gap-1 text-[9px] text-gray-500">
@@ -390,6 +397,11 @@ const ProductCard = () => {
                               <span className="line-clamp-1">
                                 {product.processor}
                               </span>
+                            </div>
+                          )}
+                          {product.generation && (
+                            <div className="flex items-center gap-1 text-[8px] text-gray-400">
+                              <span>{product.generation}</span>
                             </div>
                           )}
                           <div className="flex items-center gap-2">
@@ -435,19 +447,34 @@ const ProductCard = () => {
                           <span className="text-sm font-bold text-gray-900">
                             Rs {product.price?.toLocaleString() || "0"}
                           </span>
+                          {product.stock > 0 && product.stock <= 3 && (
+                            <span className="ml-1 text-[8px] text-orange-500">
+                              Only {product.stock} left
+                            </span>
+                          )}
                         </div>
 
                         {/* Buttons */}
                         <div className="flex gap-1.5">
                           <button
                             onClick={(e) => handleBuyNow(product, e)}
-                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-medium py-1.5 rounded transition"
+                            disabled={product.stock <= 0}
+                            className={`flex-1 text-white text-[10px] font-medium py-1.5 rounded transition ${
+                              product.stock > 0
+                                ? "bg-blue-600 hover:bg-blue-700"
+                                : "bg-gray-400 cursor-not-allowed"
+                            }`}
                           >
-                            Buy Now
+                            {product.stock > 0 ? "Buy Now" : "Sold Out"}
                           </button>
                           <button
                             onClick={(e) => handleAddToCart(product, e)}
-                            className="flex-1 bg-gray-800 hover:bg-gray-900 text-white text-[10px] font-medium py-1.5 rounded transition flex items-center justify-center gap-1"
+                            disabled={product.stock <= 0}
+                            className={`flex-1 text-white text-[10px] font-medium py-1.5 rounded transition flex items-center justify-center gap-1 ${
+                              product.stock > 0
+                                ? "bg-gray-800 hover:bg-gray-900"
+                                : "bg-gray-400 cursor-not-allowed"
+                            }`}
                           >
                             <FiShoppingCart size={10} />
                             Add
@@ -474,6 +501,7 @@ const ProductCard = () => {
                     setFilters({
                       brand: [],
                       processor: [],
+                      generation: [],
                       ram: [],
                       storage: [],
                       minPrice: 0,
