@@ -25,6 +25,15 @@ const OrderDetails = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    return `${API_URL}/uploads/${imagePath}`;
+  };
+
   const statusOptions = [
     {
       value: "pending",
@@ -88,8 +97,6 @@ const OrderDetails = () => {
     setUpdating(true);
     try {
       const token = localStorage.getItem("adminToken");
-
-      // Get current status
       const currentStatus = order.orderStatus;
 
       const response = await fetch(`${API_URL}/api/orders/admin/${id}/status`, {
@@ -110,7 +117,6 @@ const OrderDetails = () => {
 
       setOrder(data.order);
 
-      // Show appropriate message based on status change
       if (newStatus === "cancelled" && currentStatus !== "cancelled") {
         toast.success(
           `Order #${order.orderNumber} has been cancelled. Stock has been restored.`,
@@ -146,7 +152,6 @@ const OrderDetails = () => {
   const getStatusConfig = (status) =>
     statusOptions.find((s) => s.value === status) || statusOptions[0];
 
-  // Get status history steps
   const getStatusSteps = () => {
     const steps = ["pending", "processing", "shipped", "delivered"];
     const currentIndex = steps.indexOf(order?.orderStatus);
@@ -213,7 +218,6 @@ const OrderDetails = () => {
               </span>
             </div>
 
-            {/* Status Update Dropdown */}
             {order.orderStatus !== "delivered" &&
               order.orderStatus !== "cancelled" && (
                 <select
@@ -306,11 +310,16 @@ const OrderDetails = () => {
                   <img
                     src={
                       item.image
-                        ? `${API_URL}/uploads/${item.image}`
+                        ? getImageUrl(item.image)
                         : "https://via.placeholder.com/80x80?text=No+Image"
                     }
                     alt={item.title}
                     className="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded-lg"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/80x80?text=No+Image";
+                    }}
                   />
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 text-sm sm:text-base">
