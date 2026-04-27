@@ -212,164 +212,174 @@ const FeaturedProducts = () => {
         </div>
 
         {products && products.length > 0 ? (
-          <div
-            key={product._id}
-            onClick={() => navigate(`/product/${product._id}`)}
-            className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group"
-          >
-            {/* IMAGE */}
-            <div className="relative h-40 sm:h-44 md:h-52 bg-gray-100 overflow-hidden">
-              <img
-                src={getImageUrl(product)}
-                alt={product.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                loading="lazy"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://via.placeholder.com/300x200?text=No+Image";
-                }}
-              />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+            {products.map((product) => {
+              const rating = productRatings[product._id] || {
+                average: 0,
+                total: 0,
+              };
+              return (
+                <div
+                  key={product._id}
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group"
+                >
+                  {/* IMAGE */}
+                  <div className="relative h-40 sm:h-44 md:h-52 bg-gray-100 overflow-hidden">
+                    <img
+                      src={getImageUrl(product)}
+                      alt={product.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/300x200?text=No+Image";
+                      }}
+                    />
 
-              {/* BADGES */}
-              <div className="absolute top-2 left-2 flex flex-col gap-1">
-                {product.condition && (
-                  <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full">
-                    {product.condition}
-                  </span>
-                )}
-                {product.featured && (
-                  <span className="bg-yellow-500 text-white text-[10px] px-2 py-0.5 rounded-full">
-                    Featured
-                  </span>
-                )}
-              </div>
+                    {/* BADGES */}
+                    <div className="absolute top-2 left-2 flex flex-col gap-1">
+                      {product.condition && (
+                        <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full">
+                          {product.condition}
+                        </span>
+                      )}
+                      {product.featured && (
+                        <span className="bg-yellow-500 text-white text-[10px] px-2 py-0.5 rounded-full">
+                          Featured
+                        </span>
+                      )}
+                    </div>
 
-              {/* WISHLIST */}
-              <button
-                onClick={(e) => toggleWishlist(product, e)}
-                className="absolute top-2 right-2 bg-white p-2 rounded-full shadow hover:scale-110 transition"
-              >
-                <FiHeart
-                  size={14}
-                  className={
-                    wishlist.includes(product._id)
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-500"
-                  }
-                />
-              </button>
+                    {/* WISHLIST */}
+                    <button
+                      onClick={(e) => toggleWishlist(product, e)}
+                      className="absolute top-2 right-2 bg-white p-2 rounded-full shadow hover:scale-110 transition"
+                    >
+                      <FiHeart
+                        size={14}
+                        className={
+                          wishlist.includes(product._id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-500"
+                        }
+                      />
+                    </button>
 
-              {/* OUT OF STOCK */}
-              {product.stock <= 0 && (
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                  <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded">
-                    Out of Stock
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* CONTENT */}
-            <div className="p-3 sm:p-4">
-              {/* BRAND */}
-              <span className="text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                {product.brand || "Laptop"}
-              </span>
-
-              {/* TITLE */}
-              <h3 className="mt-2 text-sm sm:text-base font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[44px]">
-                {product.title.length > 60
-                  ? `${product.title.substring(0, 60)}...`
-                  : product.title}
-              </h3>
-
-              {/* SPECS */}
-              <div className="mt-2 space-y-1 text-xs sm:text-sm text-gray-600">
-                {product.processor && (
-                  <div className="flex items-center gap-2">
-                    <FiCpu size={14} />
-                    <span>{product.processor}</span>
+                    {/* OUT OF STOCK */}
+                    {product.stock <= 0 && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded">
+                          Out of Stock
+                        </span>
+                      </div>
+                    )}
                   </div>
-                )}
 
-                <div className="flex gap-4">
-                  {product.ram && (
-                    <div className="flex items-center gap-1">
-                      <FiDatabase size={12} />
-                      <span>{product.ram}</span>
+                  {/* CONTENT */}
+                  <div className="p-3 sm:p-4">
+                    {/* BRAND */}
+                    <span className="text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                      {product.brand || "Laptop"}
+                    </span>
+
+                    {/* TITLE */}
+                    <h3 className="mt-2 text-sm sm:text-base font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[44px]">
+                      {product.title.length > 60
+                        ? `${product.title.substring(0, 60)}...`
+                        : product.title}
+                    </h3>
+
+                    {/* SPECS */}
+                    <div className="mt-2 space-y-1 text-xs sm:text-sm text-gray-600">
+                      {product.processor && (
+                        <div className="flex items-center gap-2">
+                          <FiCpu size={14} />
+                          <span>{product.processor}</span>
+                        </div>
+                      )}
+
+                      <div className="flex gap-4">
+                        {product.ram && (
+                          <div className="flex items-center gap-1">
+                            <FiDatabase size={12} />
+                            <span>{product.ram}</span>
+                          </div>
+                        )}
+                        {product.storage && (
+                          <div className="flex items-center gap-1">
+                            <FiHardDrive size={12} />
+                            <span>{product.storage}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  {product.storage && (
-                    <div className="flex items-center gap-1">
-                      <FiHardDrive size={12} />
-                      <span>{product.storage}</span>
+
+                    {/* RATING */}
+                    <div className="flex items-center gap-1 mt-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <FiStar
+                          key={star}
+                          size={14}
+                          className={
+                            star <= Math.round(rating.average)
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
+                          }
+                        />
+                      ))}
+                      {rating.total > 0 && (
+                        <span className="text-xs text-gray-400 ml-1">
+                          ({rating.total})
+                        </span>
+                      )}
                     </div>
-                  )}
+
+                    {/* PRICE */}
+                    <div className="mt-3">
+                      <span className="text-base sm:text-lg font-bold text-gray-900">
+                        Rs {product.price?.toLocaleString()}
+                      </span>
+
+                      {product.stock > 0 && product.stock <= 3 && (
+                        <p className="text-xs text-orange-500 mt-1 font-medium">
+                          Only {product.stock} left
+                        </p>
+                      )}
+                    </div>
+
+                    {/* BUTTONS */}
+                    <div className="grid grid-cols-2 gap-2 mt-4">
+                      <button
+                        onClick={(e) => handleBuyNow(product, e)}
+                        disabled={product.stock <= 0}
+                        className={`py-2 rounded-lg text-sm font-semibold transition ${
+                          product.stock > 0
+                            ? "bg-blue-600 hover:bg-blue-700 text-white"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                      >
+                        Buy Now
+                      </button>
+
+                      <button
+                        onClick={(e) => handleAddToCart(product, e)}
+                        disabled={product.stock <= 0}
+                        className={`py-2 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2 ${
+                          product.stock > 0
+                            ? "bg-gray-900 hover:bg-black text-white"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                      >
+                        <FiShoppingCart size={14} />
+                        Cart
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* RATING */}
-              <div className="flex items-center gap-1 mt-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FiStar
-                    key={star}
-                    size={14}
-                    className={
-                      star <= Math.round(rating.average)
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-300"
-                    }
-                  />
-                ))}
-                {rating.total > 0 && (
-                  <span className="text-xs text-gray-400 ml-1">
-                    ({rating.total})
-                  </span>
-                )}
-              </div>
-
-              {/* PRICE */}
-              <div className="mt-3">
-                <span className="text-base sm:text-lg font-bold text-gray-900">
-                  Rs {product.price?.toLocaleString()}
-                </span>
-
-                {product.stock > 0 && product.stock <= 3 && (
-                  <p className="text-xs text-orange-500 mt-1 font-medium">
-                    Only {product.stock} left
-                  </p>
-                )}
-              </div>
-
-              {/* BUTTONS */}
-              <div className="grid grid-cols-2 gap-2 mt-4">
-                <button
-                  onClick={(e) => handleBuyNow(product, e)}
-                  disabled={product.stock <= 0}
-                  className={`py-2 rounded-lg text-sm font-semibold transition ${
-                    product.stock > 0
-                      ? "bg-blue-600 hover:bg-blue-700 text-white"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
-                >
-                  Buy Now
-                </button>
-
-                <button
-                  onClick={(e) => handleAddToCart(product, e)}
-                  disabled={product.stock <= 0}
-                  className={`py-2 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2 ${
-                    product.stock > 0
-                      ? "bg-gray-900 hover:bg-black text-white"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
-                >
-                  <FiShoppingCart size={14} />
-                  Cart
-                </button>
-              </div>
-            </div>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-10 bg-white rounded-lg">
