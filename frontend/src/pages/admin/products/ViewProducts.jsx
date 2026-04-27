@@ -9,7 +9,6 @@ import {
   FiCpu,
   FiHardDrive,
   FiDatabase,
-  FiCheckCircle,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -190,8 +189,8 @@ const ViewProducts = () => {
 
   return (
     <div className="p-3 sm:p-4 md:p-6 bg-gray-100 min-h-screen">
-      {/* Header */}
-      <div className="sticky top-0 z-20 bg-gray-100/95 backdrop-blur border-b border-gray-200 pb-3 sm:pb-4 pt-2 mb-4 sm:mb-6">
+      {/* Header - Not sticky */}
+      <div className="bg-gray-100/95 border-b border-gray-200 pb-3 sm:pb-4 pt-2 mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold">Admin Products</h2>
@@ -243,12 +242,12 @@ const ViewProducts = () => {
         </div>
       </div>
 
-      {/* Products Table - Fixed Sticky Header */}
+      {/* Products Table - Normal Header (Not Sticky) */}
       <div className="bg-white rounded-lg sm:rounded-xl shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1000px] sm:min-w-full text-sm">
             <thead className="bg-gray-200 text-gray-700">
-              <tr className="sticky top-[120px] sm:top-[136px] z-10 bg-gray-200">
+              <tr>
                 <th className="p-2 sm:p-3 text-center w-12">#</th>
                 <th className="p-2 sm:p-3 w-16">Image</th>
                 <th className="p-2 sm:p-3">Title</th>
