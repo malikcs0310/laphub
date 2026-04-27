@@ -26,6 +26,15 @@ const UserOrderDetails = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    return `${API_URL}/uploads/${imagePath}`;
+  };
+
   useEffect(() => {
     fetchOrder();
   }, [id]);
@@ -300,11 +309,16 @@ const UserOrderDetails = () => {
                   <img
                     src={
                       item.image
-                        ? `${API_URL}/uploads/${item.image}`
+                        ? getImageUrl(item.image)
                         : "https://via.placeholder.com/80x80?text=No+Image"
                     }
                     alt={item.title}
                     className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/80x80?text=No+Image";
+                    }}
                   />
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 text-sm sm:text-base">
