@@ -325,13 +325,14 @@ const ProductCard = () => {
                     <div
                       key={product._id}
                       onClick={() => navigate(`/product/${product._id}`)}
-                      className="group bg-white rounded-lg shadow hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer"
+                      className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
                     >
-                      <div className="relative overflow-hidden bg-gray-100 aspect-square">
+                      {/* IMAGE */}
+                      <div className="relative aspect-square bg-gray-100 overflow-hidden">
                         <img
                           src={getImageUrl(product)}
                           alt={product.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                           loading="lazy"
                           onError={(e) => {
                             e.target.onerror = null;
@@ -340,139 +341,143 @@ const ProductCard = () => {
                           }}
                         />
 
-                        <div className="absolute top-1 left-1 flex flex-col gap-0.5">
+                        {/* BADGES */}
+                        <div className="absolute top-2 left-2 flex flex-col gap-1">
                           {product.condition && (
-                            <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded text-[9px] font-semibold">
+                            <span className="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-full shadow">
                               {product.condition}
                             </span>
                           )}
                           {product.featured && (
-                            <span className="bg-yellow-500 text-white px-1.5 py-0.5 rounded text-[9px] font-semibold">
+                            <span className="bg-amber-500 text-white text-[10px] px-2 py-1 rounded-full shadow">
                               Featured
                             </span>
                           )}
                         </div>
 
+                        {/* WISHLIST */}
                         <button
                           onClick={(e) => toggleWishlist(product, e)}
-                          className="absolute top-1 right-1 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm"
+                          className="absolute top-2 right-2 bg-white/90 backdrop-blur p-2 rounded-full shadow hover:scale-110 transition"
                         >
                           <FiHeart
                             size={14}
-                            className={`transition ${
+                            className={
                               wishlist.includes(product._id)
                                 ? "fill-red-500 text-red-500"
-                                : "text-gray-500"
-                            }`}
+                                : "text-gray-600"
+                            }
                           />
                         </button>
 
+                        {/* OUT OF STOCK */}
                         {product.stock <= 0 && (
                           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                            <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded">
                               Out of Stock
                             </span>
                           </div>
                         )}
                       </div>
 
-                      <div className="p-2 sm:p-2.5">
-                        <div className="mb-1">
-                          <span className="text-[10px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
-                            {product.brand || "Laptop"}
-                          </span>
-                        </div>
+                      {/* CONTENT */}
+                      <div className="p-4">
+                        {/* BRAND */}
+                        <span className="inline-block text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                          {product.brand || "Laptop"}
+                        </span>
 
-                        <h3 className="text-xs font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[32px]">
-                          {product.title.length > 45
-                            ? `${product.title.substring(0, 45)}...`
+                        {/* TITLE */}
+                        <h3 className="mt-2 text-sm sm:text-base font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[44px]">
+                          {product.title.length > 60
+                            ? `${product.title.substring(0, 60)}...`
                             : product.title}
                         </h3>
 
-                        <div className="space-y-0.5 mb-1.5">
+                        {/* SPECS */}
+                        <div className="mt-2 space-y-1 text-xs sm:text-sm text-gray-600">
                           {product.processor && (
-                            <div className="flex items-center gap-1 text-[9px] text-gray-500">
-                              <FiCpu size={9} />
+                            <div className="flex items-center gap-2">
+                              <FiCpu size={13} />
                               <span className="line-clamp-1">
                                 {product.processor}
                               </span>
                             </div>
                           )}
-                          {product.generation && (
-                            <div className="flex items-center gap-1 text-[8px] text-gray-400">
-                              <span>{product.generation}</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-2">
+
+                          <div className="flex gap-4">
                             {product.ram && (
-                              <div className="flex items-center gap-1 text-[9px] text-gray-500">
-                                <FiDatabase size={9} />
+                              <div className="flex items-center gap-1">
+                                <FiDatabase size={12} />
                                 <span>{product.ram}</span>
                               </div>
                             )}
                             {product.storage && (
-                              <div className="flex items-center gap-1 text-[9px] text-gray-500">
-                                <FiHardDrive size={9} />
+                              <div className="flex items-center gap-1">
+                                <FiHardDrive size={12} />
                                 <span>{product.storage}</span>
                               </div>
                             )}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-1 mb-1.5">
-                          <div className="flex items-center">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <FiStar
-                                key={star}
-                                size={9}
-                                className={`${
-                                  star <= Math.round(rating.average)
-                                    ? "text-yellow-400 fill-yellow-400"
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
+                        {/* RATING */}
+                        <div className="flex items-center gap-1 mt-3">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <FiStar
+                              key={star}
+                              size={13}
+                              className={
+                                star <= Math.round(rating.average)
+                                  ? "text-yellow-400 fill-yellow-400"
+                                  : "text-gray-300"
+                              }
+                            />
+                          ))}
                           {rating.total > 0 && (
-                            <span className="text-[8px] text-gray-400">
+                            <span className="text-xs text-gray-400 ml-1">
                               ({rating.total})
                             </span>
                           )}
                         </div>
 
-                        <div className="mb-2">
-                          <span className="text-sm font-bold text-gray-900">
+                        {/* PRICE */}
+                        <div className="mt-3">
+                          <span className="text-base sm:text-lg font-bold text-gray-900">
                             Rs {product.price?.toLocaleString() || "0"}
                           </span>
+
                           {product.stock > 0 && product.stock <= 3 && (
-                            <span className="ml-1 text-[8px] text-orange-500">
+                            <p className="text-xs text-orange-500 font-medium mt-1">
                               Only {product.stock} left
-                            </span>
+                            </p>
                           )}
                         </div>
 
-                        <div className="flex gap-1.5">
+                        {/* BUTTONS */}
+                        <div className="grid grid-cols-2 gap-2 mt-4">
                           <button
                             onClick={(e) => handleBuyNow(product, e)}
                             disabled={product.stock <= 0}
-                            className={`flex-1 text-white text-[10px] font-medium py-1.5 rounded transition ${
+                            className={`py-2 rounded-xl text-sm font-semibold transition ${
                               product.stock > 0
-                                ? "bg-blue-600 hover:bg-blue-700"
-                                : "bg-gray-400 cursor-not-allowed"
+                                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
                             }`}
                           >
-                            {product.stock > 0 ? "Buy Now" : "Sold Out"}
+                            Buy Now
                           </button>
+
                           <button
                             onClick={(e) => handleAddToCart(product, e)}
                             disabled={product.stock <= 0}
-                            className={`flex-1 text-white text-[10px] font-medium py-1.5 rounded transition flex items-center justify-center gap-1 ${
+                            className={`py-2 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 ${
                               product.stock > 0
-                                ? "bg-gray-800 hover:bg-gray-900"
-                                : "bg-gray-400 cursor-not-allowed"
+                                ? "bg-gray-900 hover:bg-black text-white"
+                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
                             }`}
                           >
-                            <FiShoppingCart size={10} />
+                            <FiShoppingCart size={14} />
                             Add
                           </button>
                         </div>
