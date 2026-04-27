@@ -10,6 +10,9 @@ import {
   FiClock,
   FiXCircle,
   FiAlertCircle,
+  FiDollarSign,
+  FiUsers,
+  FiShoppingBag,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -18,6 +21,12 @@ const OrdersManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    pendingOrders: 0,
+    completedOrders: 0,
+  });
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -26,26 +35,31 @@ const OrdersManagement = () => {
       color: "bg-yellow-100 text-yellow-800",
       icon: FiClock,
       label: "Pending",
+      order: 1,
     },
     processing: {
       color: "bg-blue-100 text-blue-800",
       icon: FiRefreshCw,
       label: "Processing",
+      order: 2,
     },
     shipped: {
       color: "bg-purple-100 text-purple-800",
       icon: FiTruck,
       label: "Shipped",
+      order: 3,
     },
     delivered: {
       color: "bg-green-100 text-green-800",
       icon: FiCheckCircle,
       label: "Delivered",
+      order: 4,
     },
     cancelled: {
       color: "bg-red-100 text-red-800",
       icon: FiXCircle,
       label: "Cancelled",
+      order: 5,
     },
   };
 
@@ -61,6 +75,21 @@ const OrdersManagement = () => {
       if (!response.ok)
         throw new Error(data.message || "Failed to fetch orders");
       setOrders(data.orders);
+
+      // Calculate statistics
+      const totalRevenue = data.orders
+        .filter((o) => o.orderStatus === "delivered")
+        .reduce((sum, o) => sum + (o.total || 0), 0);
+
+      setStats({
+        totalOrders: data.orders.length,
+        totalRevenue: totalRevenue,
+        pendingOrders: data.orders.filter((o) => o.orderStatus === "pending")
+          .length,
+        completedOrders: data.orders.filter(
+          (o) => o.orderStatus === "delivered",
+        ).length,
+      });
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast.error("Failed to load orders");
@@ -85,12 +114,21 @@ const OrdersManagement = () => {
   });
 
   const formatPrice = (price) => `Rs ${Number(price).toLocaleString()}`;
+
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("en-PK", {
       day: "numeric",
       month: "short",
       year: "numeric",
     });
+
+  const getDaysSince = (date) => {
+    const orderDate = new Date(date);
+    const today = new Date();
+    const diffTime = Math.abs(today - orderDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
 
   const StatusBadge = ({ status }) => {
     const config = statusConfig[status] || statusConfig.pending;
@@ -125,54 +163,103 @@ const OrdersManagement = () => {
         </p>
       </div>
 
-      {/* Stats Cards - Scrollable on mobile */}
-      <div className="flex flex-nowrap sm:grid sm:grid-cols-2 md:grid-cols-5 gap-2 sm:gap-4 mb-4 sm:mb-6 overflow-x-auto pb-2 sm:pb-0">
-        {Object.entries(statusConfig).map(([key, config]) => (
-          <div
-            key={key}
-            className={`bg-white rounded-lg shadow p-2 sm:p-4 cursor-pointer transition-all hover:shadow-md flex-shrink-0 w-[100px] sm:w-auto ${
-              filterStatus === key ? "ring-2 ring-blue-500" : ""
-            }`}
-            onClick={() => setFilterStatus(key)}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[9px] sm:text-xs text-gray-500 uppercase">
-                  {config.label}
-                </p>
-                <p className="text-base sm:text-2xl font-bold text-gray-900">
-                  {orders.filter((o) => o.orderStatus === key).length}
-                </p>
-              </div>
-              <div className={`p-1.5 sm:p-2 rounded-lg ${config.color}`}>
-                <config.icon size={14} className="sm:w-5 sm:h-5" />
-              </div>
-            </div>
-          </div>
-        ))}
-        <div
-          className={`bg-white rounded-lg shadow p-2 sm:p-4 cursor-pointer transition-all hover:shadow-md flex-shrink-0 w-[100px] sm:w-auto ${
-            filterStatus === "all" ? "ring-2 ring-blue-500" : ""
-          }`}
-          onClick={() => setFilterStatus("all")}
-        >
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="bg-white rounded-lg shadow p-3 sm:p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[9px] sm:text-xs text-gray-500 uppercase">
-                All Orders
+              <p className="text-[10px] sm:text-xs text-gray-500 uppercase">
+                Total Orders
               </p>
-              <p className="text-base sm:text-2xl font-bold text-gray-900">
-                {orders.length}
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                {stats.totalOrders}
               </p>
             </div>
-            <div className="p-1.5 sm:p-2 bg-gray-100 rounded-lg">
-              <FiPackage size={14} className="sm:w-5 sm:h-5 text-gray-600" />
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <FiShoppingBag className="text-blue-600 text-sm sm:text-base" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] sm:text-xs text-gray-500 uppercase">
+                Total Revenue
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-green-600">
+                {formatPrice(stats.totalRevenue)}
+              </p>
+            </div>
+            <div className="p-2 bg-green-100 rounded-lg">
+              <FiDollarSign className="text-green-600 text-sm sm:text-base" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] sm:text-xs text-gray-500 uppercase">
+                Pending
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-yellow-600">
+                {stats.pendingOrders}
+              </p>
+            </div>
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <FiClock className="text-yellow-600 text-sm sm:text-base" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] sm:text-xs text-gray-500 uppercase">
+                Completed
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-green-600">
+                {stats.completedOrders}
+              </p>
+            </div>
+            <div className="p-2 bg-green-100 rounded-lg">
+              <FiCheckCircle className="text-green-600 text-sm sm:text-base" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Search and Filter */}
+      {/* Status Filter Chips */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button
+          onClick={() => setFilterStatus("all")}
+          className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+            filterStatus === "all"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+          }`}
+        >
+          All ({orders.length})
+        </button>
+        {Object.entries(statusConfig).map(([key, config]) => (
+          <button
+            key={key}
+            onClick={() => setFilterStatus(key)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition flex items-center gap-1 ${
+              filterStatus === key
+                ? `${config.color} ring-2 ring-offset-1`
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <config.icon size={12} />
+            {config.label} ({orders.filter((o) => o.orderStatus === key).length}
+            )
+          </button>
+        ))}
+      </div>
+
+      {/* Search Bar */}
       <div className="bg-white rounded-lg shadow mb-4 sm:mb-6 p-3 sm:p-4">
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1 relative">
@@ -195,7 +282,7 @@ const OrdersManagement = () => {
         </div>
       </div>
 
-      {/* Orders Table - Horizontal scroll on mobile */}
+      {/* Orders Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px] sm:min-w-full">
@@ -209,6 +296,9 @@ const OrdersManagement = () => {
                 </th>
                 <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase">
                   Date
+                </th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase">
+                  Items
                 </th>
                 <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase">
                   Total
@@ -229,8 +319,8 @@ const OrdersManagement = () => {
                       <p className="font-medium text-gray-900 text-xs sm:text-sm">
                         {order.orderNumber}
                       </p>
-                      <p className="text-[10px] sm:text-xs text-gray-500">
-                        {order.items?.length || 0} items
+                      <p className="text-[10px] sm:text-xs text-gray-400">
+                        {getDaysSince(order.createdAt)} days ago
                       </p>
                     </div>
                   </td>
@@ -243,6 +333,11 @@ const OrdersManagement = () => {
                       <p className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px] sm:max-w-none">
                         {order.customer?.email}
                       </p>
+                      {order.customer?.phone && (
+                        <p className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">
+                          {order.customer.phone}
+                        </p>
+                      )}
                     </div>
                   </td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4">
@@ -251,8 +346,19 @@ const OrdersManagement = () => {
                     </p>
                   </td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4">
+                    <div className="flex items-center gap-1">
+                      <FiPackage size={12} className="text-gray-400" />
+                      <span className="text-xs text-gray-900">
+                        {order.items?.length || 0}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
                     <p className="font-bold text-blue-600 text-xs sm:text-sm">
                       {formatPrice(order.total)}
+                    </p>
+                    <p className="text-[9px] sm:text-[10px] text-gray-400">
+                      {order.paymentMethod === "cod" ? "COD" : "Card"}
                     </p>
                   </td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4">
@@ -264,7 +370,7 @@ const OrdersManagement = () => {
                       className="inline-flex items-center gap-0.5 sm:gap-1 px-2 py-1 sm:px-3 sm:py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs sm:text-sm"
                     >
                       <FiEye size={12} className="sm:w-4 sm:h-4" />
-                      View
+                      View Details
                     </Link>
                   </td>
                 </tr>
@@ -285,6 +391,13 @@ const OrdersManagement = () => {
           </div>
         )}
       </div>
+
+      {/* Export Hint */}
+      {filteredOrders.length > 0 && (
+        <div className="mt-4 text-center text-[10px] sm:text-xs text-gray-400">
+          Showing {filteredOrders.length} of {orders.length} orders
+        </div>
+      )}
     </div>
   );
 };
