@@ -98,37 +98,25 @@ const EditLaptop = () => {
     { value: "reserved", label: "Reserved" },
   ];
 
+  // Find the useEffect that fetches laptop data, and make sure it's correct:
+
   useEffect(() => {
     const fetchLaptop = async () => {
       try {
+        setLoading(true); // Add loading state
         const res = await fetch(`${API_URL}/api/laptops/${id}`);
         const data = await res.json();
+        console.log("Fetched laptop data:", data); // Debug log
 
-        setFormData({
-          title: data.title || "",
-          price: data.price || "",
-          condition: data.condition || "Used",
-          location: data.location || "",
-          description: data.description || "",
-          type: data.type || "",
-          brand: data.brand || "",
-          model: data.model || "",
-          processor: data.processor || "",
-          generation: data.generation || "",
-          ram: data.ram || "",
-          storage: data.storage || "",
-          screenSize: data.screenSize || "",
-          resolution: data.resolution || "",
-          gpu: data.gpu || "",
-          os: data.os || "",
-          batteryHealth: data.batteryHealth || "",
-          stock: data.stock || "1",
-          featured: data.featured || false,
-          status: data.status || "available",
-          images: [],
-        });
-
-        setExistingImages(data.images || []);
+        if (data && data.laptop) {
+          // If API returns { laptop: {...} }
+          setFormData(data.laptop);
+          setExistingImages(data.laptop.images || []);
+        } else if (data && data._id) {
+          // If API returns direct laptop object
+          setFormData(data);
+          setExistingImages(data.images || []);
+        }
       } catch (error) {
         console.log("Error fetching laptop:", error);
         toast.error("Failed to load laptop data");
@@ -136,7 +124,6 @@ const EditLaptop = () => {
         setLoading(false);
       }
     };
-
     fetchLaptop();
   }, [id, API_URL]);
 

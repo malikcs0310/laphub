@@ -31,6 +31,7 @@ const ViewProducts = () => {
         },
       });
       const data = await res.json();
+      console.log("Fetched laptops:", data); // Debug log
 
       if (Array.isArray(data)) {
         setLaptops(data);
@@ -131,6 +132,9 @@ const ViewProducts = () => {
   const formatPrice = (price) => `Rs ${Number(price).toLocaleString()}`;
 
   const getStockBadge = (stock) => {
+    if (stock === undefined || stock === null) {
+      return <span className="text-gray-600 text-xs font-semibold">N/A</span>;
+    }
     if (stock <= 0) {
       return (
         <span className="text-red-600 text-xs font-semibold">Out of Stock</span>
@@ -151,6 +155,13 @@ const ViewProducts = () => {
   };
 
   const getStatusBadge = (status) => {
+    if (!status) {
+      return (
+        <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs">
+          Available
+        </span>
+      );
+    }
     switch (status) {
       case "available":
         return (
@@ -173,10 +184,16 @@ const ViewProducts = () => {
       default:
         return (
           <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs">
-            {status}
+            {status || "Available"}
           </span>
         );
     }
+  };
+
+  // Fix for edit button - navigate with id
+  const handleEdit = (id) => {
+    console.log("Editing product with id:", id);
+    navigate(`/admin/edit-laptop/${id}`);
   };
 
   if (loading) {
@@ -189,7 +206,7 @@ const ViewProducts = () => {
 
   return (
     <div className="p-3 sm:p-4 md:p-6 bg-gray-100 min-h-screen">
-      {/* Header - Not sticky */}
+      {/* Header */}
       <div className="bg-gray-100/95 border-b border-gray-200 pb-3 sm:pb-4 pt-2 mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
@@ -242,7 +259,7 @@ const ViewProducts = () => {
         </div>
       </div>
 
-      {/* Products Table - Normal Header (Not Sticky) */}
+      {/* Products Table */}
       <div className="bg-white rounded-lg sm:rounded-xl shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1000px] sm:min-w-full text-sm">
@@ -257,7 +274,7 @@ const ViewProducts = () => {
                 <th className="p-2 sm:p-3 hidden md:table-cell">Processor</th>
                 <th className="p-2 sm:p-3 hidden lg:table-cell">RAM/Storage</th>
                 <th className="p-2 sm:p-3">Stock</th>
-                <th className="p-2 sm:p-3 hidden xl:table-cell">Status</th>
+                <th className="p-2 sm:p-3">Status</th>
                 <th className="p-2 sm:p-3">Actions</th>
                 <th className="p-2 sm:p-3 text-center w-10">
                   <input
@@ -311,10 +328,10 @@ const ViewProducts = () => {
                       </div>
                     </td>
                     <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
-                      {lap.brand}
+                      {lap.brand || "-"}
                     </td>
                     <td className="p-2 sm:p-3 text-xs sm:text-sm">
-                      {lap.model}
+                      {lap.model || "-"}
                     </td>
                     <td className="p-2 sm:p-3 text-xs sm:text-sm font-bold text-blue-600 whitespace-nowrap">
                       {formatPrice(lap.price)}
@@ -350,9 +367,7 @@ const ViewProducts = () => {
                       </div>
                     </td>
                     <td className="p-2 sm:p-3">{getStockBadge(lap.stock)}</td>
-                    <td className="p-2 sm:p-3 hidden xl:table-cell">
-                      {getStatusBadge(lap.status)}
-                    </td>
+                    <td className="p-2 sm:p-3">{getStatusBadge(lap.status)}</td>
                     <td className="p-2 sm:p-3">
                       <div className="flex gap-1.5 sm:gap-2">
                         <button
@@ -363,9 +378,7 @@ const ViewProducts = () => {
                           <FiTrash2 size={12} />
                         </button>
                         <button
-                          onClick={() =>
-                            navigate(`/admin/edit-laptop/${lap._id}`)
-                          }
+                          onClick={() => handleEdit(lap._id)}
                           className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition"
                           title="Edit"
                         >
