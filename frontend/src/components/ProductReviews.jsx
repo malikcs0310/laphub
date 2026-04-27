@@ -21,7 +21,6 @@ const ProductReviews = ({ productId }) => {
     comment: "",
   });
   const [submitting, setSubmitting] = useState(false);
-  const [userHasPurchased, setUserHasPurchased] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -46,40 +45,8 @@ const ProductReviews = ({ productId }) => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    // Temporary test data
-    const testReviews = [
-      {
-        _id: "1",
-        userName: "Muhammad Usama",
-        rating: 5,
-        title: "Excellent Laptop!",
-        comment: "Best laptop I've ever used. Performance is amazing.",
-        verifiedPurchase: true,
-        helpful: 12,
-        notHelpful: 1,
-        createdAt: "2026-03-25T10:00:00.000Z",
-      },
-      {
-        _id: "2",
-        userName: "Sara Khan",
-        rating: 4,
-        title: "Good Value for Money",
-        comment: "Satisfied with the purchase. Works well for my daily tasks.",
-        verifiedPurchase: true,
-        helpful: 8,
-        notHelpful: 0,
-        createdAt: "2026-03-20T14:30:00.000Z",
-      },
-    ];
-    setReviews(testReviews);
-    setRatingStats({
-      average: 4.5,
-      total: 2,
-      distribution: { 5: 1, 4: 1, 3: 0, 2: 0, 1: 0 },
-    });
-    setLoading(false);
-  }, [productId]);
+
+  // ✅ Fetch real reviews from API (no hardcoded data)
   useEffect(() => {
     fetchReviews(true);
   }, [productId]);
@@ -185,7 +152,7 @@ const ProductReviews = ({ productId }) => {
       </h3>
 
       {/* Rating Summary */}
-      {ratingStats && ratingStats.total > 0 && (
+      {ratingStats && ratingStats.total > 0 ? (
         <div className="bg-gray-50 rounded-xl p-6 mb-8">
           <div className="flex items-center gap-8 flex-wrap">
             <div className="text-center">
@@ -224,6 +191,12 @@ const ProductReviews = ({ productId }) => {
               })}
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="bg-gray-50 rounded-xl p-8 text-center mb-8">
+          <p className="text-gray-500">
+            No reviews yet. Be the first to review!
+          </p>
         </div>
       )}
 
@@ -297,61 +270,71 @@ const ProductReviews = ({ productId }) => {
       )}
 
       {/* Reviews List */}
-      <div className="space-y-6">
-        {reviews.map((review) => (
-          <div key={review._id} className="border-b pb-6">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                  {review.userName?.charAt(0).toUpperCase()}
+      {reviews.length > 0 ? (
+        <div className="space-y-6">
+          {reviews.map((review) => (
+            <div key={review._id} className="border-b pb-6">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                    {review.userName?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {review.userName}
+                    </p>
+                    <StarRating rating={review.rating} readonly={true} />
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-900">
-                    {review.userName}
-                  </p>
-                  <StarRating rating={review.rating} readonly={true} />
-                </div>
+                {review.verifiedPurchase && (
+                  <span className="flex items-center gap-1 text-green-600 text-sm bg-green-50 px-2 py-1 rounded-full">
+                    <FiCheckCircle size={14} />
+                    Verified Purchase
+                  </span>
+                )}
               </div>
-              {review.verifiedPurchase && (
-                <span className="flex items-center gap-1 text-green-600 text-sm bg-green-50 px-2 py-1 rounded-full">
-                  <FiCheckCircle size={14} />
-                  Verified Purchase
-                </span>
+              <h4 className="font-semibold text-gray-900 mt-2">
+                {review.title}
+              </h4>
+              <p className="text-gray-600 mt-2">{review.comment}</p>
+              <div className="flex items-center gap-4 mt-4">
+                <button
+                  onClick={() => handleMarkHelpful(review._id, "helpful")}
+                  className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition"
+                >
+                  <FiThumbsUp size={16} />
+                  <span className="text-sm">{review.helpful || 0}</span>
+                </button>
+                <button
+                  onClick={() => handleMarkHelpful(review._id, "notHelpful")}
+                  className="flex items-center gap-1 text-gray-500 hover:text-red-600 transition"
+                >
+                  <FiThumbsDown size={16} />
+                  <span className="text-sm">{review.notHelpful || 0}</span>
+                </button>
+              </div>
+              {review.reply?.text && (
+                <div className="mt-4 bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm font-semibold text-gray-700">
+                    LapHub.pk Response:
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {review.reply.text}
+                  </p>
+                </div>
               )}
             </div>
-            <h4 className="font-semibold text-gray-900 mt-2">{review.title}</h4>
-            <p className="text-gray-600 mt-2">{review.comment}</p>
-            <div className="flex items-center gap-4 mt-4">
-              <button
-                onClick={() => handleMarkHelpful(review._id, "helpful")}
-                className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition"
-              >
-                <FiThumbsUp size={16} />
-                <span className="text-sm">{review.helpful || 0}</span>
-              </button>
-              <button
-                onClick={() => handleMarkHelpful(review._id, "notHelpful")}
-                className="flex items-center gap-1 text-gray-500 hover:text-red-600 transition"
-              >
-                <FiThumbsDown size={16} />
-                <span className="text-sm">{review.notHelpful || 0}</span>
-              </button>
-            </div>
-            {review.reply?.text && (
-              <div className="mt-4 bg-gray-50 rounded-lg p-4">
-                <p className="text-sm font-semibold text-gray-700">
-                  LapHub.pk Response:
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  {review.reply.text}
-                </p>
-              </div>
-            )}
+          ))}
+        </div>
+      ) : (
+        !loading && (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No reviews yet.</p>
           </div>
-        ))}
-      </div>
+        )
+      )}
 
-      {hasMore && (
+      {hasMore && reviews.length > 0 && (
         <div className="text-center mt-6">
           <button
             onClick={() => setPage((p) => p + 1)}
