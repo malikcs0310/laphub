@@ -108,6 +108,17 @@ const ProductDetail = () => {
     setIsLoggedIn(!!token);
   }, []);
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    // Otherwise, it's a local upload
+    return `${API_URL}/uploads/${imagePath}`;
+  };
+
   // Fetch laptop details
   useEffect(() => {
     const fetchLaptop = async () => {
@@ -121,7 +132,7 @@ const ProductDetail = () => {
           Array.isArray(productData.images) &&
           productData.images.length > 0
         ) {
-          setSelectedImage(`${API_URL}/uploads/${productData.images[0]}`);
+          setSelectedImage(getImageUrl(productData.images[0]));
         }
       } catch (error) {
         console.log("Error fetching laptop:", error);
@@ -265,7 +276,7 @@ const ProductDetail = () => {
             <div className="flex gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-4 md:mt-5 flex-wrap">
               {hasImages ? (
                 laptop.images.map((img, index) => {
-                  const imageUrl = `${API_URL}/uploads/${img}`;
+                  const imageUrl = getImageUrl(img);
                   return (
                     <button
                       key={index}
