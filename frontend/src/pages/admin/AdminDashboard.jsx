@@ -60,7 +60,7 @@ const AdminDashboard = () => {
       const data = await response.json();
       if (response.ok) {
         setStats(data.stats);
-        setRecentOrders(data.recentOrders);
+        setRecentOrders(data.recentOrders || []);
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
         Admin Dashboard
       </h1>
 
-      {/* Orders Stats Cards - 2 columns on mobile, 4 on desktop */}
+      {/* Orders Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
         <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 md:p-6">
           <div className="flex items-center justify-between">
@@ -234,7 +234,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Reviews & Testimonials Stats - Stack on mobile */}
+      {/* Reviews & Testimonials Stats */}
       <div className="flex flex-col md:flex-row gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Reviews Stats Card */}
         <div className="flex-1 bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-6">
@@ -432,38 +432,49 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {recentOrders.map((order) => (
-                <tr
-                  key={order._id}
-                  className="border-b last:border-0 hover:bg-gray-50"
-                >
-                  <td className="py-2 sm:py-3">
-                    <Link
-                      to={`/admin/orders/${order._id}`}
-                      className="text-blue-600 hover:underline text-[10px] sm:text-xs"
-                    >
-                      {order.orderNumber}
-                    </Link>
-                  </td>
-                  <td className="py-2 sm:py-3 text-[10px] sm:text-xs">
-                    {order.customer?.name?.split(" ")[0] ||
-                      order.customer?.name}
-                  </td>
-                  <td className="py-2 sm:py-3 text-[10px] sm:text-xs">
-                    {formatDate(order.createdAt)}
-                  </td>
-                  <td className="py-2 sm:py-3 text-[10px] sm:text-xs font-semibold">
-                    {formatPrice(order.total)}
-                  </td>
-                  <td className="py-2 sm:py-3">
-                    <span
-                      className={`px-1.5 py-0.5 rounded-full text-[8px] sm:text-[10px] font-medium ${statusColors[order.orderStatus]}`}
-                    >
-                      {order.orderStatus}
-                    </span>
+              {recentOrders.length > 0 ? (
+                recentOrders.map((order) => (
+                  <tr
+                    key={order._id}
+                    className="border-b last:border-0 hover:bg-gray-50"
+                  >
+                    <td className="py-2 sm:py-3">
+                      <Link
+                        to={`/admin/orders/${order._id}`}
+                        className="text-blue-600 hover:underline text-[10px] sm:text-xs"
+                      >
+                        {order.orderNumber}
+                      </Link>
+                    </td>
+                    <td className="py-2 sm:py-3 text-[10px] sm:text-xs">
+                      {order.customer?.name?.split(" ")[0] ||
+                        order.customer?.name}
+                    </td>
+                    <td className="py-2 sm:py-3 text-[10px] sm:text-xs">
+                      {formatDate(order.createdAt)}
+                    </td>
+                    <td className="py-2 sm:py-3 text-[10px] sm:text-xs font-semibold">
+                      {formatPrice(order.total)}
+                    </td>
+                    <td className="py-2 sm:py-3">
+                      <span
+                        className={`px-1.5 py-0.5 rounded-full text-[8px] sm:text-[10px] font-medium ${statusColors[order.orderStatus]}`}
+                      >
+                        {order.orderStatus}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="text-center py-8 text-gray-500 text-sm"
+                  >
+                    No orders found
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
