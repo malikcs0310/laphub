@@ -15,7 +15,7 @@ import {
 } from "react-icons/fi";
 import { getCartItems, removeFromCart } from "../utils/cartUtils";
 import toast from "react-hot-toast";
-import Logo from "./Logo"; // ✅ Add this import
+import Logo from "./Logo";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -39,6 +39,18 @@ const Header = () => {
   const location = useLocation();
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+  // ✅ Updated getImageUrl for Cloudinary support
+  const getImageUrl = useCallback(
+    (imagePath) => {
+      if (!imagePath) return "https://via.placeholder.com/100x80?text=No+Image";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+      }
+      return `${API_URL}/uploads/${imagePath}`;
+    },
+    [API_URL],
+  );
 
   const loadCartItems = useCallback(() => {
     setCartItems(getCartItems());
@@ -163,14 +175,6 @@ const Header = () => {
     [navigate],
   );
 
-  const getImageUrl = useCallback(
-    (imagePath) => {
-      if (!imagePath) return "https://via.placeholder.com/100x80?text=No+Image";
-      return `${API_URL}/uploads/${imagePath}`;
-    },
-    [API_URL],
-  );
-
   const isActive = (path) => location.pathname === path;
 
   const getUserInitials = () => {
@@ -193,8 +197,6 @@ const Header = () => {
               >
                 {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
               </button>
-
-              {/* ✅ Using Logo Component */}
               <Logo />
             </div>
 
@@ -214,7 +216,7 @@ const Header = () => {
               />
             </div>
 
-            {/* Right Icons - Same as before */}
+            {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-2">
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
@@ -385,11 +387,10 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Cart Drawer - Same as before */}
+      {/* Cart Drawer - UPDATED with proper images and info */}
       <div
         className={`fixed right-0 top-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-        {/* ... cart drawer content same as before ... */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-bold">Your Cart ({cartCount})</h2>
           <button
@@ -399,6 +400,7 @@ const Header = () => {
             <FiX size={20} />
           </button>
         </div>
+
         <div className="flex-1 overflow-y-auto p-4">
           {cartItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center">
@@ -412,50 +414,75 @@ const Header = () => {
               </button>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {cartItems.map((item) => (
-                <div key={item._id} className="flex gap-3 border-b pb-3">
+                <div key={item._id} className="flex gap-3 border-b pb-4">
                   <img
                     src={getImageUrl(item.images?.[0])}
                     alt={item.title}
-                    className="w-16 h-16 object-cover rounded-lg"
+                    className="w-20 h-20 object-cover rounded-lg"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/80x80?text=No+Image";
+                    }}
                   />
                   <div className="flex-1">
-                    <h3 className="text-sm font-medium line-clamp-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Rs {Number(item.price).toLocaleString()}
-                    </p>
+                    <Link
+                      to={`/product/${item._id}`}
+                      onClick={() => setIsCartOpen(false)}
+                    >
+                      <h3 className="text-sm font-semibold text-gray-900 hover:text-blue-600 line-clamp-2">
+                        {item.title}
+                      </h3>
+                    </Link>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {item.brand && (
+                        <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                          {item.brand}
+                        </span>
+                      )}
+                      {item.processor && (
+                        <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                          {item.processor.substring(0, 20)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
+                      <p className="text-base font-bold text-blue-600">
+                        Rs {Number(item.price).toLocaleString()}
+                      </p>
+                      <button
+                        onClick={() => handleRemove(item._id)}
+                        className="text-red-500 hover:text-red-700 p-1"
+                      >
+                        <FiTrash2 size={16} />
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => handleRemove(item._id)}
-                    className="text-red-500"
-                  >
-                    <FiTrash2 size={16} />
-                  </button>
                 </div>
               ))}
             </div>
           )}
         </div>
+
         {cartItems.length > 0 && (
-          <div className="p-4 border-t">
+          <div className="p-4 border-t bg-gray-50">
             <div className="flex justify-between mb-3">
-              <span className="font-medium">Total</span>
-              <span className="font-bold text-lg">
+              <span className="font-medium text-gray-700">Total</span>
+              <span className="font-bold text-xl text-blue-600">
                 Rs {totalPrice.toLocaleString()}
               </span>
             </div>
             <button
               onClick={handleViewCart}
-              className="w-full bg-blue-600 text-white py-2 rounded-lg mb-2"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold mb-2"
             >
               View Cart
             </button>
             <button
               onClick={handleCheckout}
-              className="w-full border border-blue-600 text-blue-600 py-2 rounded-lg"
+              className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-2.5 rounded-lg font-semibold"
             >
               Checkout
             </button>
