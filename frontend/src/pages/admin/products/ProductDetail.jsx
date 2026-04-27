@@ -7,7 +7,6 @@ import {
   FiMessageCircle,
   FiCheckCircle,
   FiTruck,
-  FiThumbsDown,
   FiZoomIn,
   FiClock,
   FiShield,
@@ -15,6 +14,7 @@ import {
   FiHardDrive,
   FiDatabase,
   FiMonitor,
+  FiBarChart2,
 } from "react-icons/fi";
 import { addToCart } from "../../../utils/cartUtils";
 import toast from "react-hot-toast";
@@ -35,24 +35,29 @@ const ProductSpecsTable = ({ laptop }) => {
     { label: "Storage", value: laptop.storage, icon: <FiHardDrive /> },
     { label: "Screen Size", value: laptop.screenSize, icon: <FiMonitor /> },
     {
-      label: "Display Type",
-      value: laptop.displayType || "Standard",
+      label: "Resolution",
+      value: laptop.resolution || "Not Specified",
       icon: <FiMonitor />,
     },
     {
-      label: "Graphics",
-      value: laptop.graphics || "Integrated",
+      label: "Graphics / GPU",
+      value: laptop.gpu || "Integrated",
+      icon: <FiMonitor />,
+    },
+    {
+      label: "Operating System",
+      value: laptop.os || "Not Specified",
       icon: <FiMonitor />,
     },
     {
       label: "Battery Health",
       value: laptop.batteryHealth || "80-90%",
-      icon: <FiMonitor />,
+      icon: <FiBarChart2 />,
     },
     { label: "Condition", value: laptop.condition, icon: <FiCheckCircle /> },
     {
-      label: "Warranty",
-      value: laptop.warranty || "7 Days Check Warranty",
+      label: "Stock Status",
+      value: laptop.stock > 0 ? `${laptop.stock} in stock` : "Out of stock",
       icon: <FiCheckCircle />,
     },
     { label: "Location", value: laptop.location, icon: <FiMonitor /> },
@@ -133,7 +138,6 @@ const ProductDetail = () => {
         setTotalReviews(data.total || 0);
       } catch (error) {
         console.log("Rating fetch failed:", error);
-        // Fallback to default if API not ready
         setAverageRating(4.5);
         setTotalReviews(12);
       }
@@ -188,7 +192,7 @@ const ProductDetail = () => {
 
   const handleWhatsAppOrder = () => {
     const phoneNumber = "923104082056";
-    const message = `🖥️ *Laptop Inquiry - LapHub.pk* 🖥️\n\n*Product:* ${laptop.title}\n*Price:* Rs ${laptop.price?.toLocaleString()}\n*Brand:* ${laptop.brand}\n*Model:* ${laptop.model}\n*Processor:* ${laptop.processor}\n*RAM:* ${laptop.ram}\n*Storage:* ${laptop.storage}\n*Condition:* ${laptop.condition}\n*Location:* ${laptop.location}\n\n*Product Link:* ${window.location.href}\n\nI'm interested in this laptop. Please share more details.`;
+    const message = `🖥️ *Laptop Inquiry - LapHub.pk* 🖥️\n\n*Product:* ${laptop.title}\n*Price:* Rs ${laptop.price?.toLocaleString()}\n*Brand:* ${laptop.brand}\n*Model:* ${laptop.model}\n*Processor:* ${laptop.processor}\n*Generation:* ${laptop.generation || "N/A"}\n*RAM:* ${laptop.ram}\n*Storage:* ${laptop.storage}\n*GPU:* ${laptop.gpu || "Integrated"}\n*OS:* ${laptop.os || "N/A"}\n*Condition:* ${laptop.condition}\n*Location:* ${laptop.location}\n*Stock:* ${laptop.stock > 0 ? "In Stock" : "Out of Stock"}\n\n*Product Link:* ${window.location.href}\n\nI'm interested in this laptop. Please share more details.`;
     window.open(
       `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
       "_blank",
@@ -219,11 +223,19 @@ const ProductDetail = () => {
     laptop.model && `Model: ${laptop.model}`,
     laptop.type && `Type: ${laptop.type}`,
     laptop.processor && `Processor: ${laptop.processor}`,
+    laptop.generation && `Generation: ${laptop.generation}`,
     laptop.ram && `RAM: ${laptop.ram}`,
     laptop.storage && `Storage: ${laptop.storage}`,
-    laptop.screenSize && `Screen Size: ${laptop.screenSize}`,
+    laptop.gpu && `GPU: ${laptop.gpu}`,
+    laptop.os && `OS: ${laptop.os}`,
+    laptop.screenSize && `Screen: ${laptop.screenSize}`,
+    laptop.resolution && `Resolution: ${laptop.resolution}`,
+    laptop.batteryHealth && `Battery Health: ${laptop.batteryHealth}`,
     laptop.condition && `Condition: ${laptop.condition}`,
     laptop.location && `Location: ${laptop.location}`,
+    laptop.stock > 0
+      ? `Stock: ${laptop.stock} available`
+      : "Stock: Out of stock",
   ].filter(Boolean);
 
   const descriptionLines = laptop.description
@@ -289,6 +301,16 @@ const ProductDetail = () => {
               <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 bg-blue-100 text-blue-700 text-[10px] sm:text-sm font-semibold rounded-full">
                 {laptop.condition || "Laptop"}
               </span>
+              {laptop.stock <= 0 && (
+                <span className="ml-2 inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-[10px] sm:text-sm font-semibold rounded-full">
+                  Out of Stock
+                </span>
+              )}
+              {laptop.featured && (
+                <span className="ml-2 inline-flex items-center px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] sm:text-sm font-semibold rounded-full">
+                  Featured
+                </span>
+              )}
             </div>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 leading-snug">
@@ -346,6 +368,34 @@ const ProductDetail = () => {
               </div>
               <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
                 <p className="text-[10px] sm:text-sm text-gray-500">
+                  Processor
+                </p>
+                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+                  {laptop.processor}
+                </p>
+              </div>
+              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
+                <p className="text-[10px] sm:text-sm text-gray-500">
+                  Generation
+                </p>
+                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+                  {laptop.generation || "N/A"}
+                </p>
+              </div>
+              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
+                <p className="text-[10px] sm:text-sm text-gray-500">RAM</p>
+                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+                  {laptop.ram}
+                </p>
+              </div>
+              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
+                <p className="text-[10px] sm:text-sm text-gray-500">Storage</p>
+                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+                  {laptop.storage}
+                </p>
+              </div>
+              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
+                <p className="text-[10px] sm:text-sm text-gray-500">
                   Condition
                 </p>
                 <p className="font-semibold text-gray-800 text-xs sm:text-sm">
@@ -364,14 +414,24 @@ const ProductDetail = () => {
             <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-10">
               <button
                 onClick={(e) => handleBuyNow(laptop, e)}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
+                disabled={laptop.stock <= 0}
+                className={`flex-1 px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base ${
+                  laptop.stock > 0
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                }`}
               >
                 <FaBolt className="text-sm sm:text-base md:text-lg" />
-                Buy Now
+                {laptop.stock > 0 ? "Buy Now" : "Out of Stock"}
               </button>
               <button
                 onClick={(e) => handleAddToCart(laptop, e)}
-                className="flex-1 bg-gray-900 hover:bg-black text-white px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
+                disabled={laptop.stock <= 0}
+                className={`flex-1 px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base ${
+                  laptop.stock > 0
+                    ? "bg-gray-900 hover:bg-black text-white"
+                    : "bg-gray-400 cursor-not-allowed text-gray-200"
+                }`}
               >
                 <FiShoppingCart className="text-sm sm:text-base md:text-lg" />
                 Add to Cart
@@ -388,12 +448,18 @@ const ProductDetail = () => {
             {/* Stock Status */}
             <div className="mb-4 sm:mb-6">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-xs sm:text-sm text-green-600 font-medium">
-                  In Stock
+                <div
+                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full animate-pulse ${laptop.stock > 0 ? "bg-green-500" : "bg-red-500"}`}
+                ></div>
+                <span
+                  className={`text-xs sm:text-sm font-medium ${laptop.stock > 0 ? "text-green-600" : "text-red-600"}`}
+                >
+                  {laptop.stock > 0
+                    ? `In Stock (${laptop.stock} available)`
+                    : "Out of Stock"}
                 </span>
                 <span className="text-[10px] sm:text-xs text-gray-400">
-                  • Ready to ship
+                  • {laptop.stock > 0 ? "Ready to ship" : "Check back later"}
                 </span>
               </div>
             </div>
@@ -404,7 +470,7 @@ const ProductDetail = () => {
                 Key Features
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-4 sm:gap-x-6 text-gray-700">
-                {features.map((feature, index) => (
+                {features.slice(0, 10).map((feature, index) => (
                   <div
                     key={index}
                     className="flex items-start gap-1.5 sm:gap-2"
