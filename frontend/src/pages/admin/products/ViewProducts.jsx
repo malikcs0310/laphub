@@ -131,9 +131,16 @@ const ViewProducts = () => {
 
   const formatPrice = (price) => `Rs ${Number(price).toLocaleString()}`;
 
+  // Update getStockBadge function:
+
   const getStockBadge = (stock) => {
+    // Check if stock is undefined or null
     if (stock === undefined || stock === null) {
-      return <span className="text-gray-600 text-xs font-semibold">N/A</span>;
+      return (
+        <span className="text-gray-600 text-xs font-semibold">
+          Update Stock
+        </span>
+      );
     }
     if (stock <= 0) {
       return (
