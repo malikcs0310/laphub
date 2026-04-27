@@ -119,31 +119,30 @@ const FeaturedProducts = () => {
 
   if (loading) {
     return (
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
+      <section className="py-6 bg-gray-50">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="flex justify-between items-center mb-4">
             <div>
-              <div className="h-8 w-40 bg-gray-200 rounded animate-pulse mb-2"></div>
-              <div className="h-4 w-56 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-6 w-32 bg-gray-200 rounded animate-pulse mb-1"></div>
+              <div className="h-3 w-40 bg-gray-200 rounded animate-pulse"></div>
             </div>
-            <div className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-6 w-16 bg-gray-200 rounded animate-pulse"></div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 gap-2">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl overflow-hidden shadow-sm"
+                className="bg-white rounded-lg overflow-hidden shadow-sm"
               >
-                <div className="h-48 bg-gray-200 animate-pulse"></div>
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                  <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-32 bg-gray-200 animate-pulse"></div>
+                <div className="p-2 space-y-1">
+                  <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                   <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                  <div className="h-6 bg-gray-200 rounded w-1/2"></div>
-                  <div className="flex gap-3">
-                    <div className="h-10 bg-gray-200 rounded flex-1"></div>
-                    <div className="h-10 bg-gray-200 rounded flex-1"></div>
+                  <div className="flex gap-1">
+                    <div className="h-6 bg-gray-200 rounded flex-1"></div>
+                    <div className="h-6 bg-gray-200 rounded flex-1"></div>
                   </div>
                 </div>
               </div>
@@ -155,28 +154,28 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section className="py-6 bg-gray-50">
+      <div className="container mx-auto px-3">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-base sm:text-xl font-bold text-gray-900">
               Featured Products
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-[10px] sm:text-xs text-gray-500">
               Latest handpicked laptops for you
             </p>
           </div>
           <Link
             to="/products"
-            className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+            className="text-blue-600 text-xs sm:text-sm font-medium flex items-center gap-0.5"
           >
-            View All <FiArrowRight size={16} />
+            View All <FiArrowRight size={12} />
           </Link>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        {/* Products Grid - 2 columns on mobile, 4 on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
           {products.map((product) => {
             const rating = productRatings[product._id] || {
               average: 0,
@@ -186,35 +185,35 @@ const FeaturedProducts = () => {
               <div
                 key={product._id}
                 onClick={() => navigate(`/product/${product._id}`)}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
+                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
               >
-                {/* Image */}
-                <div className="relative h-48 overflow-hidden bg-gray-100">
+                {/* Image - Fixed height for mobile */}
+                <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden bg-gray-100">
                   <img
                     src={
                       product.images && product.images.length > 0
                         ? `${API_URL}/uploads/${product.images[0]}`
-                        : "https://via.placeholder.com/400x300?text=No+Image"
+                        : "https://via.placeholder.com/300x200?text=No+Image"
                     }
                     alt={product.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     loading="lazy"
                   />
 
-                  {/* Badge */}
+                  {/* Condition Badge */}
                   {product.condition && (
-                    <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                    <span className="absolute top-1 left-1 bg-blue-600 text-white text-[8px] sm:text-xs px-1.5 py-0.5 rounded">
                       {product.condition}
                     </span>
                   )}
 
-                  {/* Wishlist */}
+                  {/* Wishlist Button */}
                   <button
                     onClick={(e) => toggleWishlist(product, e)}
-                    className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-sm"
+                    className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm"
                   >
                     <FiHeart
-                      size={16}
+                      size={12}
                       className={
                         wishlist.includes(product._id)
                           ? "fill-red-500 text-red-500"
@@ -225,50 +224,52 @@ const FeaturedProducts = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-4">
+                <div className="p-2">
                   {/* Brand */}
-                  <div className="mb-2">
-                    <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded inline-block">
+                  <div className="mb-1">
+                    <span className="text-[8px] sm:text-[10px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
                       {product.brand || "Laptop"}
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px]">
-                    {product.title}
+                  <h3 className="text-[10px] sm:text-xs font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[28px] sm:min-h-[32px]">
+                    {product.title.length > 40
+                      ? `${product.title.substring(0, 40)}...`
+                      : product.title}
                   </h3>
 
-                  {/* Processor - Full display */}
+                  {/* Processor - Small screens hide */}
                   {product.processor && (
-                    <div className="flex items-center gap-1 mb-2 text-xs text-gray-600">
-                      <FiCpu size={12} className="text-gray-400" />
-                      <span>{product.processor}</span>
+                    <div className="hidden sm:flex items-center gap-1 mb-1 text-[8px] text-gray-500">
+                      <FiCpu size={9} />
+                      <span className="truncate">{product.processor}</span>
                     </div>
                   )}
 
-                  {/* RAM and Storage - Side by side */}
-                  <div className="flex items-center gap-3 mb-3">
+                  {/* RAM and Storage */}
+                  <div className="flex items-center gap-1 sm:gap-2 mb-1">
                     {product.ram && (
-                      <div className="flex items-center gap-1 text-xs text-gray-600">
-                        <FiDatabase size={12} className="text-gray-400" />
+                      <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
+                        <FiDatabase size={7} />
                         <span>{product.ram}</span>
                       </div>
                     )}
                     {product.storage && (
-                      <div className="flex items-center gap-1 text-xs text-gray-600">
-                        <FiHardDrive size={12} className="text-gray-400" />
+                      <div className="flex items-center gap-0.5 text-[7px] sm:text-[9px] text-gray-500">
+                        <FiHardDrive size={7} />
                         <span>{product.storage}</span>
                       </div>
                     )}
                   </div>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-1 mb-3">
+                  <div className="flex items-center gap-0.5 mb-1">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <FiStar
                           key={star}
-                          size={14}
+                          size={8}
                           className={
                             star <= Math.round(rating.average)
                               ? "text-yellow-400 fill-yellow-400"
@@ -278,32 +279,32 @@ const FeaturedProducts = () => {
                       ))}
                     </div>
                     {rating.total > 0 && (
-                      <span className="text-xs text-gray-400">
+                      <span className="text-[6px] sm:text-[8px] text-gray-400">
                         ({rating.total})
                       </span>
                     )}
                   </div>
 
                   {/* Price */}
-                  <div className="mb-4">
-                    <span className="text-xl font-bold text-gray-900">
+                  <div className="mb-1.5">
+                    <span className="text-xs sm:text-sm font-bold text-gray-900">
                       Rs {product.price?.toLocaleString()}
                     </span>
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-1">
                     <button
                       onClick={(e) => handleBuyNow(product, e)}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[8px] sm:text-[10px] font-medium py-1 rounded transition"
                     >
-                      Buy Now
+                      Buy
                     </button>
                     <button
                       onClick={(e) => handleAddToCart(product, e)}
-                      className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-1"
+                      className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 text-[8px] sm:text-[10px] font-medium py-1 rounded transition flex items-center justify-center gap-0.5"
                     >
-                      <FiShoppingCart size={14} /> Add
+                      <FiShoppingCart size={8} /> Add
                     </button>
                   </div>
                 </div>
