@@ -17,9 +17,17 @@ const EditLaptop = () => {
     brand: "",
     model: "",
     processor: "",
+    generation: "",
     ram: "",
     storage: "",
     screenSize: "",
+    resolution: "",
+    gpu: "",
+    os: "",
+    batteryHealth: "",
+    stock: "1",
+    featured: false,
+    status: "available",
     images: [],
   });
 
@@ -30,8 +38,8 @@ const EditLaptop = () => {
 
   const laptopData = {
     Dell: ["Latitude", "Inspiron", "XPS", "Vostro", "Precision"],
-    HP: ["EliteBook", "ProBook", "Pavilion", "Envy"],
-    Lenovo: ["ThinkPad", "IdeaPad", "Legion", "Yoga"],
+    HP: ["EliteBook", "ProBook", "Pavilion", "Envy", "ZBook"],
+    Lenovo: ["ThinkPad", "IdeaPad", "Legion", "Yoga", "ThinkBook"],
     Apple: ["MacBook Air", "MacBook Pro"],
     ASUS: ["Vivobook", "Zenbook", "ROG", "TUF"],
     Acer: ["Aspire", "Predator", "Swift", "Nitro"],
@@ -46,6 +54,48 @@ const EditLaptop = () => {
     "Gaming Laptop",
     "Ultrabook",
     "Other",
+  ];
+
+  const generations = [
+    "Intel Core 3rd Gen",
+    "Intel Core 4th Gen",
+    "Intel Core 5th Gen",
+    "Intel Core 6th Gen",
+    "Intel Core 7th Gen",
+    "Intel Core 8th Gen",
+    "Intel Core 9th Gen",
+    "Intel Core 10th Gen",
+    "Intel Core 11th Gen",
+    "Intel Core 12th Gen",
+    "Intel Core 13th Gen",
+    "Intel Core 14th Gen",
+    "AMD Ryzen 3",
+    "AMD Ryzen 5",
+    "AMD Ryzen 7",
+    "AMD Ryzen 9",
+  ];
+
+  const resolutions = [
+    "HD (1366x768)",
+    "Full HD (1920x1080)",
+    "2K (2560x1440)",
+    "4K (3840x2160)",
+    "Retina Display",
+  ];
+
+  const osOptions = [
+    "Windows 10",
+    "Windows 11",
+    "macOS",
+    "Linux",
+    "Chrome OS",
+    "No OS",
+  ];
+
+  const statusOptions = [
+    { value: "available", label: "Available" },
+    { value: "sold", label: "Sold" },
+    { value: "reserved", label: "Reserved" },
   ];
 
   useEffect(() => {
@@ -64,9 +114,17 @@ const EditLaptop = () => {
           brand: data.brand || "",
           model: data.model || "",
           processor: data.processor || "",
+          generation: data.generation || "",
           ram: data.ram || "",
           storage: data.storage || "",
           screenSize: data.screenSize || "",
+          resolution: data.resolution || "",
+          gpu: data.gpu || "",
+          os: data.os || "",
+          batteryHealth: data.batteryHealth || "",
+          stock: data.stock || "1",
+          featured: data.featured || false,
+          status: data.status || "available",
           images: [],
         });
 
@@ -83,13 +141,18 @@ const EditLaptop = () => {
   }, [id, API_URL]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
     if (name === "brand") {
       setFormData((prev) => ({
         ...prev,
         brand: value,
         model: "",
+      }));
+    } else if (type === "checkbox") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
       }));
     } else {
       setFormData((prev) => ({
@@ -170,7 +233,7 @@ const EditLaptop = () => {
     <div className="min-h-screen bg-gray-100 py-4 sm:py-6 px-3 sm:px-4 lg:px-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-xl sm:rounded-2xl shadow-lg w-full max-w-4xl mx-auto p-4 sm:p-5 md:p-6 lg:p-8"
+        className="bg-white rounded-xl sm:rounded-2xl shadow-lg w-full max-w-5xl mx-auto p-4 sm:p-5 md:p-6 lg:p-8"
       >
         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800">
           Edit Laptop
@@ -206,6 +269,39 @@ const EditLaptop = () => {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Stock Quantity
+            </label>
+            <input
+              type="number"
+              name="stock"
+              placeholder="Stock"
+              min="0"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.stock}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              name="status"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              {statusOptions.map((opt, i) => (
+                <option key={i} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -322,10 +418,10 @@ const EditLaptop = () => {
           />
         </div>
 
-        {/* Specifications */}
+        {/* Processor & Performance */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
-            Specifications
+            Processor & Performance
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
@@ -335,9 +431,42 @@ const EditLaptop = () => {
               <input
                 type="text"
                 name="processor"
-                placeholder="Processor (i5 6th Gen)"
+                placeholder="Processor (Intel Core i5)"
                 className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 value={formData.processor}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Generation
+              </label>
+              <select
+                name="generation"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.generation}
+                onChange={handleChange}
+              >
+                <option value="">Select Generation</option>
+                {generations.map((gen, i) => (
+                  <option key={i} value={gen}>
+                    {gen}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                GPU / Graphics
+              </label>
+              <input
+                type="text"
+                name="gpu"
+                placeholder="Graphics Card"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.gpu}
                 onChange={handleChange}
               />
             </div>
@@ -369,7 +498,15 @@ const EditLaptop = () => {
                 onChange={handleChange}
               />
             </div>
+          </div>
+        </div>
 
+        {/* Display & Screen */}
+        <div className="mt-4 sm:mt-6">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
+            Display & Screen
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Screen Size
@@ -383,7 +520,83 @@ const EditLaptop = () => {
                 onChange={handleChange}
               />
             </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Resolution
+              </label>
+              <select
+                name="resolution"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.resolution}
+                onChange={handleChange}
+              >
+                <option value="">Select Resolution</option>
+                {resolutions.map((res, i) => (
+                  <option key={i} value={res}>
+                    {res}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+        </div>
+
+        {/* Software & Battery */}
+        <div className="mt-4 sm:mt-6">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
+            Software & Battery
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Operating System
+              </label>
+              <select
+                name="os"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.os}
+                onChange={handleChange}
+              >
+                <option value="">Select OS</option>
+                {osOptions.map((os, i) => (
+                  <option key={i} value={os}>
+                    {os}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Battery Health
+              </label>
+              <input
+                type="text"
+                name="batteryHealth"
+                placeholder="Battery Health (85%)"
+                className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                value={formData.batteryHealth}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Featured */}
+        <div className="mt-4 sm:mt-6">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              name="featured"
+              checked={formData.featured}
+              onChange={handleChange}
+              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+            />
+            <span className="text-sm font-medium text-gray-700">
+              Featured Product (Show on Homepage)
+            </span>
+          </label>
         </div>
 
         {/* Existing Images */}
@@ -439,7 +652,7 @@ const EditLaptop = () => {
             </label>
           </div>
           <p className="text-[10px] sm:text-xs text-gray-500">
-            You can select multiple images
+            You can select multiple images (Max 5)
           </p>
         </div>
 
