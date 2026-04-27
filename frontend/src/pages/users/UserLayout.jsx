@@ -39,7 +39,7 @@ const UserLayout = () => {
   };
 
   const handleBackToStore = () => {
-    navigate("/");
+    navigate("/products");
   };
 
   const isActive = (path) => location.pathname === path;
@@ -147,16 +147,6 @@ const UserLayout = () => {
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
             >
               <FiMenu size={22} />
-            </button>
-
-            {/* Back to Store Button - Mobile & Desktop */}
-            <button
-              onClick={handleBackToStore}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            >
-              <FiArrowLeft size={16} />
-              <span className="hidden sm:inline">Back to Store</span>
-              <span className="sm:hidden">Back</span>
             </button>
           </div>
 
