@@ -1,14 +1,17 @@
 import Laptop from "../models/Laptop.js";
 
 // ✅ CREATE - Add new laptop
+// ✅ CREATE - Add new laptop with Cloudinary
 export const addLaptop = async (req, res) => {
   try {
-    const imagePaths = req.files ? req.files.map((file) => file.filename) : [];
+    // Cloudinary image URLs
+    const imageUrls = req.files ? req.files.map((file) => file.path) : [];
+
+    console.log("📸 Uploaded images:", imageUrls);
 
     const laptop = new Laptop({
       ...req.body,
-      images: imagePaths,
-      // Ensure number fields are properly parsed
+      images: imageUrls,
       price: Number(req.body.price),
       stock: Number(req.body.stock) || 1,
       featured: req.body.featured === "true" || req.body.featured === true,
@@ -170,6 +173,7 @@ export const getSingleLaptop = async (req, res) => {
 };
 
 // ✅ UPDATE LAPTOP
+// ✅ UPDATE Laptop with Cloudinary
 export const updateLaptop = async (req, res) => {
   try {
     const laptop = await Laptop.findById(req.params.id);
@@ -205,9 +209,9 @@ export const updateLaptop = async (req, res) => {
       status: req.body.status || "available",
     };
 
-    // Handle images
+    // Handle new images upload
     if (req.files && req.files.length > 0) {
-      updatedData.images = req.files.map((file) => file.filename);
+      updatedData.images = req.files.map((file) => file.path);
     }
 
     const updatedLaptop = await Laptop.findByIdAndUpdate(
