@@ -8,6 +8,8 @@ import {
   FiLogOut,
   FiMenu,
   FiX,
+  FiShoppingBag,
+  FiArrowLeft,
 } from "react-icons/fi";
 import { MdLaptop } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -33,6 +35,10 @@ const UserLayout = () => {
   const handleLogout = () => {
     localStorage.clear();
     toast.success("Logged out");
+    navigate("/");
+  };
+
+  const handleBackToStore = () => {
     navigate("/");
   };
 
@@ -100,12 +106,23 @@ const UserLayout = () => {
         </nav>
 
         {/* Bottom */}
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-gray-800 space-y-3">
+          {/* Back to Store Button */}
+          <button
+            onClick={handleBackToStore}
+            className="flex items-center gap-2 text-blue-400 hover:text-blue-300 w-full transition-colors"
+          >
+            <FiShoppingBag size={18} />
+            Back to Store
+          </button>
+
+          {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-red-400 hover:text-red-500 w-full"
+            className="flex items-center gap-2 text-red-400 hover:text-red-500 w-full transition-colors"
           >
-            <FiLogOut /> Logout
+            <FiLogOut size={18} />
+            Logout
           </button>
         </div>
       </aside>
@@ -120,18 +137,31 @@ const UserLayout = () => {
 
       {/* 🔥 MAIN AREA */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-        {/* 🔥 HEADER - Fixed - Only User Name */}
+        {/* 🔥 HEADER - Fixed with Back Button */}
         <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm border-b shrink-0">
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-          >
-            <FiMenu size={22} />
-          </button>
+          {/* Left Section - Mobile Menu + Back Button */}
+          <div className="flex items-center gap-2">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+            >
+              <FiMenu size={22} />
+            </button>
+
+            {/* Back to Store Button - Mobile & Desktop */}
+            <button
+              onClick={handleBackToStore}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              <FiArrowLeft size={16} />
+              <span className="hidden sm:inline">Back to Store</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+          </div>
 
           {/* Desktop - User Name */}
-          <div className="hidden lg:flex items-center gap-3 ml-auto">
+          <div className="hidden lg:flex items-center gap-3">
             <div className="text-right">
               <p className="text-sm font-medium text-gray-700">
                 {user?.name || "User"}
