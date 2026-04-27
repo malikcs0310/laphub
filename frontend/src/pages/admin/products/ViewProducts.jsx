@@ -6,6 +6,10 @@ import {
   FiPlus,
   FiSearch,
   FiRefreshCw,
+  FiCpu,
+  FiHardDrive,
+  FiDatabase,
+  FiCheckCircle,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -32,7 +36,7 @@ const ViewProducts = () => {
       if (Array.isArray(data)) {
         setLaptops(data);
       } else {
-        setLaptops(data.data || []);
+        setLaptops(data.laptops || data.data || []);
       }
     } catch (error) {
       console.log("Error fetching:", error);
@@ -120,10 +124,61 @@ const ViewProducts = () => {
     (lap) =>
       lap.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lap.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lap.model?.toLowerCase().includes(searchTerm.toLowerCase()),
+      lap.model?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lap.processor?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lap.generation?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const formatPrice = (price) => `Rs ${Number(price).toLocaleString()}`;
+
+  const getStockBadge = (stock) => {
+    if (stock <= 0) {
+      return (
+        <span className="text-red-600 text-xs font-semibold">Out of Stock</span>
+      );
+    } else if (stock <= 3) {
+      return (
+        <span className="text-orange-600 text-xs font-semibold">
+          Low Stock ({stock})
+        </span>
+      );
+    } else {
+      return (
+        <span className="text-green-600 text-xs font-semibold">
+          In Stock ({stock})
+        </span>
+      );
+    }
+  };
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "available":
+        return (
+          <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs">
+            Available
+          </span>
+        );
+      case "sold":
+        return (
+          <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs">
+            Sold
+          </span>
+        );
+      case "reserved":
+        return (
+          <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-xs">
+            Reserved
+          </span>
+        );
+      default:
+        return (
+          <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs">
+            {status}
+          </span>
+        );
+    }
+  };
 
   if (loading) {
     return (
@@ -138,7 +193,12 @@ const ViewProducts = () => {
       {/* Header */}
       <div className="sticky top-0 sm:top-20 z-20 bg-gray-100/95 backdrop-blur border-b border-gray-200 pb-3 sm:pb-4 pt-2 mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h2 className="text-xl sm:text-2xl font-bold">Admin Products</h2>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold">Admin Products</h2>
+            <p className="text-xs text-gray-500 mt-1">
+              Manage your laptop inventory
+            </p>
+          </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <button
@@ -149,14 +209,13 @@ const ViewProducts = () => {
               Add Laptop
             </button>
 
-            {/* Delete Selected Button - Only shows when at least one product is selected */}
             {selectedProducts.length > 0 && (
               <button
                 onClick={handleBulkDelete}
                 className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition flex items-center gap-1.5 text-sm"
               >
                 <FiTrash2 size={14} />
-                Delete Selected ({selectedProducts.length})
+                Delete ({selectedProducts.length})
               </button>
             )}
           </div>
@@ -168,7 +227,7 @@ const ViewProducts = () => {
             <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
             <input
               type="text"
-              placeholder="Search by title, brand, or model..."
+              placeholder="Search by title, brand, model, processor, generation..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -184,21 +243,23 @@ const ViewProducts = () => {
         </div>
       </div>
 
-      {/* Products Table - Horizontal scroll on mobile */}
+      {/* Products Table */}
       <div className="overflow-x-auto bg-white rounded-lg sm:rounded-xl shadow">
-        <table className="w-full min-w-[800px] sm:min-w-full text-sm">
-          <thead className="bg-gray-200 text-gray-700">
+        <table className="w-full min-w-[1000px] sm:min-w-full text-sm">
+          <thead className="bg-gray-200 text-gray-700 sticky top-16 sm:top-24 z-10">
             <tr>
-              <th className="p-2 sm:p-3 text-center">#</th>
-              <th className="p-2 sm:p-3">Image</th>
+              <th className="p-2 sm:p-3 text-center w-12">#</th>
+              <th className="p-2 sm:p-3 w-16">Image</th>
               <th className="p-2 sm:p-3">Title</th>
               <th className="p-2 sm:p-3">Brand</th>
               <th className="p-2 sm:p-3">Model</th>
               <th className="p-2 sm:p-3">Price</th>
-              <th className="p-2 sm:p-3 hidden xs:table-cell">RAM</th>
-              <th className="p-2 sm:p-3 hidden xs:table-cell">Storage</th>
+              <th className="p-2 sm:p-3 hidden md:table-cell">Processor</th>
+              <th className="p-2 sm:p-3 hidden lg:table-cell">RAM/Storage</th>
+              <th className="p-2 sm:p-3">Stock</th>
+              <th className="p-2 sm:p-3 hidden xl:table-cell">Status</th>
               <th className="p-2 sm:p-3">Actions</th>
-              <th className="p-2 sm:p-3 text-center">
+              <th className="p-2 sm:p-3 text-center w-10">
                 <input
                   type="checkbox"
                   checked={
@@ -206,7 +267,7 @@ const ViewProducts = () => {
                     selectedProducts.length === filteredLaptops.length
                   }
                   onChange={handleSelectAll}
-                  className="w-4 h-4"
+                  className="w-4 h-4 cursor-pointer"
                 />
               </th>
             </tr>
@@ -214,7 +275,10 @@ const ViewProducts = () => {
           <tbody>
             {filteredLaptops.length > 0 ? (
               filteredLaptops.map((lap, index) => (
-                <tr key={lap._id} className="border-b hover:bg-gray-50">
+                <tr
+                  key={lap._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
                   <td className="p-2 sm:p-3 font-medium text-center text-xs sm:text-sm">
                     {index + 1}
                   </td>
@@ -223,46 +287,86 @@ const ViewProducts = () => {
                       <img
                         src={`${API_URL}/uploads/${lap.images[0]}`}
                         alt="laptop"
-                        className="w-12 h-10 sm:w-16 sm:h-12 object-cover rounded"
+                        className="w-12 h-10 sm:w-14 sm:h-11 object-cover rounded"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-12 h-10 sm:w-16 sm:h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+                      <div className="w-12 h-10 sm:w-14 sm:h-11 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
                         No img
                       </div>
                     )}
                   </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm">
-                    {lap.title.length > 30
-                      ? `${lap.title.substring(0, 30)}...`
-                      : lap.title}
+                  <td className="p-2 sm:p-3">
+                    <div>
+                      <p className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
+                        {lap.title.length > 35
+                          ? `${lap.title.substring(0, 35)}...`
+                          : lap.title}
+                      </p>
+                      {lap.featured && (
+                        <span className="inline-block bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded mt-1">
+                          Featured
+                        </span>
+                      )}
+                    </div>
                   </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm">{lap.brand}</td>
+                  <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
+                    {lap.brand}
+                  </td>
                   <td className="p-2 sm:p-3 text-xs sm:text-sm">{lap.model}</td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium text-blue-600">
+                  <td className="p-2 sm:p-3 text-xs sm:text-sm font-bold text-blue-600 whitespace-nowrap">
                     {formatPrice(lap.price)}
                   </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm hidden xs:table-cell">
-                    {lap.ram || "-"}
+                  <td className="p-2 sm:p-3 text-xs hidden md:table-cell">
+                    <div className="flex items-center gap-1">
+                      <FiCpu size={12} className="text-gray-400" />
+                      <span>
+                        {lap.processor?.split(" ").slice(0, 2).join(" ") || "-"}
+                      </span>
+                    </div>
+                    {lap.generation && (
+                      <span className="text-[10px] text-gray-400 block">
+                        {lap.generation}
+                      </span>
+                    )}
                   </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm hidden xs:table-cell">
-                    {lap.storage || "-"}
+                  <td className="p-2 sm:p-3 text-xs hidden lg:table-cell">
+                    <div className="space-y-0.5">
+                      {lap.ram && (
+                        <div className="flex items-center gap-1">
+                          <FiDatabase size={10} className="text-gray-400" />
+                          <span>{lap.ram}</span>
+                        </div>
+                      )}
+                      {lap.storage && (
+                        <div className="flex items-center gap-1">
+                          <FiHardDrive size={10} className="text-gray-400" />
+                          <span>{lap.storage}</span>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="p-2 sm:p-3">{getStockBadge(lap.stock)}</td>
+                  <td className="p-2 sm:p-3 hidden xl:table-cell">
+                    {getStatusBadge(lap.status)}
                   </td>
                   <td className="p-2 sm:p-3">
                     <div className="flex gap-1.5 sm:gap-2">
                       <button
                         onClick={() => handleDelete(lap._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded transition text-xs"
+                        className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition"
+                        title="Delete"
                       >
-                        <FiTrash2 size={12} className="sm:w-3.5 sm:h-3.5" />
+                        <FiTrash2 size={12} />
                       </button>
                       <button
                         onClick={() =>
                           navigate(`/admin/edit-laptop/${lap._id}`)
                         }
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded transition text-xs"
+                        className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition"
+                        title="Edit"
                       >
-                        <FiEdit2 size={12} className="sm:w-3.5 sm:h-3.5" />
+                        <FiEdit2 size={12} />
                       </button>
                     </div>
                   </td>
@@ -271,18 +375,18 @@ const ViewProducts = () => {
                       type="checkbox"
                       checked={selectedProducts.includes(lap._id)}
                       onChange={() => handleSelectProduct(lap._id)}
-                      className="w-4 h-4"
+                      className="w-4 h-4 cursor-pointer"
                     />
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="10" className="text-center py-8 sm:py-12">
+                <td colSpan="12" className="text-center py-8 sm:py-12">
                   <div className="text-gray-500 text-sm sm:text-base">
                     {searchTerm
                       ? `No products found for "${searchTerm}"`
-                      : "No products found"}
+                      : "No products found. Click 'Add Laptop' to add your first product."}
                   </div>
                 </td>
               </tr>
@@ -294,9 +398,29 @@ const ViewProducts = () => {
       {/* Stats */}
       {filteredLaptops.length > 0 && (
         <div className="mt-4 text-xs sm:text-sm text-gray-500 flex flex-wrap justify-between items-center gap-2">
-          <span>Total products: {filteredLaptops.length}</span>
+          <div className="flex gap-3">
+            <span>
+              Total:{" "}
+              <strong className="text-gray-700">
+                {filteredLaptops.length}
+              </strong>{" "}
+              products
+            </span>
+            <span>
+              In Stock:{" "}
+              <strong className="text-green-700">
+                {filteredLaptops.filter((p) => p.stock > 0).length}
+              </strong>
+            </span>
+            <span>
+              Out of Stock:{" "}
+              <strong className="text-red-700">
+                {filteredLaptops.filter((p) => p.stock <= 0).length}
+              </strong>
+            </span>
+          </div>
           {selectedProducts.length > 0 && (
-            <span className="text-blue-600">
+            <span className="text-blue-600 font-medium">
               Selected: {selectedProducts.length}
             </span>
           )}
