@@ -23,44 +23,44 @@ import ProductReviews from "../../../components/ProductReviews";
 // Product Specs Table Component
 const ProductSpecsTable = ({ laptop }) => {
   const specs = [
-    { label: "Brand", value: laptop.brand, icon: <FiMonitor /> },
-    { label: "Model", value: laptop.model, icon: <FiMonitor /> },
-    { label: "Processor", value: laptop.processor, icon: <FiCpu /> },
+    { label: "Brand", value: laptop?.brand, icon: <FiMonitor /> },
+    { label: "Model", value: laptop?.model, icon: <FiMonitor /> },
+    { label: "Processor", value: laptop?.processor, icon: <FiCpu /> },
     {
       label: "Processor Generation",
-      value: laptop.generation || "Not Specified",
+      value: laptop?.generation || "Not Specified",
       icon: <FiCpu />,
     },
-    { label: "RAM", value: laptop.ram, icon: <FiDatabase /> },
-    { label: "Storage", value: laptop.storage, icon: <FiHardDrive /> },
-    { label: "Screen Size", value: laptop.screenSize, icon: <FiMonitor /> },
+    { label: "RAM", value: laptop?.ram, icon: <FiDatabase /> },
+    { label: "Storage", value: laptop?.storage, icon: <FiHardDrive /> },
+    { label: "Screen Size", value: laptop?.screenSize, icon: <FiMonitor /> },
     {
       label: "Resolution",
-      value: laptop.resolution || "Not Specified",
+      value: laptop?.resolution || "Not Specified",
       icon: <FiMonitor />,
     },
     {
       label: "Graphics / GPU",
-      value: laptop.gpu || "Integrated",
+      value: laptop?.gpu || "Integrated",
       icon: <FiMonitor />,
     },
     {
       label: "Operating System",
-      value: laptop.os || "Not Specified",
+      value: laptop?.os || "Not Specified",
       icon: <FiMonitor />,
     },
     {
       label: "Battery Health",
-      value: laptop.batteryHealth || "80-90%",
+      value: laptop?.batteryHealth || "80-90%",
       icon: <FiBarChart2 />,
     },
-    { label: "Condition", value: laptop.condition, icon: <FiCheckCircle /> },
+    { label: "Condition", value: laptop?.condition, icon: <FiCheckCircle /> },
     {
       label: "Stock Status",
-      value: laptop.stock > 0 ? `${laptop.stock} in stock` : "Out of stock",
+      value: laptop?.stock > 0 ? `${laptop.stock} in stock` : "Out of stock",
       icon: <FiCheckCircle />,
     },
-    { label: "Location", value: laptop.location, icon: <FiMonitor /> },
+    { label: "Location", value: laptop?.location, icon: <FiMonitor /> },
   ];
 
   return (
@@ -98,8 +98,6 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState("");
-
-  // Rating states
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
 
@@ -116,9 +114,14 @@ const ProductDetail = () => {
       try {
         const res = await fetch(`${API_URL}/api/laptops/${id}`);
         const data = await res.json();
-        setLaptop(data);
-        if (data.images && data.images.length > 0) {
-          setSelectedImage(`${API_URL}/uploads/${data.images[0]}`);
+        const productData = data.laptop || data;
+        setLaptop(productData);
+        if (
+          productData?.images &&
+          Array.isArray(productData.images) &&
+          productData.images.length > 0
+        ) {
+          setSelectedImage(`${API_URL}/uploads/${productData.images[0]}`);
         }
       } catch (error) {
         console.log("Error fetching laptop:", error);
@@ -138,8 +141,6 @@ const ProductDetail = () => {
         setTotalReviews(data.total || 0);
       } catch (error) {
         console.log("Rating fetch failed:", error);
-        setAverageRating(4.5);
-        setTotalReviews(12);
       }
     };
     if (id) fetchRating();
@@ -151,42 +152,24 @@ const ProductDetail = () => {
     if (result.success) {
       toast.success(
         `✨ ${product.title.split(" ").slice(0, 3).join(" ")}... added to cart!`,
-        {
-          icon: "🛒",
-          duration: 2500,
-          style: {
-            background: "linear-gradient(135deg, #065f46, #10b981)",
-            color: "#fff",
-          },
-        },
       );
     } else {
-      toast.error("❌ Failed to add to cart", { icon: "😢", duration: 3000 });
+      toast.error("❌ Failed to add to cart");
     }
   };
 
   const handleBuyNow = (product, e) => {
     e.stopPropagation();
     if (!isLoggedIn) {
-      toast.error("🔒 Please login to continue shopping!", {
-        icon: "🔐",
-        duration: 3000,
-        style: { background: "linear-gradient(135deg, #991b1b, #ef4444)" },
-      });
-      setTimeout(() => {
-        toast.loading("Taking you to login...", { duration: 1000 });
-        setTimeout(
-          () =>
-            navigate("/login", { state: { from: `/product/${product._id}` } }),
-          1000,
-        );
-      }, 500);
+      toast.error("🔒 Please login to continue shopping!");
+      setTimeout(
+        () =>
+          navigate("/login", { state: { from: `/product/${product._id}` } }),
+        1000,
+      );
       return;
     }
-    toast.success("🚀 Redirecting to secure checkout...", {
-      icon: "💨",
-      duration: 1500,
-    });
+    toast.success("🚀 Redirecting to secure checkout...");
     setTimeout(() => navigate(`/checkout?product=${product._id}`), 800);
   };
 
@@ -205,6 +188,7 @@ const ProductDetail = () => {
     setIsZoomOpen(true);
   };
 
+  // Early return if laptop is still loading
   if (!laptop) {
     return (
       <div className="min-h-screen bg-[#f6f6f7] flex items-center justify-center">
@@ -217,6 +201,10 @@ const ProductDetail = () => {
       </div>
     );
   }
+
+  // Safe check for images
+  const hasImages =
+    laptop.images && Array.isArray(laptop.images) && laptop.images.length > 0;
 
   const features = [
     laptop.brand && `Brand: ${laptop.brand}`,
@@ -247,7 +235,7 @@ const ProductDetail = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         {/* Product Main Info */}
         <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 lg:p-10 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
-          {/* Left Side - Images with Zoom */}
+          {/* Left Side - Images */}
           <div>
             <div className="relative bg-[#f7f7f7] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden flex items-center justify-center h-[280px] sm:h-[360px] md:h-[420px] lg:h-[520px] group">
               <img
@@ -257,18 +245,25 @@ const ProductDetail = () => {
                 }
                 alt={laptop.title}
                 className="max-h-full max-w-full object-contain cursor-zoom-in"
-                onClick={() => openZoom(selectedImage)}
+                onClick={() => selectedImage && openZoom(selectedImage)}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/500x400?text=No+Image";
+                }}
               />
-              <button
-                onClick={() => openZoom(selectedImage)}
-                className="absolute bottom-4 right-4 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition"
-              >
-                <FiZoomIn className="text-gray-700 text-xl" />
-              </button>
+              {selectedImage && (
+                <button
+                  onClick={() => openZoom(selectedImage)}
+                  className="absolute bottom-4 right-4 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition"
+                >
+                  <FiZoomIn className="text-gray-700 text-xl" />
+                </button>
+              )}
             </div>
 
             <div className="flex gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-4 md:mt-5 flex-wrap">
-              {laptop.images && laptop.images.length > 0 ? (
+              {hasImages ? (
                 laptop.images.map((img, index) => {
                   const imageUrl = `${API_URL}/uploads/${img}`;
                   return (
@@ -285,29 +280,36 @@ const ProductDetail = () => {
                         src={imageUrl}
                         alt={`thumb-${index}`}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://via.placeholder.com/100x80?text=No+Image";
+                        }}
                       />
                     </button>
                   );
                 })
               ) : (
-                <div className="text-gray-500 text-sm">No images available</div>
+                <div className="text-gray-500 text-sm w-full text-center py-4">
+                  No images available
+                </div>
               )}
             </div>
           </div>
 
           {/* Right Side - Details */}
           <div className="flex flex-col">
-            <div className="mb-2">
+            <div className="mb-2 flex flex-wrap gap-2">
               <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 bg-blue-100 text-blue-700 text-[10px] sm:text-sm font-semibold rounded-full">
                 {laptop.condition || "Laptop"}
               </span>
               {laptop.stock <= 0 && (
-                <span className="ml-2 inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-[10px] sm:text-sm font-semibold rounded-full">
+                <span className="inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-[10px] sm:text-sm font-semibold rounded-full">
                   Out of Stock
                 </span>
               )}
               {laptop.featured && (
-                <span className="ml-2 inline-flex items-center px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] sm:text-sm font-semibold rounded-full">
+                <span className="inline-flex items-center px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] sm:text-sm font-semibold rounded-full">
                   Featured
                 </span>
               )}
@@ -321,11 +323,6 @@ const ProductDetail = () => {
               <p className="text-2xl sm:text-3xl font-bold text-blue-600">
                 Rs {laptop.price?.toLocaleString()}
               </p>
-              {laptop.originalPrice && (
-                <p className="text-sm sm:text-lg text-gray-400 line-through">
-                  Rs {laptop.originalPrice.toLocaleString()}
-                </p>
-              )}
             </div>
 
             {/* Real-time Rating */}
@@ -347,136 +344,120 @@ const ProductDetail = () => {
 
             {/* Short Intro */}
             <p className="text-gray-600 text-sm sm:text-base leading-6 sm:leading-7 mb-4 sm:mb-6">
-              {descriptionLines.length > 0
-                ? descriptionLines[0]
-                : "A premium quality laptop with reliable performance, decent battery timing, and professional build quality. Perfect for office work, study, freelancing, and daily use."}
+              {descriptionLines[0] ||
+                "A premium quality laptop with reliable performance, decent battery timing, and professional build quality."}
             </p>
 
             {/* Quick Specs */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-6 sm:mb-8">
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">Brand</p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Brand</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.brand}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">Model</p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Model</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.model}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">
-                  Processor
-                </p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Processor</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.processor}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">
-                  Generation
-                </p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Generation</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.generation || "N/A"}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">RAM</p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">RAM</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.ram}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">Storage</p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Storage</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.storage}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">
-                  Condition
-                </p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Condition</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.condition}
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl px-2 py-2 sm:px-4 sm:py-3">
-                <p className="text-[10px] sm:text-sm text-gray-500">Location</p>
-                <p className="font-semibold text-gray-800 text-xs sm:text-sm">
+              <div className="bg-gray-50 rounded-lg px-2 py-2">
+                <p className="text-[10px] text-gray-500">Location</p>
+                <p className="font-semibold text-gray-800 text-xs">
                   {laptop.location}
                 </p>
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-10">
+            <div className="flex flex-col xs:flex-row gap-2 mb-6">
               <button
                 onClick={(e) => handleBuyNow(laptop, e)}
                 disabled={laptop.stock <= 0}
-                className={`flex-1 px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base ${
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-1.5 text-sm ${
                   laptop.stock > 0
                     ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                 }`}
               >
-                <FaBolt className="text-sm sm:text-base md:text-lg" />
-                {laptop.stock > 0 ? "Buy Now" : "Out of Stock"}
+                <FaBolt /> {laptop.stock > 0 ? "Buy Now" : "Out of Stock"}
               </button>
               <button
                 onClick={(e) => handleAddToCart(laptop, e)}
                 disabled={laptop.stock <= 0}
-                className={`flex-1 px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base ${
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-1.5 text-sm ${
                   laptop.stock > 0
                     ? "bg-gray-900 hover:bg-black text-white"
                     : "bg-gray-400 cursor-not-allowed text-gray-200"
                 }`}
               >
-                <FiShoppingCart className="text-sm sm:text-base md:text-lg" />
-                Add to Cart
+                <FiShoppingCart /> Add to Cart
               </button>
               <button
                 onClick={handleWhatsAppOrder}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-1.5 text-sm"
               >
-                <FiMessageCircle className="text-sm sm:text-base md:text-lg" />
-                WhatsApp
+                <FiMessageCircle /> WhatsApp
               </button>
             </div>
 
             {/* Stock Status */}
-            <div className="mb-4 sm:mb-6">
-              <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="mb-4">
+              <div className="flex items-center gap-1.5">
                 <div
-                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full animate-pulse ${laptop.stock > 0 ? "bg-green-500" : "bg-red-500"}`}
+                  className={`w-2 h-2 rounded-full animate-pulse ${laptop.stock > 0 ? "bg-green-500" : "bg-red-500"}`}
                 ></div>
                 <span
-                  className={`text-xs sm:text-sm font-medium ${laptop.stock > 0 ? "text-green-600" : "text-red-600"}`}
+                  className={`text-xs font-medium ${laptop.stock > 0 ? "text-green-600" : "text-red-600"}`}
                 >
                   {laptop.stock > 0
                     ? `In Stock (${laptop.stock} available)`
                     : "Out of Stock"}
                 </span>
-                <span className="text-[10px] sm:text-xs text-gray-400">
-                  • {laptop.stock > 0 ? "Ready to ship" : "Check back later"}
-                </span>
               </div>
             </div>
 
             {/* Features */}
-            <div className="border-t pt-4 sm:pt-6">
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">
+            <div className="border-t pt-4">
+              <h3 className="text-base font-bold text-gray-900 mb-3">
                 Key Features
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-4 sm:gap-x-6 text-gray-700">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700">
                 {features.slice(0, 10).map((feature, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-1.5 sm:gap-2"
-                  >
-                    <FiCheckCircle className="text-blue-600 mt-0.5 flex-shrink-0 text-sm sm:text-base" />
-                    <span className="text-xs sm:text-sm">{feature}</span>
+                  <div key={index} className="flex items-start gap-1.5">
+                    <FiCheckCircle className="text-blue-600 mt-0.5 flex-shrink-0 text-sm" />
+                    <span className="text-xs">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -485,35 +466,35 @@ const ProductDetail = () => {
         </div>
 
         {/* Tabs */}
-        <div className="mt-6 sm:mt-8">
+        <div className="mt-6">
           <div className="border-b border-gray-200">
-            <nav className="flex gap-4 sm:gap-6 md:gap-8">
+            <nav className="flex gap-6">
               <button
                 onClick={() => setActiveTab("description")}
-                className={`pb-3 sm:pb-4 text-sm sm:text-base md:text-lg font-semibold transition ${
+                className={`pb-3 text-sm font-semibold transition ${
                   activeTab === "description"
                     ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
+                    : "text-gray-500"
                 }`}
               >
                 Description
               </button>
               <button
                 onClick={() => setActiveTab("specifications")}
-                className={`pb-3 sm:pb-4 text-sm sm:text-base md:text-lg font-semibold transition ${
+                className={`pb-3 text-sm font-semibold transition ${
                   activeTab === "specifications"
                     ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
+                    : "text-gray-500"
                 }`}
               >
                 Specifications
               </button>
               <button
                 onClick={() => setActiveTab("reviews")}
-                className={`pb-3 sm:pb-4 text-sm sm:text-base md:text-lg font-semibold transition ${
+                className={`pb-3 text-sm font-semibold transition ${
                   activeTab === "reviews"
                     ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
+                    : "text-gray-500"
                 }`}
               >
                 Reviews
@@ -523,19 +504,19 @@ const ProductDetail = () => {
 
           {/* Description Tab */}
           {activeTab === "description" && (
-            <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 mt-4 sm:mt-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+            <div className="bg-white rounded-xl shadow-sm p-6 mt-4">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
                 Product Description
               </h3>
-              <div className="space-y-2 sm:space-y-3 text-gray-700 text-sm sm:text-base leading-6 sm:leading-7">
+              <div className="space-y-2 text-gray-700">
                 {descriptionLines.length > 0 ? (
                   descriptionLines.map((line, index) => (
                     <p key={index}>{line}</p>
                   ))
                 ) : (
                   <p className="text-gray-500">
-                    No detailed description available for this laptop right now.
-                    Please contact us for more information.
+                    No detailed description available. Please contact us for
+                    more information.
                   </p>
                 )}
               </div>
@@ -544,13 +525,12 @@ const ProductDetail = () => {
 
           {/* Specifications Tab */}
           {activeTab === "specifications" && (
-            <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 mt-4 sm:mt-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
+            <div className="bg-white rounded-xl shadow-sm p-6 mt-4">
+              <h3 className="text-xl font-bold text-gray-900 mb-6">
                 Complete Specifications
               </h3>
               <ProductSpecsTable laptop={laptop} />
 
-              {/* Delivery Info */}
               <div className="mt-8 p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-semibold text-blue-800 mb-3">
                   Delivery Information
@@ -558,19 +538,19 @@ const ProductDetail = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex items-center gap-2">
                     <FiTruck className="text-blue-600" />
-                    <span className="text-sm">Nationwide delivery</span>
+                    <span>Nationwide delivery</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <FiClock className="text-blue-600" />
-                    <span className="text-sm">2-4 business days</span>
+                    <span>2-4 business days</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <FiShield className="text-blue-600" />
-                    <span className="text-sm">Secure packaging</span>
+                    <span>Secure packaging</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <FiCheckCircle className="text-blue-600" />
-                    <span className="text-sm">Cash on Delivery</span>
+                    <span>Cash on Delivery</span>
                   </div>
                 </div>
               </div>
@@ -579,7 +559,7 @@ const ProductDetail = () => {
 
           {/* Reviews Tab */}
           {activeTab === "reviews" && (
-            <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm p-4 sm:p-6 md:p-8 mt-4 sm:mt-6">
+            <div className="bg-white rounded-xl shadow-sm p-6 mt-4">
               <ProductReviews productId={laptop._id} />
             </div>
           )}
