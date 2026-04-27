@@ -21,11 +21,19 @@ const UserWishlist = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    return `${API_URL}/uploads/${imagePath}`;
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
 
-    // Load wishlist from localStorage
     const savedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
     setWishlist(savedWishlist);
     fetchWishlistProducts(savedWishlist);
@@ -67,7 +75,6 @@ const UserWishlist = () => {
       const wishlistProducts = allProducts.filter((p) => ids.includes(p._id));
       setProducts(wishlistProducts);
 
-      // Fetch ratings for wishlist products
       if (wishlistProducts.length > 0) {
         await fetchRatings(wishlistProducts);
       }
@@ -117,7 +124,6 @@ const UserWishlist = () => {
 
   return (
     <div className="px-2 sm:px-0 pb-8">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
@@ -138,7 +144,6 @@ const UserWishlist = () => {
       </div>
 
       {products.length === 0 ? (
-        // Empty State
         <div className="bg-white rounded-xl shadow-sm p-8 sm:p-12 text-center">
           <FiHeart className="mx-auto text-gray-400 text-4xl sm:text-5xl mb-3" />
           <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
@@ -155,7 +160,6 @@ const UserWishlist = () => {
           </Link>
         </div>
       ) : (
-        // Wishlist Grid
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {products.map((product) => {
             const rating = productRatings[product._id] || {
@@ -175,15 +179,19 @@ const UserWishlist = () => {
                     <img
                       src={
                         product.images && product.images.length > 0
-                          ? `${API_URL}/uploads/${product.images[0]}`
+                          ? getImageUrl(product.images[0])
                           : "https://via.placeholder.com/300x200?text=No+Image"
                       }
                       alt={product.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                       loading="lazy"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/300x200?text=No+Image";
+                      }}
                     />
 
-                    {/* Stock Badge */}
                     {isOutOfStock && (
                       <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                         <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
@@ -200,7 +208,6 @@ const UserWishlist = () => {
                 </Link>
 
                 <div className="p-3">
-                  {/* Brand & Condition */}
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[9px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
                       {product.brand || "Laptop"}
@@ -212,7 +219,6 @@ const UserWishlist = () => {
                     )}
                   </div>
 
-                  {/* Title */}
                   <Link to={`/product/${product._id}`}>
                     <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2 min-h-[40px]">
                       {product.title.length > 50
@@ -221,7 +227,6 @@ const UserWishlist = () => {
                     </h3>
                   </Link>
 
-                  {/* Specs */}
                   <div className="space-y-0.5 mb-2">
                     {product.processor && (
                       <div className="flex items-center gap-1 text-[9px] text-gray-500">
@@ -245,7 +250,6 @@ const UserWishlist = () => {
                     </div>
                   </div>
 
-                  {/* Rating */}
                   <div className="flex items-center gap-1 mb-2">
                     <div className="flex items-center">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -267,7 +271,6 @@ const UserWishlist = () => {
                     )}
                   </div>
 
-                  {/* Price */}
                   <div className="mb-3">
                     <span className="text-base font-bold text-blue-600">
                       {formatPrice(product.price)}
@@ -279,7 +282,6 @@ const UserWishlist = () => {
                     )}
                   </div>
 
-                  {/* Buttons */}
                   <div className="flex gap-2">
                     <button
                       onClick={() => moveToCart(product)}
