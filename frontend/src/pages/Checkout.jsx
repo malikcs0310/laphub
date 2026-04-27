@@ -41,6 +41,15 @@ const Checkout = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    return `${API_URL}/uploads/${imagePath}`;
+  };
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const productId = params.get("product");
@@ -248,7 +257,6 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
       <div className="container mx-auto px-3 sm:px-4 max-w-7xl">
-        {/* Header */}
         <div className="mb-6 sm:mb-8">
           <button
             onClick={() => navigate(-1)}
@@ -269,9 +277,7 @@ const Checkout = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
-          {/* Main Form */}
           <div className="lg:flex-[2] space-y-5 sm:space-y-6">
-            {/* Delivery Information */}
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-100">
               <div className="flex items-center mb-4 sm:mb-6">
                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 sm:p-3 rounded-xl mr-3 sm:mr-4">
@@ -450,7 +456,6 @@ const Checkout = () => {
                   />
                 </div>
 
-                {/* Payment Method */}
                 <div className="border-t pt-4 sm:pt-6">
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
                     Payment Method
@@ -523,7 +528,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:flex-1">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-6 sticky top-24 border border-gray-100">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 pb-2 border-b">
@@ -540,11 +544,16 @@ const Checkout = () => {
                     <img
                       src={
                         item.images && item.images.length > 0
-                          ? `${API_URL}/uploads/${item.images[0]}`
+                          ? getImageUrl(item.images[0])
                           : "https://via.placeholder.com/60x60?text=No+Image"
                       }
                       alt={item.title}
                       className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://via.placeholder.com/60x60?text=No+Image";
+                      }}
                     />
                     <div className="flex-1">
                       <h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
