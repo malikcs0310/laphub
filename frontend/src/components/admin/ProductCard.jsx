@@ -325,31 +325,26 @@ const ProductCard = () => {
                     <div
                       key={product._id}
                       onClick={() => navigate(`/product/${product._id}`)}
-                      className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+                      className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer flex flex-col"
                     >
-                      {/* IMAGE */}
-                      <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                      {/* IMAGE SECTION */}
+                      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                         <img
                           src={getImageUrl(product)}
                           alt={product.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src =
-                              "https://via.placeholder.com/300x300?text=No+Image";
-                          }}
                         />
 
                         {/* BADGES */}
-                        <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        <div className="absolute top-1 left-1 flex flex-col gap-1">
                           {product.condition && (
-                            <span className="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-full shadow">
+                            <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-md">
                               {product.condition}
                             </span>
                           )}
                           {product.featured && (
-                            <span className="bg-amber-500 text-white text-[10px] px-2 py-1 rounded-full shadow">
+                            <span className="bg-yellow-500 text-white text-[10px] px-2 py-0.5 rounded-md">
                               Featured
                             </span>
                           )}
@@ -358,14 +353,14 @@ const ProductCard = () => {
                         {/* WISHLIST */}
                         <button
                           onClick={(e) => toggleWishlist(product, e)}
-                          className="absolute top-2 right-2 bg-white/90 backdrop-blur p-2 rounded-full shadow hover:scale-110 transition"
+                          className="absolute top-1 right-1 bg-white/90 p-1.5 rounded-full shadow"
                         >
                           <FiHeart
                             size={14}
                             className={
                               wishlist.includes(product._id)
                                 ? "fill-red-500 text-red-500"
-                                : "text-gray-600"
+                                : "text-gray-500"
                             }
                           />
                         </button>
@@ -373,7 +368,7 @@ const ProductCard = () => {
                         {/* OUT OF STOCK */}
                         {product.stock <= 0 && (
                           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded">
+                            <span className="text-white text-xs font-semibold bg-red-600 px-2 py-1 rounded">
                               Out of Stock
                             </span>
                           </div>
@@ -381,52 +376,50 @@ const ProductCard = () => {
                       </div>
 
                       {/* CONTENT */}
-                      <div className="p-4">
+                      <div className="p-3 flex flex-col flex-1">
                         {/* BRAND */}
-                        <span className="inline-block text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                        <span className="text-[11px] text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded w-fit">
                           {product.brand || "Laptop"}
                         </span>
 
                         {/* TITLE */}
-                        <h3 className="mt-2 text-sm sm:text-base font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[44px]">
-                          {product.title.length > 60
-                            ? `${product.title.substring(0, 60)}...`
-                            : product.title}
+                        <h3 className="text-sm font-semibold text-gray-900 mt-1 line-clamp-2 leading-snug min-h-[38px]">
+                          {product.title}
                         </h3>
 
                         {/* SPECS */}
-                        <div className="mt-2 space-y-1 text-xs sm:text-sm text-gray-600">
+                        <div className="mt-1 space-y-1 text-[11px] text-gray-500">
                           {product.processor && (
-                            <div className="flex items-center gap-2">
-                              <FiCpu size={13} />
-                              <span className="line-clamp-1">
+                            <div className="flex items-center gap-1">
+                              <FiCpu size={12} />
+                              <span className="truncate">
                                 {product.processor}
                               </span>
                             </div>
                           )}
 
-                          <div className="flex gap-4">
+                          <div className="flex gap-3">
                             {product.ram && (
                               <div className="flex items-center gap-1">
                                 <FiDatabase size={12} />
-                                <span>{product.ram}</span>
+                                {product.ram}
                               </div>
                             )}
                             {product.storage && (
                               <div className="flex items-center gap-1">
                                 <FiHardDrive size={12} />
-                                <span>{product.storage}</span>
+                                {product.storage}
                               </div>
                             )}
                           </div>
                         </div>
 
                         {/* RATING */}
-                        <div className="flex items-center gap-1 mt-3">
+                        <div className="flex items-center gap-1 mt-2">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <FiStar
                               key={star}
-                              size={13}
+                              size={10}
                               className={
                                 star <= Math.round(rating.average)
                                   ? "text-yellow-400 fill-yellow-400"
@@ -435,34 +428,34 @@ const ProductCard = () => {
                             />
                           ))}
                           {rating.total > 0 && (
-                            <span className="text-xs text-gray-400 ml-1">
+                            <span className="text-[10px] text-gray-400">
                               ({rating.total})
                             </span>
                           )}
                         </div>
 
                         {/* PRICE */}
-                        <div className="mt-3">
-                          <span className="text-base sm:text-lg font-bold text-gray-900">
-                            Rs {product.price?.toLocaleString() || "0"}
+                        <div className="mt-2">
+                          <span className="text-base font-bold text-gray-900">
+                            Rs {product.price?.toLocaleString()}
                           </span>
 
                           {product.stock > 0 && product.stock <= 3 && (
-                            <p className="text-xs text-orange-500 font-medium mt-1">
+                            <span className="ml-2 text-[10px] text-orange-500">
                               Only {product.stock} left
-                            </p>
+                            </span>
                           )}
                         </div>
 
                         {/* BUTTONS */}
-                        <div className="grid grid-cols-2 gap-2 mt-4">
+                        <div className="flex gap-2 mt-3">
                           <button
                             onClick={(e) => handleBuyNow(product, e)}
                             disabled={product.stock <= 0}
-                            className={`py-2 rounded-xl text-sm font-semibold transition ${
+                            className={`flex-1 text-white text-xs font-medium py-2 rounded-lg transition ${
                               product.stock > 0
-                                ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                ? "bg-blue-600 hover:bg-blue-700"
+                                : "bg-gray-400 cursor-not-allowed"
                             }`}
                           >
                             Buy Now
@@ -471,13 +464,13 @@ const ProductCard = () => {
                           <button
                             onClick={(e) => handleAddToCart(product, e)}
                             disabled={product.stock <= 0}
-                            className={`py-2 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 ${
+                            className={`flex-1 text-white text-xs font-medium py-2 rounded-lg transition flex items-center justify-center gap-1 ${
                               product.stock > 0
-                                ? "bg-gray-900 hover:bg-black text-white"
-                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                ? "bg-gray-900 hover:bg-black"
+                                : "bg-gray-400 cursor-not-allowed"
                             }`}
                           >
-                            <FiShoppingCart size={14} />
+                            <FiShoppingCart size={12} />
                             Add
                           </button>
                         </div>
