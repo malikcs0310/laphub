@@ -98,25 +98,52 @@ const EditLaptop = () => {
     { value: "reserved", label: "Reserved" },
   ];
 
-  // Find the useEffect that fetches laptop data, and make sure it's correct:
+  // Get image URL (supports both local uploads and Cloudinary)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    // Otherwise, it's a local upload
+    return `${API_URL}/uploads/${imagePath}`;
+  };
 
   useEffect(() => {
     const fetchLaptop = async () => {
       try {
-        setLoading(true); // Add loading state
+        setLoading(true);
         const res = await fetch(`${API_URL}/api/laptops/${id}`);
         const data = await res.json();
-        console.log("Fetched laptop data:", data); // Debug log
+        console.log("Fetched laptop data:", data);
 
-        if (data && data.laptop) {
-          // If API returns { laptop: {...} }
-          setFormData(data.laptop);
-          setExistingImages(data.laptop.images || []);
-        } else if (data && data._id) {
-          // If API returns direct laptop object
-          setFormData(data);
-          setExistingImages(data.images || []);
-        }
+        let laptopData = data.laptop || data;
+
+        setFormData({
+          title: laptopData.title || "",
+          price: laptopData.price || "",
+          condition: laptopData.condition || "Used",
+          location: laptopData.location || "",
+          description: laptopData.description || "",
+          type: laptopData.type || "",
+          brand: laptopData.brand || "",
+          model: laptopData.model || "",
+          processor: laptopData.processor || "",
+          generation: laptopData.generation || "",
+          ram: laptopData.ram || "",
+          storage: laptopData.storage || "",
+          screenSize: laptopData.screenSize || "",
+          resolution: laptopData.resolution || "",
+          gpu: laptopData.gpu || "",
+          os: laptopData.os || "",
+          batteryHealth: laptopData.batteryHealth || "",
+          stock: laptopData.stock !== undefined ? laptopData.stock : "1",
+          featured: laptopData.featured || false,
+          status: laptopData.status || "available",
+          images: [],
+        });
+
+        setExistingImages(laptopData.images || []);
       } catch (error) {
         console.log("Error fetching laptop:", error);
         toast.error("Failed to load laptop data");
@@ -586,7 +613,7 @@ const EditLaptop = () => {
           </label>
         </div>
 
-        {/* Existing Images */}
+        {/* Existing Images - Cloudinary Support */}
         {existingImages.length > 0 && (
           <div className="mt-4 sm:mt-6">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
@@ -596,9 +623,14 @@ const EditLaptop = () => {
               {existingImages.map((img, index) => (
                 <img
                   key={index}
-                  src={`${API_URL}/uploads/${img}`}
+                  src={getImageUrl(img)}
                   alt={`Laptop ${index}`}
                   className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-gray-200"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/80x80?text=No+Image";
+                  }}
                 />
               ))}
             </div>
