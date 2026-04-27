@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   FiTrash2,
   FiShoppingCart,
+  FiAlertCircle,
   FiArrowRight,
   FiTruck,
   FiPackage,
