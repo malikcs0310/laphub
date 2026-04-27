@@ -24,13 +24,11 @@ const FeaturedProducts = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  // Check login status
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
-  // Load wishlist
   useEffect(() => {
     const savedWishlist = localStorage.getItem("wishlist");
     if (savedWishlist) {
@@ -50,7 +48,6 @@ const FeaturedProducts = () => {
 
   const handleBuyNow = (product, e) => {
     e.stopPropagation();
-
     if (!isLoggedIn) {
       toast.error("Please login or signup to continue");
       setTimeout(() => {
@@ -58,7 +55,6 @@ const FeaturedProducts = () => {
       }, 1000);
       return;
     }
-
     navigate(`/checkout?product=${product._id}`);
   };
 
@@ -80,7 +76,6 @@ const FeaturedProducts = () => {
     localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
   };
 
-  // Fetch ratings for products
   const fetchRatings = async (productsList) => {
     const ratingsMap = {};
     for (const product of productsList) {
@@ -109,7 +104,6 @@ const FeaturedProducts = () => {
         const data = await res.json();
         const productsData = Array.isArray(data) ? data : data.data || [];
         setProducts(productsData);
-
         if (productsData.length > 0) {
           await fetchRatings(productsData);
         }
@@ -120,37 +114,35 @@ const FeaturedProducts = () => {
         setLoading(false);
       }
     };
-
     fetchFeaturedProducts();
   }, [API_URL]);
 
-  // Loading Skeleton
   if (loading) {
     return (
       <section className="py-8 bg-gray-50">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
             <div>
-              <div className="h-7 sm:h-10 w-32 sm:w-48 bg-gray-200 rounded-lg animate-pulse mb-2"></div>
-              <div className="h-4 sm:h-6 w-48 bg-gray-200 rounded-lg animate-pulse"></div>
+              <div className="h-8 w-40 bg-gray-200 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-56 bg-gray-200 rounded animate-pulse"></div>
             </div>
-            <div className="h-8 sm:h-10 w-24 bg-gray-200 rounded-lg animate-pulse mt-3 sm:mt-0"></div>
+            <div className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white rounded-lg overflow-hidden border border-gray-100"
+                className="bg-white rounded-xl overflow-hidden shadow-sm"
               >
-                <div className="aspect-square bg-gray-200 animate-pulse"></div>
-                <div className="p-2 space-y-2">
-                  <div className="h-3 bg-gray-200 animate-pulse rounded w-1/3"></div>
-                  <div className="h-3 bg-gray-200 animate-pulse rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-200 animate-pulse rounded w-2/3"></div>
-                  <div className="h-4 bg-gray-200 animate-pulse rounded w-1/2"></div>
-                  <div className="flex gap-2">
-                    <div className="h-7 bg-gray-200 animate-pulse rounded flex-1"></div>
-                    <div className="h-7 bg-gray-200 animate-pulse rounded flex-1"></div>
+                <div className="h-48 bg-gray-200 animate-pulse"></div>
+                <div className="p-4 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                  <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-6 bg-gray-200 rounded w-2/3"></div>
+                  <div className="flex gap-3">
+                    <div className="h-10 bg-gray-200 rounded flex-1"></div>
+                    <div className="h-10 bg-gray-200 rounded flex-1"></div>
                   </div>
                 </div>
               </div>
@@ -162,190 +154,157 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <section className="py-6 sm:py-8 bg-gray-50">
-      <div className="container mx-auto px-3 sm:px-4">
+    <section className="py-12 bg-gray-50">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
-          <div className="text-center sm:text-left">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
               Featured Products
             </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Latest 4 newly added laptops
+            <p className="text-sm text-gray-500 mt-1">
+              Latest handpicked laptops for you
             </p>
           </div>
-
           <Link
             to="/products"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 text-sm mt-3 sm:mt-0 group"
+            className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
           >
-            View All
-            <FiArrowRight className="ml-1 group-hover:translate-x-1 transition-transform text-xs" />
+            View All <FiArrowRight size={16} />
           </Link>
         </div>
 
-        {/* Cards - Same CSS as ProductCard */}
-        {products.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-            {products.map((product) => {
-              const rating = productRatings[product._id] || {
-                average: 0,
-                total: 0,
-              };
-              return (
-                <div
-                  key={product._id}
-                  onClick={() => navigate(`/product/${product._id}`)}
-                  className="group bg-white rounded-lg shadow hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer"
-                >
-                  {/* Image Section */}
-                  <div className="relative overflow-hidden bg-gray-100 aspect-square">
-                    <img
-                      src={
-                        product.images && product.images.length > 0
-                          ? `${API_URL}/uploads/${product.images[0]}`
-                          : "https://via.placeholder.com/300x300?text=No+Image"
-                      }
-                      alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
+        {/* Products Grid - Professional Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          {products.map((product) => {
+            const rating = productRatings[product._id] || {
+              average: 0,
+              total: 0,
+            };
+            return (
+              <div
+                key={product._id}
+                onClick={() => navigate(`/product/${product._id}`)}
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
+              >
+                {/* Image - Fixed Height, Not Full Square */}
+                <div className="relative h-48 overflow-hidden bg-gray-100">
+                  <img
+                    src={
+                      product.images && product.images.length > 0
+                        ? `${API_URL}/uploads/${product.images[0]}`
+                        : "https://via.placeholder.com/400x300?text=No+Image"
+                    }
+                    alt={product.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    loading="lazy"
+                  />
 
-                    {/* Condition Badge */}
-                    {product.condition && (
-                      <span className="absolute top-1 left-1 bg-blue-600 text-white px-1.5 py-0.5 rounded text-[9px] font-semibold">
-                        {product.condition}
+                  {/* Badge */}
+                  {product.condition && (
+                    <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                      {product.condition}
+                    </span>
+                  )}
+
+                  {/* Wishlist */}
+                  <button
+                    onClick={(e) => toggleWishlist(product, e)}
+                    className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-sm"
+                  >
+                    <FiHeart
+                      size={16}
+                      className={
+                        wishlist.includes(product._id)
+                          ? "fill-red-500 text-red-500"
+                          : "text-gray-500"
+                      }
+                    />
+                  </button>
+                </div>
+
+                {/* Content - Proper Spacing */}
+                <div className="p-4">
+                  {/* Brand */}
+                  <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded inline-block mb-2">
+                    {product.brand || "Laptop"}
+                  </span>
+
+                  {/* Title */}
+                  <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px]">
+                    {product.title}
+                  </h3>
+
+                  {/* Specs Row */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {product.processor && (
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded flex items-center gap-1">
+                        <FiCpu size={11} /> {product.processor.substring(0, 15)}
                       </span>
                     )}
-
-                    {/* Wishlist Button */}
-                    <button
-                      onClick={(e) => toggleWishlist(product, e)}
-                      className="absolute top-1 right-1 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm"
-                    >
-                      <FiHeart
-                        size={14}
-                        className={`transition ${
-                          wishlist.includes(product._id)
-                            ? "fill-red-500 text-red-500"
-                            : "text-gray-500"
-                        }`}
-                      />
-                    </button>
-
-                    {/* Login Overlay */}
-                    {!isLoggedIn && (
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-white/90 backdrop-blur-sm text-gray-800 px-2 py-1 rounded text-[9px] font-medium">
-                          Login to buy
-                        </div>
-                      </div>
+                  </div>
+                  <div className="flex gap-2 mb-3">
+                    {product.ram && (
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded flex items-center gap-1">
+                        <FiDatabase size={11} /> {product.ram}
+                      </span>
+                    )}
+                    {product.storage && (
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded flex items-center gap-1">
+                        <FiHardDrive size={11} /> {product.storage}
+                      </span>
                     )}
                   </div>
 
-                  {/* Content Section */}
-                  <div className="p-2">
-                    {/* Brand */}
-                    <div className="mb-1">
-                      <span className="text-[9px] text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded">
-                        {product.brand || "Laptop"}
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-3">
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <FiStar
+                          key={star}
+                          size={14}
+                          className={
+                            star <= Math.round(rating.average)
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
+                          }
+                        />
+                      ))}
+                    </div>
+                    {rating.total > 0 && (
+                      <span className="text-xs text-gray-400">
+                        ({rating.total})
                       </span>
-                    </div>
+                    )}
+                  </div>
 
-                    {/* Title */}
-                    <h3 className="text-[11px] font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[26px]">
-                      {product.title.length > 45
-                        ? `${product.title.substring(0, 45)}...`
-                        : product.title}
-                    </h3>
+                  {/* Price */}
+                  <div className="mb-4">
+                    <span className="text-xl font-bold text-gray-900">
+                      Rs {product.price?.toLocaleString()}
+                    </span>
+                  </div>
 
-                    {/* Specs */}
-                    <div className="space-y-0.5 mb-1">
-                      {product.processor && (
-                        <div className="flex items-center gap-1 text-[8px] text-gray-500">
-                          <FiCpu size={8} />
-                          <span className="line-clamp-1">
-                            {product.processor}
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2">
-                        {product.ram && (
-                          <div className="flex items-center gap-1 text-[8px] text-gray-500">
-                            <FiDatabase size={8} />
-                            <span>{product.ram}</span>
-                          </div>
-                        )}
-                        {product.storage && (
-                          <div className="flex items-center gap-1 text-[8px] text-gray-500">
-                            <FiHardDrive size={8} />
-                            <span>{product.storage}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Rating */}
-                    <div className="flex items-center gap-1 mb-1.5">
-                      <div className="flex items-center">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <FiStar
-                            key={star}
-                            size={8}
-                            className={`${
-                              star <= Math.round(rating.average)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      {rating.total > 0 && (
-                        <span className="text-[7px] text-gray-400">
-                          ({rating.total})
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Price */}
-                    <div className="mb-2">
-                      <span className="text-xs font-bold text-gray-900">
-                        Rs {product.price?.toLocaleString() || "0"}
-                      </span>
-                    </div>
-
-                    {/* Buttons */}
-                    <div className="flex gap-1">
-                      <button
-                        onClick={(e) => handleBuyNow(product, e)}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[9px] font-medium py-1 rounded transition"
-                      >
-                        Buy Now
-                      </button>
-                      <button
-                        onClick={(e) => handleAddToCart(product, e)}
-                        className="flex-1 bg-gray-800 hover:bg-gray-900 text-white text-[9px] font-medium py-1 rounded transition flex items-center justify-center gap-0.5"
-                      >
-                        <FiShoppingCart size={8} />
-                        Add
-                      </button>
-                    </div>
+                  {/* Buttons */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={(e) => handleBuyNow(product, e)}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition"
+                    >
+                      Buy Now
+                    </button>
+                    <button
+                      onClick={(e) => handleAddToCart(product, e)}
+                      className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-1"
+                    >
+                      <FiShoppingCart size={14} /> Add
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <FiAlertCircle className="mx-auto text-gray-400 text-3xl mb-3" />
-            <h3 className="text-base font-bold text-gray-800 mb-1">
-              No featured products found
-            </h3>
-            <p className="text-xs text-gray-500">
-              Check back soon for our latest laptops!
-            </p>
-          </div>
-        )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
