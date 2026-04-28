@@ -325,26 +325,28 @@ const ProductCard = () => {
                     <div
                       key={product._id}
                       onClick={() => navigate(`/product/${product._id}`)}
-                      className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer flex flex-col"
+                      className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
                     >
-                      {/* IMAGE SECTION */}
+                      {/* IMAGE WRAPPER */}
                       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                         <img
                           src={getImageUrl(product)}
                           alt={product.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
 
+                        {/* DARK OVERLAY ON HOVER */}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></div>
+
                         {/* BADGES */}
-                        <div className="absolute top-1 left-1 flex flex-col gap-1">
+                        <div className="absolute top-2 left-2 flex flex-col gap-1">
                           {product.condition && (
-                            <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-md">
+                            <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-md shadow">
                               {product.condition}
                             </span>
                           )}
                           {product.featured && (
-                            <span className="bg-yellow-500 text-white text-[10px] px-2 py-0.5 rounded-md">
+                            <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-[10px] px-2 py-0.5 rounded-md shadow">
                               Featured
                             </span>
                           )}
@@ -353,22 +355,39 @@ const ProductCard = () => {
                         {/* WISHLIST */}
                         <button
                           onClick={(e) => toggleWishlist(product, e)}
-                          className="absolute top-1 right-1 bg-white/90 p-1.5 rounded-full shadow"
+                          className="absolute top-2 right-2 bg-white/90 backdrop-blur-md p-2 rounded-full shadow-md hover:scale-110 transition"
                         >
                           <FiHeart
                             size={14}
                             className={
                               wishlist.includes(product._id)
                                 ? "fill-red-500 text-red-500"
-                                : "text-gray-500"
+                                : "text-gray-600"
                             }
                           />
                         </button>
 
+                        {/* QUICK ACTION (HOVER BUTTONS) */}
+                        <div className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex gap-2 p-2 bg-gradient-to-t from-black/60 to-transparent">
+                          <button
+                            onClick={(e) => handleBuyNow(product, e)}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs py-1.5 rounded-lg"
+                          >
+                            Buy Now
+                          </button>
+
+                          <button
+                            onClick={(e) => handleAddToCart(product, e)}
+                            className="flex-1 bg-white text-black text-xs py-1.5 rounded-lg hover:bg-gray-200"
+                          >
+                            Add Cart
+                          </button>
+                        </div>
+
                         {/* OUT OF STOCK */}
                         {product.stock <= 0 && (
-                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <span className="text-white text-xs font-semibold bg-red-600 px-2 py-1 rounded">
+                          <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                            <span className="text-white text-xs font-bold px-3 py-1 bg-red-600 rounded-lg">
                               Out of Stock
                             </span>
                           </div>
@@ -376,19 +395,19 @@ const ProductCard = () => {
                       </div>
 
                       {/* CONTENT */}
-                      <div className="p-3 flex flex-col flex-1">
+                      <div className="p-3 flex flex-col gap-1">
                         {/* BRAND */}
-                        <span className="text-[11px] text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded w-fit">
+                        <span className="text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded w-fit">
                           {product.brand || "Laptop"}
                         </span>
 
                         {/* TITLE */}
-                        <h3 className="text-sm font-semibold text-gray-900 mt-1 line-clamp-2 leading-snug min-h-[38px]">
+                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-snug min-h-[40px]">
                           {product.title}
                         </h3>
 
                         {/* SPECS */}
-                        <div className="mt-1 space-y-1 text-[11px] text-gray-500">
+                        <div className="text-[11px] text-gray-500 space-y-1">
                           {product.processor && (
                             <div className="flex items-center gap-1">
                               <FiCpu size={12} />
@@ -405,6 +424,7 @@ const ProductCard = () => {
                                 {product.ram}
                               </div>
                             )}
+
                             {product.storage && (
                               <div className="flex items-center gap-1">
                                 <FiHardDrive size={12} />
@@ -415,7 +435,7 @@ const ProductCard = () => {
                         </div>
 
                         {/* RATING */}
-                        <div className="flex items-center gap-1 mt-2">
+                        <div className="flex items-center gap-1 mt-1">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <FiStar
                               key={star}
@@ -435,44 +455,16 @@ const ProductCard = () => {
                         </div>
 
                         {/* PRICE */}
-                        <div className="mt-2">
+                        <div className="mt-1 flex items-center justify-between">
                           <span className="text-base font-bold text-gray-900">
                             Rs {product.price?.toLocaleString()}
                           </span>
 
                           {product.stock > 0 && product.stock <= 3 && (
-                            <span className="ml-2 text-[10px] text-orange-500">
+                            <span className="text-[10px] text-orange-500 font-medium">
                               Only {product.stock} left
                             </span>
                           )}
-                        </div>
-
-                        {/* BUTTONS */}
-                        <div className="flex gap-2 mt-3">
-                          <button
-                            onClick={(e) => handleBuyNow(product, e)}
-                            disabled={product.stock <= 0}
-                            className={`flex-1 text-white text-xs font-medium py-2 rounded-lg transition ${
-                              product.stock > 0
-                                ? "bg-blue-600 hover:bg-blue-700"
-                                : "bg-gray-400 cursor-not-allowed"
-                            }`}
-                          >
-                            Buy Now
-                          </button>
-
-                          <button
-                            onClick={(e) => handleAddToCart(product, e)}
-                            disabled={product.stock <= 0}
-                            className={`flex-1 text-white text-xs font-medium py-2 rounded-lg transition flex items-center justify-center gap-1 ${
-                              product.stock > 0
-                                ? "bg-gray-900 hover:bg-black"
-                                : "bg-gray-400 cursor-not-allowed"
-                            }`}
-                          >
-                            <FiShoppingCart size={12} />
-                            Add
-                          </button>
                         </div>
                       </div>
                     </div>
