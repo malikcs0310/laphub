@@ -154,11 +154,7 @@ const ForgotPassword = () => {
                 to="/login"
                 className="inline-flex items-center text-blue-600 hover:text-blue-700 text-xs sm:text-sm"
               >
-                <FiArrowLeft
-                  className="mr-1"
-                  size={12}
-                  className="sm:w-3.5 sm:h-3.5"
-                />
+                <FiArrowLeft className="mr-1 sm:w-3.5 sm:h-3.5" size={12} />
                 Back to Login
               </Link>
             </div>

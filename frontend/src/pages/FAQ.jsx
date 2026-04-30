@@ -113,9 +113,8 @@ const FAQ = () => {
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="bg-blue-50 p-1.5 sm:p-2 rounded-lg">
                         <Icon
-                          className="text-blue-600 text-sm sm:text-base"
+                          className="text-blue-600 text-sm sm:text-base sm:w-4 sm:h-4"
                           size={14}
-                          className="sm:w-4 sm:h-4"
                         />
                       </div>
                       <span className="font-medium text-gray-800 text-xs sm:text-sm md:text-base">
