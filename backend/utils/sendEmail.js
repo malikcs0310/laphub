@@ -6,40 +6,35 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load env
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
-// Create transporter
+// ✅ Resend SMTP Configuration
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.resend.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "resend",
+    pass: process.env.RESEND_API_KEY,
   },
 });
 
-// Verify connection
 transporter.verify((error, success) => {
   if (error) {
     console.error("❌ Email service error:", error);
   } else {
-    console.log("✅ Email service ready to send emails");
+    console.log("✅ Resend email service ready");
   }
 });
 
-// Generic send function
-// In sendEmail function
+// Send email function
 export const sendEmail = async (to, subject, html, from = null) => {
   try {
     const info = await transporter.sendMail({
-      from: from || `"LapHub.pk" <${process.env.EMAIL_USER}>`,
+      from: from || `"LapHub.pk" <${process.env.USER_EMAIL}>`, // ✅ Changed to USER_EMAIL
       to,
       subject,
       html,
-      // ✅ Add this for better email headers
-      headers: {
-        "X-Entity-Ref-ID": Date.now().toString(),
-      },
     });
     console.log(`✅ Email sent to ${to}: ${info.messageId}`);
     return true;
@@ -63,8 +58,6 @@ export const sendNewOrderEmail = async (order) => {
         <p><strong>Order Number:</strong> ${order.orderNumber}</p>
         <p><strong>Customer:</strong> ${order.customer?.name}</p>
         <p><strong>Phone:</strong> ${order.customer?.phone}</p>
-        <p><strong>Email:</strong> ${order.customer?.email}</p>
-        <p><strong>Address:</strong> ${order.customer?.address}, ${order.customer?.city}</p>
         <p><strong>Total:</strong> Rs ${order.total?.toLocaleString()}</p>
         <p><strong>Payment Method:</strong> ${order.paymentMethod === "cod" ? "Cash on Delivery" : "Card"}</p>
         <div style="margin-top: 20px; text-align: center;">
@@ -73,9 +66,6 @@ export const sendNewOrderEmail = async (order) => {
             View Order Details
           </a>
         </div>
-      </div>
-      <div style="background: #f3f4f6; padding: 10px; text-align: center; font-size: 12px; color: #6b7280;">
-        LapHub.pk - Trusted Laptop Store
       </div>
     </div>
   `;
@@ -123,14 +113,17 @@ export const sendReviewApprovedEmail = async (review, product) => {
       </div>
       <div style="padding: 20px;">
         <p>Dear ${review.userName},</p>
-        <p>Thank you for your review on <strong>${product?.title || "Laptop"}</strong>!</p>
-        <p>Your review has been approved and is now visible on our website.</p>
+        <p>Your review on <strong>${product?.title || "Laptop"}</strong> has been approved!</p>
         <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}/product/${product?._id}" 
              style="background: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             View Your Review
           </a>
         </div>
+        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
+          Thank you for being a valued customer!<br>
+          - LapHub.pk Team
+        </p>
       </div>
     </div>
   `;
@@ -152,7 +145,7 @@ export const sendNewTestimonialEmail = async (testimonial) => {
         <p><strong>Name:</strong> ${testimonial.name}</p>
         <p><strong>Email:</strong> ${testimonial.email}</p>
         <p><strong>City:</strong> ${testimonial.city || "N/A"}</p>
-        <p><strong>Rating:</strong> ${"★".repeat(testimonial.rating)}${"☆".repeat(5 - testimonial.rating)}</p>
+        <p><strong>Rating:</strong> ${"★".repeat(testimonial.rating)}${"☆".repeat(5 - testimonial.rating)} (${testimonial.rating}/5)</p>
         <p><strong>Comment:</strong> ${testimonial.comment}</p>
         <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}/admin/testimonials" 
@@ -179,7 +172,6 @@ export const sendTestimonialApprovedEmail = async (testimonial) => {
       </div>
       <div style="padding: 20px;">
         <p>Dear ${testimonial.name},</p>
-        <p>Thank you for sharing your experience with LapHub.pk!</p>
         <p>Your testimonial has been approved and is now visible on our website.</p>
         <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 15px 0;">
           <p style="margin: 0; font-style: italic;">"${testimonial.comment}"</p>
@@ -190,6 +182,10 @@ export const sendTestimonialApprovedEmail = async (testimonial) => {
             Visit LapHub.pk
           </a>
         </div>
+        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
+          Thank you for being a valued customer!<br>
+          - LapHub.pk Team
+        </p>
       </div>
     </div>
   `;
