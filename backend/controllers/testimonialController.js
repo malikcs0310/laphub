@@ -1,4 +1,8 @@
 import Testimonial from "../models/Testimonial.js";
+import {
+  sendNewTestimonialEmail,
+  sendTestimonialApprovedEmail,
+} from "../utils/sendEmail.js";
 
 // @desc    Submit testimonial
 // @route   POST /api/testimonials
@@ -17,6 +21,9 @@ export const submitTestimonial = async (req, res) => {
     });
 
     await testimonial.save();
+
+    // ✅ Send email notification to admin
+    await sendNewTestimonialEmail(testimonial);
 
     res.status(201).json({
       success: true,
@@ -61,10 +68,18 @@ export const updateTestimonialStatus = async (req, res) => {
       return res.status(404).json({ message: "Testimonial not found" });
     }
 
+    const previousStatus = testimonial.status;
+
     if (status) testimonial.status = status;
     if (featured !== undefined) testimonial.featured = featured;
 
     await testimonial.save();
+
+    // ✅ Send email to customer when testimonial is approved
+    if (status === "approved" && previousStatus !== "approved") {
+      await sendTestimonialApprovedEmail(testimonial);
+    }
+
     res.json({ success: true, message: "Testimonial updated", testimonial });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
