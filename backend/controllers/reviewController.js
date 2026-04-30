@@ -50,7 +50,7 @@ export const addReview = async (req, res) => {
 
     // ✅ Send email notification to admin
     const product = await Laptop.findById(productId);
-    await sendNewReviewEmail(review, product);
+    await sendNewReviewEmail(review, product); // Background send (optional)
 
     res.status(201).json({
       success: true,
