@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiGrid,
   FiPlusSquare,
@@ -14,18 +14,118 @@ import {
 import { MdLaptop } from "react-icons/md";
 
 const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
+  const [badges, setBadges] = useState({
+    orders: 0,
+    reviews: 0,
+    testimonials: 0,
+  });
+
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+  // Fetch all counts on mount and every 30 seconds
+  useEffect(() => {
+    fetchBadgeCounts();
+
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchBadgeCounts, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchBadgeCounts = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+
+      // Fetch pending orders count
+      const ordersRes = await fetch(`${API_URL}/api/orders/admin/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const ordersData = await ordersRes.json();
+      const pendingOrdersCount =
+        ordersData.orders?.filter((order) => order.orderStatus === "pending")
+          .length || 0;
+
+      // Fetch pending reviews count
+      const reviewsRes = await fetch(`${API_URL}/api/reviews/admin/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const reviewsData = await reviewsRes.json();
+      const pendingReviewsCount =
+        reviewsData.reviews?.filter((review) => review.status === "pending")
+          .length || 0;
+
+      // Fetch pending testimonials count
+      const testimonialsRes = await fetch(
+        `${API_URL}/api/testimonials/admin/all`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const testimonialsData = await testimonialsRes.json();
+      const pendingTestimonialsCount =
+        testimonialsData.testimonials?.filter(
+          (testimonial) => testimonial.status === "pending",
+        ).length || 0;
+
+      setBadges({
+        orders: pendingOrdersCount,
+        reviews: pendingReviewsCount,
+        testimonials: pendingTestimonialsCount,
+      });
+    } catch (error) {
+      console.error("Error fetching badge counts:", error);
+    }
+  };
+
+  // Call this function when navigating to clear badge
+  const clearBadge = (type) => {
+    setBadges((prev) => ({
+      ...prev,
+      [type]: 0,
+    }));
+  };
+
   const menu = [
-    { path: "/admin", label: "Dashboard", icon: FiGrid },
-    { path: "/admin/add-laptop", label: "Add Laptop", icon: FiPlusSquare },
-    { path: "/admin/view-products", label: "Products", icon: FiPackage },
-    { path: "/admin/users", label: "Users", icon: FiUsers },
-    { path: "/admin/orders", label: "Orders", icon: FiShoppingCart },
-    { path: "/admin/manage-contacts", label: "Contacts", icon: FiMail },
-    { path: "/admin/reviews", label: "Reviews", icon: FiStar },
+    { path: "/admin", label: "Dashboard", icon: FiGrid, badge: null },
+    {
+      path: "/admin/add-laptop",
+      label: "Add Laptop",
+      icon: FiPlusSquare,
+      badge: null,
+    },
+    {
+      path: "/admin/view-products",
+      label: "Products",
+      icon: FiPackage,
+      badge: null,
+    },
+    { path: "/admin/users", label: "Users", icon: FiUsers, badge: null },
+    {
+      path: "/admin/orders",
+      label: "Orders",
+      icon: FiShoppingCart,
+      badge: "orders",
+      badgeColor: "bg-blue-500",
+    },
+    {
+      path: "/admin/manage-contacts",
+      label: "Contacts",
+      icon: FiMail,
+      badge: null,
+    },
+    {
+      path: "/admin/reviews",
+      label: "Reviews",
+      icon: FiStar,
+      badge: "reviews",
+      badgeColor: "bg-yellow-500",
+    },
     {
       path: "/admin/testimonials",
       label: "Testimonials",
       icon: FiMessageCircle,
+      badge: "testimonials",
+      badgeColor: "bg-purple-500",
     },
   ];
 
@@ -41,23 +141,44 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
 
       {/* Menu */}
       <nav className="p-3 sm:p-4 space-y-1 sm:space-y-2">
-        {menu.map((item, index) => (
-          <NavLink
-            key={index}
-            to={item.path}
-            onClick={() => setMobileOpen?.(false)}
-            className={({ isActive }) =>
-              `flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition ${
-                isActive
-                  ? "bg-blue-600 text-white shadow"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
-              }`
-            }
-          >
-            <item.icon size={16} className="sm:w-4 sm:h-4" />
-            <span className="font-medium text-xs sm:text-sm">{item.label}</span>
-          </NavLink>
-        ))}
+        {menu.map((item, index) => {
+          const badgeCount = item.badge ? badges[item.badge] : 0;
+          const badgeColor = item.badgeColor || "bg-blue-500";
+
+          return (
+            <NavLink
+              key={index}
+              to={item.path}
+              onClick={() => {
+                if (item.badge) {
+                  clearBadge(item.badge);
+                }
+                setMobileOpen?.(false);
+              }}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition ${
+                  isActive
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2 sm:gap-3">
+                <item.icon size={16} className="sm:w-4 sm:h-4" />
+                <span className="font-medium text-xs sm:text-sm">
+                  {item.label}
+                </span>
+              </div>
+              {badgeCount > 0 && (
+                <span
+                  className={`${badgeColor} text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center`}
+                >
+                  {badgeCount > 99 ? "99+" : badgeCount}
+                </span>
+              )}
+            </NavLink>
+          );
+        })}
       </nav>
 
       {/* Footer */}
