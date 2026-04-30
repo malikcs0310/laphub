@@ -9,11 +9,6 @@ const __dirname = path.dirname(__filename);
 // Load env
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
-// Debug logs
-console.log("📧 Email Config Check:");
-console.log("EMAIL_USER:", process.env.EMAIL_USER ? "✅ Loaded" : "❌ Missing");
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "✅ Loaded" : "❌ Missing");
-
 // Create transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -32,16 +27,16 @@ transporter.verify((error, success) => {
   }
 });
 
-// Send email function
-export const sendEmail = async (to, subject, html) => {
+// Generic send function
+export const sendEmail = async (to, subject, html, from = null) => {
   try {
     const info = await transporter.sendMail({
-      from: `"LapHub.pk" <${process.env.EMAIL_USER}>`,
+      from: from || `"LapHub.pk" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
     });
-    console.log(`✅ Email sent: ${info.messageId}`);
+    console.log(`✅ Email sent to ${to}: ${info.messageId}`);
     return true;
   } catch (error) {
     console.error("❌ Email error:", error);
@@ -49,27 +44,33 @@ export const sendEmail = async (to, subject, html) => {
   }
 };
 
-// New Order Email to Admin
+// ==================== ORDER EMAILS ====================
+
 export const sendNewOrderEmail = async (order) => {
   const adminEmail = process.env.ADMIN_EMAIL || "malikcs0310@gmail.com";
 
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
       <div style="background: #2563eb; padding: 20px; text-align: center; color: white;">
         <h2 style="margin: 0;">🛒 New Order Received!</h2>
       </div>
-      <div style="padding: 20px; border: 1px solid #e5e7eb;">
+      <div style="padding: 20px;">
         <p><strong>Order Number:</strong> ${order.orderNumber}</p>
         <p><strong>Customer:</strong> ${order.customer?.name}</p>
         <p><strong>Phone:</strong> ${order.customer?.phone}</p>
+        <p><strong>Email:</strong> ${order.customer?.email}</p>
+        <p><strong>Address:</strong> ${order.customer?.address}, ${order.customer?.city}</p>
         <p><strong>Total:</strong> Rs ${order.total?.toLocaleString()}</p>
         <p><strong>Payment Method:</strong> ${order.paymentMethod === "cod" ? "Cash on Delivery" : "Card"}</p>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}/admin/orders/${order._id}" 
              style="background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             View Order Details
           </a>
         </div>
+      </div>
+      <div style="background: #f3f4f6; padding: 10px; text-align: center; font-size: 12px; color: #6b7280;">
+        LapHub.pk - Trusted Laptop Store
       </div>
     </div>
   `;
@@ -77,22 +78,23 @@ export const sendNewOrderEmail = async (order) => {
   return sendEmail(adminEmail, `🛒 New Order: ${order.orderNumber}`, html);
 };
 
-// New Review Email to Admin
+// ==================== REVIEW EMAILS ====================
+
 export const sendNewReviewEmail = async (review, product) => {
   const adminEmail = process.env.ADMIN_EMAIL || "malikcs0310@gmail.com";
 
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
       <div style="background: #10b981; padding: 20px; text-align: center; color: white;">
         <h2 style="margin: 0;">⭐ New Product Review!</h2>
       </div>
-      <div style="padding: 20px; border: 1px solid #e5e7eb;">
+      <div style="padding: 20px;">
         <p><strong>Product:</strong> ${product?.title || "Laptop"}</p>
         <p><strong>Customer:</strong> ${review.userName}</p>
         <p><strong>Rating:</strong> ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)} (${review.rating}/5)</p>
         <p><strong>Title:</strong> ${review.title}</p>
         <p><strong>Comment:</strong> ${review.comment}</p>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}/admin/reviews" 
              style="background: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             Review in Admin Panel
@@ -105,50 +107,49 @@ export const sendNewReviewEmail = async (review, product) => {
   return sendEmail(adminEmail, `⭐ New Review: ${review.title}`, html);
 };
 
-// Review Approved Email to Customer
 export const sendReviewApprovedEmail = async (review, product) => {
+  const customerEmail = review.userEmail || review.user?.email;
+  if (!customerEmail) return false;
+
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
       <div style="background: #10b981; padding: 20px; text-align: center; color: white;">
         <h2 style="margin: 0;">✅ Your Review is Live!</h2>
       </div>
-      <div style="padding: 20px; border: 1px solid #e5e7eb;">
+      <div style="padding: 20px;">
         <p>Dear ${review.userName},</p>
         <p>Thank you for your review on <strong>${product?.title || "Laptop"}</strong>!</p>
         <p>Your review has been approved and is now visible on our website.</p>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}/product/${product?._id}" 
              style="background: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             View Your Review
           </a>
         </div>
-        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
-          Thank you for being a valued customer!<br>
-          - LapHub.pk Team
-        </p>
       </div>
     </div>
   `;
 
-  return sendEmail(review.userEmail, "✅ Your Review is Live!", html);
+  return sendEmail(customerEmail, "✅ Your Review is Live!", html);
 };
 
-// New Testimonial Email to Admin
+// ==================== TESTIMONIAL EMAILS ====================
+
 export const sendNewTestimonialEmail = async (testimonial) => {
   const adminEmail = process.env.ADMIN_EMAIL || "malikcs0310@gmail.com";
 
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
       <div style="background: #8b5cf6; padding: 20px; text-align: center; color: white;">
         <h2 style="margin: 0;">💬 New Testimonial Received!</h2>
       </div>
-      <div style="padding: 20px; border: 1px solid #e5e7eb;">
+      <div style="padding: 20px;">
         <p><strong>Name:</strong> ${testimonial.name}</p>
         <p><strong>Email:</strong> ${testimonial.email}</p>
         <p><strong>City:</strong> ${testimonial.city || "N/A"}</p>
-        <p><strong>Rating:</strong> ${"★".repeat(testimonial.rating)}${"☆".repeat(5 - testimonial.rating)} (${testimonial.rating}/5)</p>
+        <p><strong>Rating:</strong> ${"★".repeat(testimonial.rating)}${"☆".repeat(5 - testimonial.rating)}</p>
         <p><strong>Comment:</strong> ${testimonial.comment}</p>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}/admin/testimonials" 
              style="background: #8b5cf6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             View in Admin Panel
@@ -165,34 +166,57 @@ export const sendNewTestimonialEmail = async (testimonial) => {
   );
 };
 
-// Testimonial Approved Email to Customer
 export const sendTestimonialApprovedEmail = async (testimonial) => {
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
       <div style="background: #8b5cf6; padding: 20px; text-align: center; color: white;">
         <h2 style="margin: 0;">✅ Your Testimonial is Live!</h2>
       </div>
-      <div style="padding: 20px; border: 1px solid #e5e7eb;">
+      <div style="padding: 20px;">
         <p>Dear ${testimonial.name},</p>
         <p>Thank you for sharing your experience with LapHub.pk!</p>
         <p>Your testimonial has been approved and is now visible on our website.</p>
         <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 15px 0;">
           <p style="margin: 0; font-style: italic;">"${testimonial.comment}"</p>
-          <p style="margin: 10px 0 0 0; color: #8b5cf6;">★ ${testimonial.rating}/5</p>
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; text-align: center;">
           <a href="${process.env.FRONTEND_URL}" 
              style="background: #8b5cf6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             Visit LapHub.pk
           </a>
         </div>
-        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
-          Thank you for being a valued customer!<br>
-          - LapHub.pk Team
-        </p>
       </div>
     </div>
   `;
 
   return sendEmail(testimonial.email, "✅ Your Testimonial is Live!", html);
+};
+
+// ==================== CONTACT FORM EMAILS ====================
+
+export const sendContactEmail = async (name, email, subject, message) => {
+  const adminEmail = process.env.ADMIN_EMAIL || "malikcs0310@gmail.com";
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
+      <div style="background: #3b82f6; padding: 20px; text-align: center; color: white;">
+        <h2 style="margin: 0;">📧 New Contact Form Submission</h2>
+      </div>
+      <div style="padding: 20px;">
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong></p>
+        <p style="background: #f3f4f6; padding: 10px; border-radius: 5px;">${message}</p>
+        <div style="margin-top: 20px; text-align: center;">
+          <a href="mailto:${email}" 
+             style="background: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+            Reply to ${name}
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return sendEmail(adminEmail, `📧 Contact: ${subject} from ${name}`, html);
 };

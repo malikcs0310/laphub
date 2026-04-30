@@ -108,7 +108,9 @@ export const createOrder = async (req, res) => {
     console.log("✅ Order saved successfully:", order.orderNumber);
 
     // ✅ Send email notification to admin
-    await sendNewOrderEmail(order);
+    sendNewOrderEmail(order).catch((err) =>
+      console.error("Order email error:", err),
+    );
 
     // ✅ UPDATE STOCK AFTER ORDER
     await updateStockOnOrder(items);

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { sendContactMessage } from "../services/contactService";
 import {
   FiMail,
   FiPhone,
@@ -16,6 +15,8 @@ import { MdSupportAgent, MdWhatsapp, MdLocationOn } from "react-icons/md";
 import toast from "react-hot-toast";
 
 const Contact = () => {
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -77,15 +78,29 @@ const Contact = () => {
     setErrorMessage("");
 
     try {
-      await sendContactMessage(formData);
-      setSuccessMessage(
-        "Your message has been sent successfully! We'll get back to you soon.",
-      );
-      toast.success("Message sent successfully!");
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      // ✅ Call backend API - Nodemailer
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccessMessage(
+          "Your message has been sent successfully! We'll get back to you soon.",
+        );
+        toast.success("Message sent successfully!");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        throw new Error(data.message || "Failed to send message");
+      }
     } catch (error) {
-      setErrorMessage(error);
-      toast.error(error || "Failed to send message");
+      setErrorMessage(error.message || "Failed to send message");
+      toast.error(error.message || "Failed to send message");
     }
 
     setLoading(false);
