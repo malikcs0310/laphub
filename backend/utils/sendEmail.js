@@ -1,12 +1,35 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Email transporter setup
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load env
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
+// Debug logs
+console.log("📧 Email Config Check:");
+console.log("EMAIL_USER:", process.env.EMAIL_USER ? "✅ Loaded" : "❌ Missing");
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "✅ Loaded" : "❌ Missing");
+
+// Create transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+});
+
+// Verify connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Email service error:", error);
+  } else {
+    console.log("✅ Email service ready to send emails");
+  }
 });
 
 // Send email function
@@ -18,7 +41,7 @@ export const sendEmail = async (to, subject, html) => {
       subject,
       html,
     });
-    console.log("✅ Email sent:", info.messageId);
+    console.log(`✅ Email sent: ${info.messageId}`);
     return true;
   } catch (error) {
     console.error("❌ Email error:", error);
@@ -107,11 +130,7 @@ export const sendReviewApprovedEmail = async (review, product) => {
     </div>
   `;
 
-  return sendEmail(
-    review.userEmail || review.user?.email,
-    "✅ Your Review is Live!",
-    html,
-  );
+  return sendEmail(review.userEmail, "✅ Your Review is Live!", html);
 };
 
 // New Testimonial Email to Admin
