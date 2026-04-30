@@ -106,13 +106,12 @@ const Contact = () => {
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-3 sm:px-4">
-        {/* Hero Section - Mobile Optimized */}
+        {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-100 rounded-full mb-3 sm:mb-4">
             <MdSupportAgent
-              className="text-blue-600 mr-1 sm:mr-2"
+              className="text-blue-600 mr-1 sm:mr-2 sm:w-4 sm:h-4"
               size={14}
-              className="sm:w-4 sm:h-4"
             />
             <span className="text-blue-600 text-[10px] sm:text-sm font-semibold">
               We're Here to Help
@@ -210,9 +209,8 @@ const Contact = () => {
                 <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
                   <div className="flex items-center mb-2 sm:mb-4">
                     <FiClock
-                      className="text-gray-500 mr-1 sm:mr-2"
+                      className="text-gray-500 mr-1 sm:mr-2 sm:w-3.5 sm:h-3.5"
                       size={12}
-                      className="sm:w-3.5 sm:h-3.5"
                     />
                     <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
                       Business Hours
@@ -239,9 +237,8 @@ const Contact = () => {
                   <div className="bg-green-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-center">
                     <div className="flex items-center justify-center mb-0.5 sm:mb-1">
                       <FiCheckCircle
-                        className="text-green-600 mr-1"
+                        className="text-green-600 mr-1 sm:w-3.5 sm:h-3.5"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       <span className="text-green-700 text-[10px] sm:text-sm font-medium">
                         Quick Response
@@ -270,9 +267,8 @@ const Contact = () => {
                   className="inline-flex items-center bg-white text-green-600 px-3 py-1.5 sm:px-5 sm:py-2 rounded-lg font-semibold hover:bg-gray-100 transition text-sm sm:text-base"
                 >
                   <MdWhatsapp
-                    className="mr-1 sm:mr-2"
+                    className="mr-1 sm:mr-2 sm:w-4 sm:h-4"
                     size={14}
-                    className="sm:w-4 sm:h-4"
                   />
                   Start Chat
                 </a>
@@ -300,9 +296,8 @@ const Contact = () => {
                   <div>
                     <label className="block text-gray-700 font-medium mb-1 sm:mb-2 text-xs sm:text-sm">
                       <FiUser
-                        className="inline mr-1 sm:mr-2 text-gray-500"
+                        className="inline mr-1 sm:mr-2 text-gray-500 sm:w-3.5 sm:h-3.5"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       Your Name
                     </label>
@@ -325,9 +320,8 @@ const Contact = () => {
                   <div>
                     <label className="block text-gray-700 font-medium mb-1 sm:mb-2 text-xs sm:text-sm">
                       <FiMail
-                        className="inline mr-1 sm:mr-2 text-gray-500"
+                        className="inline mr-1 sm:mr-2 text-gray-500 sm:w-3.5 sm:h-3.5"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       Email Address
                     </label>
@@ -352,9 +346,8 @@ const Contact = () => {
                   <div>
                     <label className="block text-gray-700 font-medium mb-1 sm:mb-2 text-xs sm:text-sm">
                       <FiMessageSquare
-                        className="inline mr-1 sm:mr-2 text-gray-500"
+                        className="inline mr-1 sm:mr-2 text-gray-500 sm:w-3.5 sm:h-3.5"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       Subject
                     </label>
@@ -379,9 +372,8 @@ const Contact = () => {
                   <div>
                     <label className="block text-gray-700 font-medium mb-1 sm:mb-2 text-xs sm:text-sm">
                       <FiMessageSquare
-                        className="inline mr-1 sm:mr-2 text-gray-500"
+                        className="inline mr-1 sm:mr-2 text-gray-500 sm:w-3.5 sm:h-3.5"
                         size={12}
-                        className="sm:w-3.5 sm:h-3.5"
                       />
                       Message
                     </label>
@@ -416,9 +408,8 @@ const Contact = () => {
                     ) : (
                       <>
                         <FiSend
-                          className="mr-1 sm:mr-2"
+                          className="mr-1 sm:mr-2 sm:w-4 sm:h-4"
                           size={14}
-                          className="sm:w-4 sm:h-4"
                         />
                         Send Message
                       </>
@@ -432,9 +423,8 @@ const Contact = () => {
                     <div className="flex items-center">
                       <div className="bg-green-100 p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3">
                         <FiCheckCircle
-                          className="text-green-600"
+                          className="text-green-600 sm:w-4 sm:h-4"
                           size={16}
-                          className="sm:w-4 sm:h-4"
                         />
                       </div>
                       <p className="text-green-700 font-medium text-xs sm:text-sm">
@@ -450,9 +440,8 @@ const Contact = () => {
                     <div className="flex items-center">
                       <div className="bg-red-100 p-1.5 sm:p-2 rounded-lg mr-2 sm:mr-3">
                         <FiAlertCircle
-                          className="text-red-600"
+                          className="text-red-600 sm:w-4 sm:h-4"
                           size={16}
-                          className="sm:w-4 sm:h-4"
                         />
                       </div>
                       <p className="text-red-700 font-medium text-xs sm:text-sm">
