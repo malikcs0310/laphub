@@ -28,6 +28,7 @@ transporter.verify((error, success) => {
 });
 
 // Generic send function
+// In sendEmail function
 export const sendEmail = async (to, subject, html, from = null) => {
   try {
     const info = await transporter.sendMail({
@@ -35,6 +36,10 @@ export const sendEmail = async (to, subject, html, from = null) => {
       to,
       subject,
       html,
+      // ✅ Add this for better email headers
+      headers: {
+        "X-Entity-Ref-ID": Date.now().toString(),
+      },
     });
     console.log(`✅ Email sent to ${to}: ${info.messageId}`);
     return true;
