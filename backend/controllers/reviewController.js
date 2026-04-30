@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import ProductReview from "../models/ProductReview.js";
 import Order from "../models/Order.js";
+import Laptop from "../models/Laptop.js";
+import {
+  sendNewReviewEmail,
+  sendReviewApprovedEmail,
+} from "../utils/sendEmail.js";
 
 // @desc    Add review for a product
 // @route   POST /api/reviews
@@ -33,6 +38,7 @@ export const addReview = async (req, res) => {
       productId,
       user: userId,
       userName: req.user.name,
+      userEmail: req.user.email,
       rating,
       title,
       comment,
@@ -41,6 +47,10 @@ export const addReview = async (req, res) => {
     });
 
     await review.save();
+
+    // ✅ Send email notification to admin
+    const product = await Laptop.findById(productId);
+    await sendNewReviewEmail(review, product);
 
     res.status(201).json({
       success: true,
@@ -201,6 +211,9 @@ export const updateReviewStatus = async (req, res) => {
       return res.status(404).json({ message: "Review not found" });
     }
 
+    const previousStatus = review.status;
+    const product = await Laptop.findById(review.productId);
+
     review.status = status;
     if (reply) {
       review.reply = {
@@ -210,6 +223,11 @@ export const updateReviewStatus = async (req, res) => {
       };
     }
     await review.save();
+
+    // ✅ Send email to customer when review is approved
+    if (status === "approved" && previousStatus !== "approved") {
+      await sendReviewApprovedEmail(review, product);
+    }
 
     res.json({ success: true, message: "Review updated", review });
   } catch (error) {
@@ -227,6 +245,7 @@ export const deleteReview = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 // @desc    Get product rating summary only
 // @route   GET /api/reviews/product/:productId/summary
 // @access  Public
