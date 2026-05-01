@@ -201,18 +201,6 @@ const ProductDetail = () => {
     }, 800);
   };
 
-  const getShortDescription = (htmlText) => {
-    if (!htmlText)
-      return "A premium quality laptop with reliable performance, decent battery timing, and professional build quality.";
-
-    // Remove HTML tags
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = htmlText;
-    const cleanText = tempDiv.textContent || tempDiv.innerText || "";
-
-    // Get first 120 characters
-    return cleanText.slice(0, 120) + (cleanText.length > 120 ? "..." : "");
-  };
   // Format description with proper HTML (headings, bullet points, spacing)
   const formatDescription = (text) => {
     if (!text) return null;
@@ -504,7 +492,10 @@ const ProductDetail = () => {
 
             {/* Short Intro */}
             <p className="text-gray-600 text-sm sm:text-base leading-6 sm:leading-7 mb-4 sm:mb-6">
-              {getShortDescription(laptop.description)}
+              Premium quality {laptop.brand} {laptop.model} with{" "}
+              {laptop.processor} processor,
+              {laptop.ram} RAM, and {laptop.storage}. Excellent condition with
+              strong battery backup. Perfect for work, study, and daily use.
             </p>
 
             {/* Quick Specs */}
