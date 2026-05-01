@@ -1,6 +1,5 @@
 import Order from "../models/Order.js";
-import Laptop from "../models/Laptop.js";
-import { sendNewOrderEmail } from "../utils/sendEmail.js"; // ✅ Add this import
+import Laptop from "../models/Laptop.js"; // ✅ Add this import
 
 // Helper function to update stock when order placed
 const updateStockOnOrder = async (items) => {
@@ -106,14 +105,15 @@ export const createOrder = async (req, res) => {
 
     await order.save();
     console.log("✅ Order saved successfully:", order.orderNumber);
-
-    // ✅ Send email notification to admin
     sendNewOrderEmail(order).catch((err) =>
       console.error("Order email error:", err),
     );
 
     // ✅ UPDATE STOCK AFTER ORDER
     await updateStockOnOrder(items);
+    sendNewOrderEmail(order).catch((err) =>
+      console.error("Order email error:", err),
+    );
 
     res.status(201).json({
       success: true,

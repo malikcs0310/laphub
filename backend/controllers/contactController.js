@@ -1,5 +1,4 @@
 import Contact from "../models/Contact.js";
-import { sendContactEmail } from "../utils/sendEmail.js";
 
 // @desc    Create a new contact message
 // @route   POST /api/contact
@@ -18,9 +17,6 @@ export const createContact = async (req, res) => {
 
     const newContact = new Contact({ name, email, subject, message });
     await newContact.save();
-
-    // ✅ Send email notification to admin
-    await sendContactEmail(name, email, subject, message);
 
     res.status(201).json({
       success: true,

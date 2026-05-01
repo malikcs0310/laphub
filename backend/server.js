@@ -118,12 +118,3 @@ app.listen(PORT, () => {
   console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health\n`);
 });
-app.get("/api/test-email", async (req, res) => {
-  const { sendEmail } = await import("./utils/sendEmail.js");
-  await sendEmail(
-    "malikcs0310@gmail.com",
-    "Test Email",
-    "<h1>Test</h1><p>Email working!</p>",
-  );
-  res.json({ message: "Email sent" });
-});
