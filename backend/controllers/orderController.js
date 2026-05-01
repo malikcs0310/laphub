@@ -1,5 +1,6 @@
 import Order from "../models/Order.js";
 import Laptop from "../models/Laptop.js"; // ✅ Add this import
+import { sendNewOrderEmail } from "../utils/sendEmail.js";
 
 // Helper function to update stock when order placed
 const updateStockOnOrder = async (items) => {
