@@ -201,6 +201,93 @@ const ProductDetail = () => {
     }, 800);
   };
 
+  // Format description with proper HTML (headings, bullet points, spacing)
+  const formatDescription = (text) => {
+    if (!text) return null;
+
+    // First, split by double line breaks to identify paragraphs
+    const paragraphs = text.split(/\n\s*\n/);
+
+    return paragraphs.map((paragraph, idx) => {
+      // Check for heading (line starting with # or ## or ###)
+      if (paragraph.trim().startsWith("# ")) {
+        return (
+          <h3 key={idx} className="text-lg font-bold text-gray-900 mt-4 mb-2">
+            {paragraph.replace("# ", "")}
+          </h3>
+        );
+      }
+      if (paragraph.trim().startsWith("## ")) {
+        return (
+          <h4
+            key={idx}
+            className="text-md font-semibold text-gray-900 mt-3 mb-2"
+          >
+            {paragraph.replace("## ", "")}
+          </h4>
+        );
+      }
+
+      // Check for bullet points (lines starting with •, -, *, or numbers)
+      const lines = paragraph.split("\n");
+
+      // Bullet list detection
+      if (
+        lines.some(
+          (line) =>
+            line.trim().startsWith("•") ||
+            line.trim().startsWith("-") ||
+            line.trim().startsWith("*"),
+        )
+      ) {
+        const items = lines.filter(
+          (line) =>
+            line.trim().startsWith("•") ||
+            line.trim().startsWith("-") ||
+            line.trim().startsWith("*"),
+        );
+        return (
+          <ul key={idx} className="list-disc pl-5 mb-3 space-y-1">
+            {items.map((item, i) => (
+              <li key={i}>{item.replace(/^[•\-*]\s*/, "")}</li>
+            ))}
+          </ul>
+        );
+      }
+
+      // Numbered list detection
+      if (lines.some((line) => /^\d+\./.test(line.trim()))) {
+        const items = lines.filter((line) => /^\d+\./.test(line.trim()));
+        return (
+          <ol key={idx} className="list-decimal pl-5 mb-3 space-y-1">
+            {items.map((item, i) => (
+              <li key={i}>{item.replace(/^\d+\.\s*/, "")}</li>
+            ))}
+          </ol>
+        );
+      }
+
+      // Check for bold text (wrapped in **)
+      let formattedText = paragraph;
+      // Bold: **text** -> <strong>text</strong>
+      formattedText = formattedText.replace(
+        /\*\*(.*?)\*\*/g,
+        '<strong class="font-bold text-gray-900">$1</strong>',
+      );
+      // Line breaks within paragraph
+      formattedText = formattedText.replace(/\n/g, "<br/>");
+
+      // Regular paragraph
+      return (
+        <p
+          key={idx}
+          className="mb-3 leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: formattedText }}
+        />
+      );
+    });
+  };
+
   const handleWhatsAppOrder = () => {
     const phoneNumber = "923104082056";
     const message = `🖥️ *Laptop Inquiry - LapHub.pk* 🖥️\n\n*Product:* ${laptop.title}\n*Price:* Rs ${laptop.price?.toLocaleString()}\n*Brand:* ${laptop.brand}\n*Model:* ${laptop.model}\n*Processor:* ${laptop.processor}\n*Generation:* ${laptop.generation || "N/A"}\n*RAM:* ${laptop.ram}\n*Storage:* ${laptop.storage}\n*GPU:* ${laptop.gpu || "Integrated"}\n*OS:* ${laptop.os || "N/A"}\n*Condition:* ${laptop.condition}\n*Location:* ${laptop.location}\n*Stock:* ${laptop.stock > 0 ? "In Stock" : "Out of Stock"}\n\n*Product Link:* ${window.location.href}\n\nI'm interested in this laptop. Please share more details.`;
@@ -531,16 +618,15 @@ const ProductDetail = () => {
           </div>
 
           {/* Description Tab */}
+          {/* Description Tab */}
           {activeTab === "description" && (
             <div className="bg-white rounded-xl shadow-sm p-6 mt-4">
               <h3 className="text-xl font-bold text-gray-900 mb-3">
                 Product Description
               </h3>
-              <div className="space-y-2 text-gray-700">
-                {descriptionLines.length > 0 ? (
-                  descriptionLines.map((line, index) => (
-                    <p key={index}>{line}</p>
-                  ))
+              <div className="text-gray-700">
+                {laptop.description ? (
+                  formatDescription(laptop.description)
                 ) : (
                   <p className="text-gray-500">
                     No detailed description available. Please contact us for
