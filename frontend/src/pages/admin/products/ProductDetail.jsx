@@ -201,6 +201,18 @@ const ProductDetail = () => {
     }, 800);
   };
 
+  const getShortDescription = (htmlText) => {
+    if (!htmlText)
+      return "A premium quality laptop with reliable performance, decent battery timing, and professional build quality.";
+
+    // Remove HTML tags
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlText;
+    const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+
+    // Get first 120 characters
+    return cleanText.slice(0, 120) + (cleanText.length > 120 ? "..." : "");
+  };
   // Format description with proper HTML (headings, bullet points, spacing)
   const formatDescription = (text) => {
     if (!text) return null;
@@ -491,10 +503,9 @@ const ProductDetail = () => {
             </div>
 
             {/* Short Intro */}
-            {/* <p className="text-gray-600 text-sm sm:text-base leading-6 sm:leading-7 mb-4 sm:mb-6">
-              {descriptionLines[0] ||
-                "A premium quality laptop with reliable performance, decent battery timing, and professional build quality."}
-            </p> */}
+            <p className="text-gray-600 text-sm sm:text-base leading-6 sm:leading-7 mb-4 sm:mb-6">
+              {getShortDescription(laptop.description)}
+            </p>
 
             {/* Quick Specs */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-6 sm:mb-8">
