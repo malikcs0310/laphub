@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import TipTapEditor from "../../../components/TipTapEditor";
 
 const EditLaptop = () => {
   const { id } = useParams();
@@ -175,7 +176,9 @@ const EditLaptop = () => {
       }));
     }
   };
-
+  const handleDescriptionChange = (value) => {
+    setFormData({ ...formData, description: value });
+  };
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -252,7 +255,6 @@ const EditLaptop = () => {
         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800">
           Edit Laptop
         </h2>
-
         {/* Basic Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
@@ -368,7 +370,6 @@ const EditLaptop = () => {
             />
           </div>
         </div>
-
         {/* Brand & Model */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -416,22 +417,16 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
-
-        {/* Description */}
+        // Replace description section
         <div className="mt-4 sm:mt-6">
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-            Description *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Description
           </label>
-          <textarea
-            name="description"
-            placeholder="Description"
-            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-y text-sm"
-            rows="4"
+          <TipTapEditor
             value={formData.description}
-            onChange={handleChange}
+            onChange={handleDescriptionChange}
           />
         </div>
-
         {/* Processor & Performance */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -514,7 +509,6 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
-
         {/* Display & Screen */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -555,7 +549,6 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
-
         {/* Software & Battery */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -596,7 +589,6 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
-
         {/* Featured */}
         <div className="mt-4 sm:mt-6">
           <label className="flex items-center gap-2 cursor-pointer">
@@ -612,7 +604,6 @@ const EditLaptop = () => {
             </span>
           </label>
         </div>
-
         {/* Existing Images - Cloudinary Support */}
         {existingImages.length > 0 && (
           <div className="mt-4 sm:mt-6">
@@ -636,7 +627,6 @@ const EditLaptop = () => {
             </div>
           </div>
         )}
-
         {/* Upload New Images */}
         <div className="mt-4 sm:mt-6">
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
@@ -674,7 +664,6 @@ const EditLaptop = () => {
             You can select multiple images (Max 5)
           </p>
         </div>
-
         {/* Submit Button */}
         <button
           type="submit"

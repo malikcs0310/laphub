@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import TipTapEditor from "../../../components/TipTapEditor";
 
 const AddLaptop = () => {
   const navigate = useNavigate();
@@ -104,7 +105,9 @@ const AddLaptop = () => {
     if (name === "brand")
       setFormData((prev) => ({ ...prev, brand: value, model: "" }));
   };
-
+  const handleDescriptionChange = (value) => {
+    setFormData({ ...formData, description: value });
+  };
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -358,19 +361,13 @@ const AddLaptop = () => {
           </div>
         </div>
 
-        {/* Description */}
         <div className="mt-4 sm:mt-6">
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-            Description *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Description
           </label>
-          <textarea
-            name="description"
+          <TipTapEditor
             value={formData.description}
-            placeholder="Detailed description of the laptop..."
-            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-y text-sm"
-            rows={4}
-            onChange={handleChange}
-            required
+            onChange={handleDescriptionChange}
           />
         </div>
 
