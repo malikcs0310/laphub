@@ -17,7 +17,10 @@ import {
 const TipTapEditor = ({ value, onChange }) => {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      // ✅ Disable link in StarterKit to avoid duplication
+      StarterKit.configure({
+        link: false,
+      }),
       Link.configure({
         openOnClick: false,
       }),
