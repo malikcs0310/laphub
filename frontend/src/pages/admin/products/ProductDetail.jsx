@@ -171,17 +171,34 @@ const ProductDetail = () => {
 
   const handleBuyNow = (product, e) => {
     e.stopPropagation();
-    if (!isLoggedIn) {
-      toast.error("🔒 Please login to continue shopping!");
-      setTimeout(
-        () =>
-          navigate("/login", { state: { from: `/product/${product._id}` } }),
-        1000,
-      );
+
+    // ✅ Add product to cart first
+    if (!product || !product._id) {
+      toast.error("Product not found");
       return;
     }
+
+    if (!isLoggedIn) {
+      toast.error("🔒 Please login to continue shopping!");
+      setTimeout(() => {
+        navigate("/login", { state: { from: `/product/${product._id}` } });
+      }, 1000);
+      return;
+    }
+
+    // Add to cart before checkout
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const exists = cart.some((item) => item._id === product._id);
+    if (!exists) {
+      cart.push({ ...product, quantity: 1 });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      window.dispatchEvent(new Event("cartUpdated"));
+    }
+
     toast.success("🚀 Redirecting to secure checkout...");
-    setTimeout(() => navigate(`/checkout?product=${product._id}`), 800);
+    setTimeout(() => {
+      navigate("/checkout");
+    }, 800);
   };
 
   const handleWhatsAppOrder = () => {
