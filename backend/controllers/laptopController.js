@@ -1,20 +1,51 @@
 import Laptop from "../models/Laptop.js";
+import mongoose from "mongoose";
+
+// Helper function to generate slug
+const generateSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+};
 
 // ✅ CREATE - Add new laptop
-// ✅ CREATE - Add new laptop with Cloudinary
 export const addLaptop = async (req, res) => {
   try {
-    // Cloudinary image URLs
     const imageUrls = req.files ? req.files.map((file) => file.path) : [];
 
     console.log("📸 Uploaded images:", imageUrls);
+    console.log("📝 Request body:", req.body);
+
+    // Generate slug from title (if not provided)
+    let slug = req.body.slug;
+    if (!slug && req.body.title) {
+      slug = generateSlug(req.body.title);
+    }
 
     const laptop = new Laptop({
-      ...req.body,
-      images: imageUrls,
+      title: req.body.title,
+      slug: slug,
       price: Number(req.body.price),
+      condition: req.body.condition || "Used",
+      location: req.body.location,
+      description: req.body.description || "",
+      type: req.body.type || "",
+      brand: req.body.brand || "",
+      model: req.body.model || "",
+      processor: req.body.processor || "",
+      generation: req.body.generation || "",
+      ram: req.body.ram || "",
+      storage: req.body.storage || "",
+      screenSize: req.body.screenSize || "",
+      resolution: req.body.resolution || "",
+      gpu: req.body.gpu || "",
+      os: req.body.os || "",
+      batteryHealth: req.body.batteryHealth || "",
       stock: Number(req.body.stock) || 1,
       featured: req.body.featured === "true" || req.body.featured === true,
+      status: req.body.status || "available",
+      images: imageUrls,
     });
 
     await laptop.save();
@@ -68,42 +99,14 @@ export const getAllLaptops = async (req, res) => {
       ];
     }
 
-    // Brand filter
-    if (brand) {
-      filter.brand = { $in: brand.split(",") };
-    }
+    if (brand) filter.brand = { $in: brand.split(",") };
+    if (processor) filter.processor = { $regex: processor, $options: "i" };
+    if (ram) filter.ram = { $regex: ram, $options: "i" };
+    if (storage) filter.storage = { $regex: storage, $options: "i" };
+    if (condition) filter.condition = condition;
+    if (type) filter.type = type;
+    if (status) filter.status = status;
 
-    // Processor filter
-    if (processor) {
-      filter.processor = { $regex: processor, $options: "i" };
-    }
-
-    // RAM filter
-    if (ram) {
-      filter.ram = { $regex: ram, $options: "i" };
-    }
-
-    // Storage filter
-    if (storage) {
-      filter.storage = { $regex: storage, $options: "i" };
-    }
-
-    // Condition filter
-    if (condition) {
-      filter.condition = condition;
-    }
-
-    // Type filter
-    if (type) {
-      filter.type = type;
-    }
-
-    // Status filter
-    if (status) {
-      filter.status = status;
-    }
-
-    // Price range filter
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = Number(minPrice);
@@ -173,7 +176,6 @@ export const getSingleLaptop = async (req, res) => {
 };
 
 // ✅ UPDATE LAPTOP
-// ✅ UPDATE Laptop with Cloudinary
 export const updateLaptop = async (req, res) => {
   try {
     const laptop = await Laptop.findById(req.params.id);
@@ -185,28 +187,37 @@ export const updateLaptop = async (req, res) => {
       });
     }
 
-    // Build updated data
+    // Update slug if title changed
+    let slug = laptop.slug;
+    if (req.body.title && req.body.title !== laptop.title) {
+      slug = generateSlug(req.body.title);
+    }
+
     const updatedData = {
-      title: req.body.title,
-      price: Number(req.body.price),
-      condition: req.body.condition,
-      location: req.body.location,
-      description: req.body.description,
-      type: req.body.type,
-      brand: req.body.brand,
-      model: req.body.model,
-      processor: req.body.processor,
-      generation: req.body.generation,
-      ram: req.body.ram,
-      storage: req.body.storage,
-      screenSize: req.body.screenSize,
-      resolution: req.body.resolution,
-      gpu: req.body.gpu,
-      os: req.body.os,
-      batteryHealth: req.body.batteryHealth,
-      stock: Number(req.body.stock) || 1,
-      featured: req.body.featured === "true" || req.body.featured === true,
-      status: req.body.status || "available",
+      title: req.body.title || laptop.title,
+      slug: slug,
+      price: Number(req.body.price) || laptop.price,
+      condition: req.body.condition || laptop.condition,
+      location: req.body.location || laptop.location,
+      description: req.body.description || laptop.description,
+      type: req.body.type || laptop.type,
+      brand: req.body.brand || laptop.brand,
+      model: req.body.model || laptop.model,
+      processor: req.body.processor || laptop.processor,
+      generation: req.body.generation || laptop.generation,
+      ram: req.body.ram || laptop.ram,
+      storage: req.body.storage || laptop.storage,
+      screenSize: req.body.screenSize || laptop.screenSize,
+      resolution: req.body.resolution || laptop.resolution,
+      gpu: req.body.gpu || laptop.gpu,
+      os: req.body.os || laptop.os,
+      batteryHealth: req.body.batteryHealth || laptop.batteryHealth,
+      stock: Number(req.body.stock) || laptop.stock,
+      featured:
+        req.body.featured === "true" ||
+        req.body.featured === true ||
+        laptop.featured,
+      status: req.body.status || laptop.status,
     };
 
     // Handle new images upload
@@ -286,6 +297,8 @@ export const updateStock = async (req, res) => {
     laptop.stock -= quantity;
     if (laptop.stock === 0) {
       laptop.status = "sold";
+    } else if (laptop.stock > 0 && laptop.status === "sold") {
+      laptop.status = "available";
     }
 
     await laptop.save();
