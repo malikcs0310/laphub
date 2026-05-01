@@ -22,13 +22,24 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // Load clicked badges from localStorage on mount
+  useEffect(() => {
+    const clickedBadges = localStorage.getItem("clickedBadges");
+    if (clickedBadges) {
+      const parsed = JSON.parse(clickedBadges);
+      setBadges((prev) => ({
+        orders: prev.orders - (parsed.orders || 0),
+        reviews: prev.reviews - (parsed.reviews || 0),
+        testimonials: prev.testimonials - (parsed.testimonials || 0),
+      }));
+    }
+  }, []);
+
   // Fetch all counts on mount and every 30 seconds
   useEffect(() => {
     fetchBadgeCounts();
 
-    // Refresh every 30 seconds
     const interval = setInterval(fetchBadgeCounts, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -67,10 +78,21 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
           (testimonial) => testimonial.status === "pending",
         ).length || 0;
 
+      // Get clicked badges from localStorage
+      const clickedBadges = JSON.parse(
+        localStorage.getItem("clickedBadges") || "{}",
+      );
+
       setBadges({
-        orders: pendingOrdersCount,
-        reviews: pendingReviewsCount,
-        testimonials: pendingTestimonialsCount,
+        orders: Math.max(0, pendingOrdersCount - (clickedBadges.orders || 0)),
+        reviews: Math.max(
+          0,
+          pendingReviewsCount - (clickedBadges.reviews || 0),
+        ),
+        testimonials: Math.max(
+          0,
+          pendingTestimonialsCount - (clickedBadges.testimonials || 0),
+        ),
       });
     } catch (error) {
       console.error("Error fetching badge counts:", error);
@@ -78,7 +100,17 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
   };
 
   // Call this function when navigating to clear badge
-  const clearBadge = (type) => {
+  const clearBadge = (type, badgeCount) => {
+    if (badgeCount <= 0) return;
+
+    // Save clicked badge in localStorage
+    const clickedBadges = JSON.parse(
+      localStorage.getItem("clickedBadges") || "{}",
+    );
+    clickedBadges[type] = (clickedBadges[type] || 0) + badgeCount;
+    localStorage.setItem("clickedBadges", JSON.stringify(clickedBadges));
+
+    // Update UI
     setBadges((prev) => ({
       ...prev,
       [type]: 0,
@@ -150,8 +182,8 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
               key={index}
               to={item.path}
               onClick={() => {
-                if (item.badge) {
-                  clearBadge(item.badge);
+                if (item.badge && badgeCount > 0) {
+                  clearBadge(item.badge, badgeCount);
                 }
                 setMobileOpen?.(false);
               }}
