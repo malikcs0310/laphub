@@ -491,10 +491,10 @@ const ProductDetail = () => {
             </div>
 
             {/* Short Intro */}
-            <p className="text-gray-600 text-sm sm:text-base leading-6 sm:leading-7 mb-4 sm:mb-6">
+            {/* <p className="text-gray-600 text-sm sm:text-base leading-6 sm:leading-7 mb-4 sm:mb-6">
               {descriptionLines[0] ||
                 "A premium quality laptop with reliable performance, decent battery timing, and professional build quality."}
-            </p>
+            </p> */}
 
             {/* Quick Specs */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-6 sm:mb-8">
