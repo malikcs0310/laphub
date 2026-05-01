@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       // Check if it's admin login
-      if (email === "admin@laptopshop.com" && password === "admin123") {
+      if (email === "malikcs0310@gmail.com" && password === "admin123") {
         const adminRes = await fetch(`${API_URL}/api/auth/admin/login`, {
           method: "POST",
           headers: {
