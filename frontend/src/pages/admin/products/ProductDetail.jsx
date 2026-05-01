@@ -205,87 +205,120 @@ const ProductDetail = () => {
   const formatDescription = (text) => {
     if (!text) return null;
 
-    // First, split by double line breaks to identify paragraphs
-    const paragraphs = text.split(/\n\s*\n/);
+    const lines = text.split("\n");
+    const result = [];
+    let i = 0;
 
-    return paragraphs.map((paragraph, idx) => {
-      // Check for heading (line starting with # or ## or ###)
-      if (paragraph.trim().startsWith("# ")) {
-        return (
-          <h3 key={idx} className="text-lg font-bold text-gray-900 mt-4 mb-2">
-            {paragraph.replace("# ", "")}
-          </h3>
-        );
-      }
-      if (paragraph.trim().startsWith("## ")) {
-        return (
-          <h4
-            key={idx}
-            className="text-md font-semibold text-gray-900 mt-3 mb-2"
-          >
-            {paragraph.replace("## ", "")}
-          </h4>
-        );
+    while (i < lines.length) {
+      const line = lines[i];
+      const trimmedLine = line.trim();
+
+      // Skip empty lines (add spacing)
+      if (trimmedLine === "") {
+        result.push(<div key={`space-${i}`} className="h-3" />);
+        i++;
+        continue;
       }
 
-      // Check for bullet points (lines starting with •, -, *, or numbers)
-      const lines = paragraph.split("\n");
+      // Check for heading (line that is not too long, doesn't end with colon, not starting with bullet)
+      const isHeading =
+        trimmedLine.length < 60 &&
+        !trimmedLine.endsWith(":") &&
+        !trimmedLine.startsWith("•") &&
+        !trimmedLine.startsWith("-") &&
+        !trimmedLine.startsWith("*") &&
+        !trimmedLine.match(/^\d+\./) &&
+        // Check if next line is empty or different
+        (i === 0 || lines[i - 1].trim() === "");
 
-      // Bullet list detection
-      if (
-        lines.some(
-          (line) =>
-            line.trim().startsWith("•") ||
-            line.trim().startsWith("-") ||
-            line.trim().startsWith("*"),
-        )
-      ) {
-        const items = lines.filter(
-          (line) =>
-            line.trim().startsWith("•") ||
-            line.trim().startsWith("-") ||
-            line.trim().startsWith("*"),
+      if (isHeading) {
+        result.push(
+          <h3 key={i} className="text-xl font-bold text-gray-900 mt-5 mb-2">
+            {trimmedLine}
+          </h3>,
         );
-        return (
-          <ul key={idx} className="list-disc pl-5 mb-3 space-y-1">
-            {items.map((item, i) => (
-              <li key={i}>{item.replace(/^[•\-*]\s*/, "")}</li>
-            ))}
-          </ul>
-        );
+        i++;
+        continue;
       }
 
-      // Numbered list detection
-      if (lines.some((line) => /^\d+\./.test(line.trim()))) {
-        const items = lines.filter((line) => /^\d+\./.test(line.trim()));
-        return (
-          <ol key={idx} className="list-decimal pl-5 mb-3 space-y-1">
-            {items.map((item, i) => (
-              <li key={i}>{item.replace(/^\d+\.\s*/, "")}</li>
-            ))}
-          </ol>
+      // Bullet points with •
+      if (trimmedLine.startsWith("•")) {
+        result.push(
+          <div key={i} className="flex items-start gap-2 ml-4 mb-1.5">
+            <span className="text-blue-600 font-bold mt-0.5">•</span>
+            <span className="text-gray-700 flex-1">
+              {trimmedLine.substring(1).trim()}
+            </span>
+          </div>,
         );
+        i++;
+        continue;
       }
 
-      // Check for bold text (wrapped in **)
-      let formattedText = paragraph;
-      // Bold: **text** -> <strong>text</strong>
-      formattedText = formattedText.replace(
+      // Bullet points with -
+      if (trimmedLine.startsWith("-")) {
+        result.push(
+          <div key={i} className="flex items-start gap-2 ml-4 mb-1.5">
+            <span className="text-blue-600 font-bold mt-0.5">•</span>
+            <span className="text-gray-700 flex-1">
+              {trimmedLine.substring(1).trim()}
+            </span>
+          </div>,
+        );
+        i++;
+        continue;
+      }
+
+      // Bullet points with *
+      if (trimmedLine.startsWith("*")) {
+        result.push(
+          <div key={i} className="flex items-start gap-2 ml-4 mb-1.5">
+            <span className="text-blue-600 font-bold mt-0.5">•</span>
+            <span className="text-gray-700 flex-1">
+              {trimmedLine.substring(1).trim()}
+            </span>
+          </div>,
+        );
+        i++;
+        continue;
+      }
+
+      // Numbered list (1., 2., etc.)
+      const numberedMatch = trimmedLine.match(/^(\d+)\.\s*(.*)/);
+      if (numberedMatch) {
+        result.push(
+          <div key={i} className="flex items-start gap-2 ml-4 mb-1.5">
+            <span className="text-blue-600 font-semibold min-w-[20px]">
+              {numberedMatch[1]}.
+            </span>
+            <span className="text-gray-700 flex-1">{numberedMatch[2]}</span>
+          </div>,
+        );
+        i++;
+        continue;
+      }
+
+      // Handle bold text within regular paragraph
+      let formattedLine = trimmedLine;
+      formattedLine = formattedLine.replace(
         /\*\*(.*?)\*\*/g,
         '<strong class="font-bold text-gray-900">$1</strong>',
       );
-      // Line breaks within paragraph
-      formattedText = formattedText.replace(/\n/g, "<br/>");
 
       // Regular paragraph
-      return (
-        <p
-          key={idx}
-          className="mb-3 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: formattedText }}
-        />
-      );
-    });
+      if (formattedLine.length > 0) {
+        result.push(
+          <p
+            key={i}
+            className="mb-2 text-gray-700 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: formattedLine }}
+          />,
+        );
+      }
+      i++;
+    }
+
+    return result;
   };
 
   const handleWhatsAppOrder = () => {
@@ -618,22 +651,17 @@ const ProductDetail = () => {
           </div>
 
           {/* Description Tab */}
-          {/* Description Tab */}
           {activeTab === "description" && (
             <div className="bg-white rounded-xl shadow-sm p-6 mt-4">
               <h3 className="text-xl font-bold text-gray-900 mb-3">
                 Product Description
               </h3>
-              <div className="text-gray-700">
-                {laptop.description ? (
-                  formatDescription(laptop.description)
-                ) : (
-                  <p className="text-gray-500">
-                    No detailed description available. Please contact us for
-                    more information.
-                  </p>
-                )}
-              </div>
+              <div
+                className="prose max-w-none text-gray-700 leading-relaxed"
+                dangerouslySetInnerHTML={{
+                  __html: laptop.description || "No description available.",
+                }}
+              />
             </div>
           )}
 
