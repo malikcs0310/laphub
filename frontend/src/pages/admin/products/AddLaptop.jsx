@@ -133,18 +133,13 @@ const AddLaptop = () => {
 
     try {
       const data = new FormData();
-
-      for (const key of Object.keys(formData)) {
+      Object.keys(formData).forEach((key) => {
         if (key === "images") {
           formData.images.forEach((img) => img && data.append("images", img));
-        } else if (key === "featured") {
-          data.append("featured", formData.featured ? "true" : "false");
-        } else if (key === "price" || key === "stock") {
-          data.append(key, String(formData[key]));
         } else {
           data.append(key, formData[key]);
         }
-      }
+      });
 
       const token = localStorage.getItem("adminToken");
       const res = await fetch(`${API_URL}/api/laptops/add`, {
