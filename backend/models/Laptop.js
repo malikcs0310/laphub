@@ -3,18 +3,12 @@ import mongoose from "mongoose";
 const laptopSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+    slug: { type: String, unique: true, sparse: true },
 
-    // ✅ Optional slug (no auto-generation)
-    slug: {
-      type: String,
-      unique: true,
-      sparse: true,
-    },
-
-    // ✅ PRICE FIELDS
-    costPrice: { type: Number, required: true, min: 0 }, // Admin only
-    sellingPrice: { type: Number, required: true, min: 0 }, // Customer sees
-    price: { type: Number, min: 0 }, // Legacy/Compatibility
+    // ✅ PRICE FIELDS - ADD THESE
+    costPrice: { type: Number, default: 0, min: 0 }, // What you paid
+    sellingPrice: { type: Number, default: 0, min: 0 }, // Customer pays
+    price: { type: Number, min: 0 }, // For compatibility
 
     condition: { type: String, default: "Used" },
     location: { type: String, required: true },
@@ -40,35 +34,30 @@ const laptopSchema = new mongoose.Schema(
     },
     images: { type: [String], default: [] },
   },
-  {
-    timestamps: true,
-    // ✅ Virtual fields for profit (not stored in DB, calculated on the fly)
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-  },
+  { timestamps: true },
 );
 
-// ✅ Virtual field for profit (NO pre-save, NO next)
+// Virtual field for profit calculation
 laptopSchema.virtual("profit").get(function () {
   return (this.sellingPrice || this.price || 0) - (this.costPrice || 0);
 });
 
-// ✅ Virtual field for profit margin
+// Virtual field for profit margin
 laptopSchema.virtual("profitMargin").get(function () {
   const cost = this.costPrice || 1;
   const profit = this.profit;
   return ((profit / cost) * 100).toFixed(1);
 });
 
-// ✅ Set price = sellingPrice (for compatibility)
+// Set price = sellingPrice for compatibility
 laptopSchema.pre("save", function (next) {
   if (this.sellingPrice) {
     this.price = this.sellingPrice;
   }
-  next(); // ✅ next is used correctly here
+  next();
 });
 
-// Indexes for performance
+// Indexes
 laptopSchema.index({ status: 1, featured: 1 });
 laptopSchema.index({ brand: 1 });
 laptopSchema.index({ sellingPrice: 1 });
