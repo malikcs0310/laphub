@@ -10,7 +10,8 @@ const EditLaptop = () => {
 
   const [formData, setFormData] = useState({
     title: "",
-    price: "",
+    costPrice: "",
+    sellingPrice: "",
     condition: "Used",
     location: "",
     description: "",
@@ -99,16 +100,20 @@ const EditLaptop = () => {
     { value: "reserved", label: "Reserved" },
   ];
 
-  // Get image URL (supports both local uploads and Cloudinary)
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
-    // If it's already a full URL (Cloudinary), return as is
     if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
       return imagePath;
     }
-    // Otherwise, it's a local upload
     return `${API_URL}/uploads/${imagePath}`;
   };
+
+  // Calculate profit preview
+  const costPrice = Number(formData.costPrice);
+  const sellingPrice = Number(formData.sellingPrice);
+  const expectedProfit = sellingPrice - costPrice;
+  const profitMargin =
+    costPrice > 0 ? ((expectedProfit / costPrice) * 100).toFixed(1) : 0;
 
   useEffect(() => {
     const fetchLaptop = async () => {
@@ -122,7 +127,8 @@ const EditLaptop = () => {
 
         setFormData({
           title: laptopData.title || "",
-          price: laptopData.price || "",
+          costPrice: laptopData.costPrice || "",
+          sellingPrice: laptopData.sellingPrice || laptopData.price || "",
           condition: laptopData.condition || "Used",
           location: laptopData.location || "",
           description: laptopData.description || "",
@@ -176,9 +182,11 @@ const EditLaptop = () => {
       }));
     }
   };
+
   const handleDescriptionChange = (value) => {
     setFormData({ ...formData, description: value });
   };
+
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -255,9 +263,10 @@ const EditLaptop = () => {
         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800">
           Edit Laptop
         </h2>
+
         {/* Basic Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <div>
+          <div className="sm:col-span-2">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Laptop Title *
             </label>
@@ -272,20 +281,68 @@ const EditLaptop = () => {
             />
           </div>
 
+          {/* Price Section - Two Fields */}
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-              Price (PKR) *
+              Cost Price (PKR) *
+              <span className="text-gray-400 text-xs ml-1">
+                (What you paid)
+              </span>
             </label>
             <input
               type="number"
-              name="price"
-              placeholder="Price (PKR)"
+              name="costPrice"
+              value={formData.costPrice}
+              placeholder="e.g., 56000"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
-              value={formData.price}
               onChange={handleChange}
               required
             />
           </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Selling Price (PKR) *
+              <span className="text-gray-400 text-xs ml-1">
+                (Customer pays)
+              </span>
+            </label>
+            <input
+              type="number"
+              name="sellingPrice"
+              value={formData.sellingPrice}
+              placeholder="e.g., 61000"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Profit Preview */}
+          {formData.costPrice &&
+            formData.sellingPrice &&
+            Number(formData.sellingPrice) > 0 && (
+              <div
+                className={`p-3 rounded-lg ${sellingPrice > costPrice ? "bg-green-50" : "bg-red-50"} sm:col-span-2`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Expected Profit:</span>
+                  <span
+                    className={`text-lg font-bold ${sellingPrice > costPrice ? "text-green-600" : "text-red-600"}`}
+                  >
+                    Rs {expectedProfit.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-xs text-gray-500">Profit Margin:</span>
+                  <span
+                    className={`text-sm font-semibold ${sellingPrice > costPrice ? "text-green-600" : "text-red-600"}`}
+                  >
+                    {profitMargin}%
+                  </span>
+                </div>
+              </div>
+            )}
 
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
@@ -370,6 +427,7 @@ const EditLaptop = () => {
             />
           </div>
         </div>
+
         {/* Brand & Model */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -417,7 +475,8 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
-        // Replace description section
+
+        {/* Description */}
         <div className="mt-4 sm:mt-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Description
@@ -427,6 +486,7 @@ const EditLaptop = () => {
             onChange={handleDescriptionChange}
           />
         </div>
+
         {/* Processor & Performance */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -509,6 +569,7 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
+
         {/* Display & Screen */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -549,6 +610,7 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
+
         {/* Software & Battery */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -589,6 +651,7 @@ const EditLaptop = () => {
             </div>
           </div>
         </div>
+
         {/* Featured */}
         <div className="mt-4 sm:mt-6">
           <label className="flex items-center gap-2 cursor-pointer">
@@ -604,7 +667,8 @@ const EditLaptop = () => {
             </span>
           </label>
         </div>
-        {/* Existing Images - Cloudinary Support */}
+
+        {/* Existing Images */}
         {existingImages.length > 0 && (
           <div className="mt-4 sm:mt-6">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
@@ -627,6 +691,7 @@ const EditLaptop = () => {
             </div>
           </div>
         )}
+
         {/* Upload New Images */}
         <div className="mt-4 sm:mt-6">
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
@@ -664,6 +729,7 @@ const EditLaptop = () => {
             You can select multiple images (Max 5)
           </p>
         </div>
+
         {/* Submit Button */}
         <button
           type="submit"
