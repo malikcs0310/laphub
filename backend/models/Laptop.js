@@ -3,13 +3,19 @@ import mongoose from "mongoose";
 const laptopSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+
+    // ✅ Optional slug (no auto-generation)
     slug: {
       type: String,
       unique: true,
       sparse: true,
-      // Remove auto-generation - we'll handle manually
     },
-    price: { type: Number, required: true, min: 0 },
+
+    // ✅ PRICE FIELDS
+    costPrice: { type: Number, required: true, min: 0 }, // Admin only
+    sellingPrice: { type: Number, required: true, min: 0 }, // Customer sees
+    price: { type: Number, min: 0 }, // Legacy/Compatibility
+
     condition: { type: String, default: "Used" },
     location: { type: String, required: true },
     description: { type: String, default: "" },
@@ -34,16 +40,37 @@ const laptopSchema = new mongoose.Schema(
     },
     images: { type: [String], default: [] },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    // ✅ Virtual fields for profit (not stored in DB, calculated on the fly)
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
 
-// ✅ NO pre-save hook - remove completely to avoid errors
-// Slug will be generated in controller if needed
+// ✅ Virtual field for profit (NO pre-save, NO next)
+laptopSchema.virtual("profit").get(function () {
+  return (this.sellingPrice || this.price || 0) - (this.costPrice || 0);
+});
 
-// Add indexes for performance
+// ✅ Virtual field for profit margin
+laptopSchema.virtual("profitMargin").get(function () {
+  const cost = this.costPrice || 1;
+  const profit = this.profit;
+  return ((profit / cost) * 100).toFixed(1);
+});
+
+// ✅ Set price = sellingPrice (for compatibility)
+laptopSchema.pre("save", function (next) {
+  if (this.sellingPrice) {
+    this.price = this.sellingPrice;
+  }
+  next(); // ✅ next is used correctly here
+});
+
+// Indexes for performance
 laptopSchema.index({ status: 1, featured: 1 });
 laptopSchema.index({ brand: 1 });
-laptopSchema.index({ price: 1 });
-laptopSchema.index({ createdAt: -1 });
+laptopSchema.index({ sellingPrice: 1 });
 
 export default mongoose.model("Laptop", laptopSchema);

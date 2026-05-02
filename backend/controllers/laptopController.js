@@ -10,23 +10,16 @@ const generateSlug = (title) => {
 };
 
 // ✅ CREATE - Add new laptop
+
 export const addLaptop = async (req, res) => {
   try {
     const imageUrls = req.files ? req.files.map((file) => file.path) : [];
 
-    console.log("📸 Uploaded images:", imageUrls);
-    console.log("📝 Request body:", req.body);
-
-    // Generate slug from title (if not provided)
-    let slug = req.body.slug;
-    if (!slug && req.body.title) {
-      slug = generateSlug(req.body.title);
-    }
-
     const laptop = new Laptop({
       title: req.body.title,
-      slug: slug,
-      price: Number(req.body.price),
+      costPrice: Number(req.body.costPrice),
+      sellingPrice: Number(req.body.sellingPrice),
+      price: Number(req.body.sellingPrice), // For compatibility
       condition: req.body.condition || "Used",
       location: req.body.location,
       description: req.body.description || "",

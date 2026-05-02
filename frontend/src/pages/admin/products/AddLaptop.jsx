@@ -9,7 +9,8 @@ const AddLaptop = () => {
 
   const [formData, setFormData] = useState({
     title: "",
-    price: "",
+    costPrice: "",
+    sellingPrice: "",
     condition: "Used",
     location: "",
     description: "",
@@ -96,6 +97,13 @@ const AddLaptop = () => {
     { value: "reserved", label: "Reserved" },
   ];
 
+  // Calculate profit preview
+  const costPrice = Number(formData.costPrice);
+  const sellingPrice = Number(formData.sellingPrice);
+  const expectedProfit = sellingPrice - costPrice;
+  const profitMargin =
+    costPrice > 0 ? ((expectedProfit / costPrice) * 100).toFixed(1) : 0;
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -105,9 +113,11 @@ const AddLaptop = () => {
     if (name === "brand")
       setFormData((prev) => ({ ...prev, brand: value, model: "" }));
   };
+
   const handleDescriptionChange = (value) => {
     setFormData({ ...formData, description: value });
   };
+
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -156,7 +166,8 @@ const AddLaptop = () => {
         toast.success(result.message || "Laptop added successfully!");
         setFormData({
           title: "",
-          price: "",
+          costPrice: "",
+          sellingPrice: "",
           condition: "Used",
           location: "",
           description: "",
@@ -202,7 +213,7 @@ const AddLaptop = () => {
 
         {/* Basic Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <div>
+          <div className="sm:col-span-2">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Laptop Title *
             </label>
@@ -216,20 +227,70 @@ const AddLaptop = () => {
               required
             />
           </div>
+
+          {/* Price Section - Two Fields */}
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-              Price (PKR) *
+              Cost Price (PKR) *
+              <span className="text-gray-400 text-xs ml-1">
+                (What you paid)
+              </span>
             </label>
             <input
               type="number"
-              name="price"
-              value={formData.price}
-              placeholder="e.g., 52000"
+              name="costPrice"
+              value={formData.costPrice}
+              placeholder="e.g., 56000"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               onChange={handleChange}
               required
             />
           </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              Selling Price (PKR) *
+              <span className="text-gray-400 text-xs ml-1">
+                (Customer pays)
+              </span>
+            </label>
+            <input
+              type="number"
+              name="sellingPrice"
+              value={formData.sellingPrice}
+              placeholder="e.g., 61000"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Profit Preview */}
+          {formData.costPrice &&
+            formData.sellingPrice &&
+            Number(formData.sellingPrice) > 0 && (
+              <div
+                className={`p-3 rounded-lg ${sellingPrice > costPrice ? "bg-green-50" : "bg-red-50"} sm:col-span-2`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Expected Profit:</span>
+                  <span
+                    className={`text-lg font-bold ${sellingPrice > costPrice ? "text-green-600" : "text-red-600"}`}
+                  >
+                    Rs {expectedProfit.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-xs text-gray-500">Profit Margin:</span>
+                  <span
+                    className={`text-sm font-semibold ${sellingPrice > costPrice ? "text-green-600" : "text-red-600"}`}
+                  >
+                    {profitMargin}%
+                  </span>
+                </div>
+              </div>
+            )}
+
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Stock Quantity *
@@ -245,6 +306,7 @@ const AddLaptop = () => {
               required
             />
           </div>
+
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Status
@@ -262,6 +324,7 @@ const AddLaptop = () => {
               ))}
             </select>
           </div>
+
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Type *
@@ -281,6 +344,7 @@ const AddLaptop = () => {
               ))}
             </select>
           </div>
+
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Condition *
@@ -296,6 +360,7 @@ const AddLaptop = () => {
               <option value="Refurbished">Refurbished</option>
             </select>
           </div>
+
           <div className="sm:col-span-2">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Location *
@@ -361,6 +426,7 @@ const AddLaptop = () => {
           </div>
         </div>
 
+        {/* Description */}
         <div className="mt-4 sm:mt-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Description
@@ -371,7 +437,7 @@ const AddLaptop = () => {
           />
         </div>
 
-        {/* Processor & Generation */}
+        {/* Processor & Performance */}
         <div className="mt-4 sm:mt-6">
           <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
             Processor & Performance

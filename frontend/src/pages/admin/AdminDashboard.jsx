@@ -14,6 +14,8 @@ import {
   FiMessageCircle,
   FiEye,
   FiEyeOff,
+  FiTrendingDown,
+  FiBarChart2,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -42,6 +44,14 @@ const AdminDashboard = () => {
   const [recentReviews, setRecentReviews] = useState([]);
   const [recentTestimonials, setRecentTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [profitStats, setProfitStats] = useState({
+    totalCost: 0,
+    totalRevenue: 0,
+    totalProfit: 0,
+    averageMargin: 0,
+    soldCount: 0,
+  });
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -49,7 +59,43 @@ const AdminDashboard = () => {
     fetchDashboardData();
     fetchReviewData();
     fetchTestimonialData();
+    fetchProducts();
   }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_URL}/api/laptops`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      const productsList = data.laptops || data.data || [];
+      setProducts(productsList);
+
+      // Calculate profit from sold products
+      const soldProducts = productsList.filter((p) => p.status === "sold");
+      const totalCost = soldProducts.reduce(
+        (sum, p) => sum + (p.costPrice || 0),
+        0,
+      );
+      const totalRevenue = soldProducts.reduce(
+        (sum, p) => sum + (p.sellingPrice || p.price || 0),
+        0,
+      );
+
+      setProfitStats({
+        totalCost,
+        totalRevenue,
+        totalProfit: totalRevenue - totalCost,
+        averageMargin: totalCost
+          ? (((totalRevenue - totalCost) / totalCost) * 100).toFixed(1)
+          : 0,
+        soldCount: soldProducts.length,
+      });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -168,6 +214,45 @@ const AdminDashboard = () => {
       <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
         Admin Dashboard
       </h1>
+
+      {/* Profit Analytics Card - NEW */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg p-4 sm:p-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <FiBarChart2 className="text-white text-xl" />
+            <h2 className="text-white font-bold text-lg">Profit Analytics</h2>
+          </div>
+          <span className="bg-white/20 text-white px-3 py-1 rounded-full text-xs">
+            {profitStats.soldCount} Products Sold
+          </span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white/10 rounded-lg p-3 backdrop-blur">
+            <p className="text-white/70 text-xs">Total Cost</p>
+            <p className="text-white text-xl font-bold">
+              {formatPrice(profitStats.totalCost)}
+            </p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 backdrop-blur">
+            <p className="text-white/70 text-xs">Total Revenue</p>
+            <p className="text-white text-xl font-bold">
+              {formatPrice(profitStats.totalRevenue)}
+            </p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 backdrop-blur">
+            <p className="text-white/70 text-xs">Total Profit</p>
+            <p className="text-green-300 text-xl font-bold">
+              +{formatPrice(profitStats.totalProfit)}
+            </p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 backdrop-blur">
+            <p className="text-white/70 text-xs">Average Margin</p>
+            <p className="text-green-300 text-xl font-bold">
+              {profitStats.averageMargin}%
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Orders Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
