@@ -9,6 +9,7 @@ import {
   FiCpu,
   FiHardDrive,
   FiDatabase,
+  FiTrendingUp,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -131,14 +132,11 @@ const ViewProducts = () => {
 
   const formatPrice = (price) => `Rs ${Number(price).toLocaleString()}`;
 
-  // Get image URL (supports both local uploads and Cloudinary)
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
-    // If it's already a full URL (Cloudinary), return as is
     if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
       return imagePath;
     }
-    // Otherwise, it's a local upload
     return `${API_URL}/uploads/${imagePath}`;
   };
 
@@ -276,7 +274,7 @@ const ViewProducts = () => {
       {/* Products Table */}
       <div className="bg-white rounded-lg sm:rounded-xl shadow overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1000px] sm:min-w-full text-sm">
+          <table className="w-full min-w-[1200px] sm:min-w-full text-sm">
             <thead className="bg-gray-200 text-gray-700">
               <tr>
                 <th className="p-2 sm:p-3 text-center w-12">#</th>
@@ -284,7 +282,9 @@ const ViewProducts = () => {
                 <th className="p-2 sm:p-3">Title</th>
                 <th className="p-2 sm:p-3">Brand</th>
                 <th className="p-2 sm:p-3">Model</th>
-                <th className="p-2 sm:p-3">Price</th>
+                <th className="p-2 sm:p-3">Cost Price</th>
+                <th className="p-2 sm:p-3">Selling Price</th>
+                <th className="p-2 sm:p-3">Profit</th>
                 <th className="p-2 sm:p-3 hidden md:table-cell">Processor</th>
                 <th className="p-2 sm:p-3 hidden lg:table-cell">RAM/Storage</th>
                 <th className="p-2 sm:p-3">Stock</th>
@@ -305,119 +305,147 @@ const ViewProducts = () => {
             </thead>
             <tbody>
               {filteredLaptops.length > 0 ? (
-                filteredLaptops.map((lap, index) => (
-                  <tr
-                    key={lap._id}
-                    className="border-b hover:bg-gray-50 transition"
-                  >
-                    <td className="p-2 sm:p-3 font-medium text-center text-xs sm:text-sm">
-                      {index + 1}
-                    </td>
-                    <td className="p-2 sm:p-3">
-                      {lap.images && lap.images.length > 0 ? (
-                        <img
-                          src={getImageUrl(lap.images[0])}
-                          alt="laptop"
-                          className="w-12 h-10 sm:w-14 sm:h-11 object-cover rounded"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src =
-                              "https://via.placeholder.com/80x60?text=No+Image";
-                          }}
-                        />
-                      ) : (
-                        <div className="w-12 h-10 sm:w-14 sm:h-11 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
-                          No img
+                filteredLaptops.map((lap, index) => {
+                  const costPrice = lap.costPrice || lap.price * 0.8;
+                  const sellingPrice = lap.sellingPrice || lap.price;
+                  const profit = sellingPrice - costPrice;
+                  const profitPercent =
+                    costPrice > 0 ? ((profit / costPrice) * 100).toFixed(1) : 0;
+
+                  return (
+                    <tr
+                      key={lap._id}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
+                      <td className="p-2 sm:p-3 font-medium text-center text-xs sm:text-sm">
+                        {index + 1}
+                      </td>
+                      <td className="p-2 sm:p-3">
+                        {lap.images && lap.images.length > 0 ? (
+                          <img
+                            src={getImageUrl(lap.images[0])}
+                            alt="laptop"
+                            className="w-12 h-10 sm:w-14 sm:h-11 object-cover rounded"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src =
+                                "https://via.placeholder.com/80x60?text=No+Image";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-12 h-10 sm:w-14 sm:h-11 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+                            No img
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-2 sm:p-3">
+                        <div>
+                          <p className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
+                            {lap.title.length > 35
+                              ? `${lap.title.substring(0, 35)}...`
+                              : lap.title}
+                          </p>
+                          {lap.featured && (
+                            <span className="inline-block bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded mt-1">
+                              Featured
+                            </span>
+                          )}
                         </div>
-                      )}
-                    </td>
-                    <td className="p-2 sm:p-3">
-                      <div>
-                        <p className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">
-                          {lap.title.length > 35
-                            ? `${lap.title.substring(0, 35)}...`
-                            : lap.title}
-                        </p>
-                        {lap.featured && (
-                          <span className="inline-block bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded mt-1">
-                            Featured
+                      </td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
+                        {lap.brand || "-"}
+                      </td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm">
+                        {lap.model || "-"}
+                      </td>
+                      <td className="p-2 sm:p-3 text-xs font-medium text-gray-700 whitespace-nowrap">
+                        {formatPrice(costPrice)}
+                      </td>
+                      <td className="p-2 sm:p-3 text-xs font-bold text-blue-600 whitespace-nowrap">
+                        {formatPrice(sellingPrice)}
+                      </td>
+                      <td className="p-2 sm:p-3">
+                        <div className="flex flex-col">
+                          <span
+                            className={`text-xs font-semibold ${profit >= 0 ? "text-green-600" : "text-red-600"}`}
+                          >
+                            +{formatPrice(profit)}
+                          </span>
+                          <span className="text-[10px] text-gray-400">
+                            ({profitPercent}% margin)
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-2 sm:p-3 text-xs hidden md:table-cell">
+                        <div className="flex items-center gap-1">
+                          <FiCpu size={12} className="text-gray-400" />
+                          <span>
+                            {lap.processor?.split(" ").slice(0, 2).join(" ") ||
+                              "-"}
+                          </span>
+                        </div>
+                        {lap.generation && (
+                          <span className="text-[10px] text-gray-400 block">
+                            {lap.generation}
                           </span>
                         )}
-                      </div>
-                    </td>
-                    <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
-                      {lap.brand || "-"}
-                    </td>
-                    <td className="p-2 sm:p-3 text-xs sm:text-sm">
-                      {lap.model || "-"}
-                    </td>
-                    <td className="p-2 sm:p-3 text-xs sm:text-sm font-bold text-blue-600 whitespace-nowrap">
-                      {formatPrice(lap.price)}
-                    </td>
-                    <td className="p-2 sm:p-3 text-xs hidden md:table-cell">
-                      <div className="flex items-center gap-1">
-                        <FiCpu size={12} className="text-gray-400" />
-                        <span>
-                          {lap.processor?.split(" ").slice(0, 2).join(" ") ||
-                            "-"}
-                        </span>
-                      </div>
-                      {lap.generation && (
-                        <span className="text-[10px] text-gray-400 block">
-                          {lap.generation}
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-2 sm:p-3 text-xs hidden lg:table-cell">
-                      <div className="space-y-0.5">
-                        {lap.ram && (
-                          <div className="flex items-center gap-1">
-                            <FiDatabase size={10} className="text-gray-400" />
-                            <span>{lap.ram}</span>
-                          </div>
-                        )}
-                        {lap.storage && (
-                          <div className="flex items-center gap-1">
-                            <FiHardDrive size={10} className="text-gray-400" />
-                            <span>{lap.storage}</span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-2 sm:p-3">{getStockBadge(lap.stock)}</td>
-                    <td className="p-2 sm:p-3">{getStatusBadge(lap.status)}</td>
-                    <td className="p-2 sm:p-3">
-                      <div className="flex gap-1.5 sm:gap-2">
-                        <button
-                          onClick={() => handleDelete(lap._id)}
-                          className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition"
-                          title="Delete"
-                        >
-                          <FiTrash2 size={12} />
-                        </button>
-                        <button
-                          onClick={() => handleEdit(lap._id)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition"
-                          title="Edit"
-                        >
-                          <FiEdit2 size={12} />
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-2 sm:p-3 text-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedProducts.includes(lap._id)}
-                        onChange={() => handleSelectProduct(lap._id)}
-                        className="w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="p-2 sm:p-3 text-xs hidden lg:table-cell">
+                        <div className="space-y-0.5">
+                          {lap.ram && (
+                            <div className="flex items-center gap-1">
+                              <FiDatabase size={10} className="text-gray-400" />
+                              <span>{lap.ram}</span>
+                            </div>
+                          )}
+                          {lap.storage && (
+                            <div className="flex items-center gap-1">
+                              <FiHardDrive
+                                size={10}
+                                className="text-gray-400"
+                              />
+                              <span>{lap.storage}</span>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-2 sm:p-3">{getStockBadge(lap.stock)}</td>
+                      <td className="p-2 sm:p-3">
+                        {getStatusBadge(lap.status)}
+                      </td>
+                      <td className="p-2 sm:p-3">
+                        <div className="flex gap-1.5 sm:gap-2">
+                          <button
+                            onClick={() => handleDelete(lap._id)}
+                            className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition"
+                            title="Delete"
+                          >
+                            <FiTrash2 size={12} />
+                          </button>
+                          <button
+                            onClick={() => handleEdit(lap._id)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition"
+                            title="Edit"
+                          >
+                            <FiEdit2 size={12} />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-2 sm:p-3 text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedProducts.includes(lap._id)}
+                          onChange={() => handleSelectProduct(lap._id)}
+                          className="w-4 h-4 cursor-pointer"
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan="12" className="text-center py-8 sm:py-12">
+                  <td colSpan="14" className="text-center py-8 sm:py-12">
                     <div className="text-gray-500 text-sm sm:text-base">
                       {searchTerm
                         ? `No products found for "${searchTerm}"`
