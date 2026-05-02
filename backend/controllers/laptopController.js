@@ -189,7 +189,18 @@ export const updateLaptop = async (req, res) => {
     const updatedData = {
       title: req.body.title || laptop.title,
       slug: slug,
-      price: Number(req.body.price) || laptop.price,
+      // ✅ PRICE FIELDS - UPDATED
+      costPrice: Number(req.body.costPrice) || laptop.costPrice || 0,
+      sellingPrice:
+        Number(req.body.sellingPrice) ||
+        laptop.sellingPrice ||
+        laptop.price ||
+        0,
+      price:
+        Number(req.body.sellingPrice) ||
+        laptop.sellingPrice ||
+        laptop.price ||
+        0,
       condition: req.body.condition || laptop.condition,
       location: req.body.location || laptop.location,
       description: req.body.description || laptop.description,
