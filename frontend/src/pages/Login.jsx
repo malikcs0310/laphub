@@ -18,8 +18,32 @@ const Login = () => {
     setError("");
 
     try {
-      // ✅ Direct API call - no hardcoded credentials
-      const res = await fetch(`${API_URL}/api/auth/login`, {
+      // ✅ STEP 1: Try admin login first (using backend API only)
+      let adminResponse = null;
+      try {
+        const adminRes = await fetch(`${API_URL}/api/auth/admin/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (adminRes.ok) {
+          const adminData = await adminRes.json();
+          localStorage.setItem("adminToken", adminData.token);
+          localStorage.setItem("isAdmin", "true");
+          navigate("/admin");
+          setLoading(false);
+          return;
+        }
+      } catch (adminErr) {
+        // Admin login failed, continue to user login
+        console.log("Not admin, trying user login...");
+      }
+
+      // ✅ STEP 2: If not admin, try regular user login
+      const userRes = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,18 +51,22 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const userData = await userRes.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
+      if (!userRes.ok) {
+        throw new Error(userData.message || "Login failed");
       }
 
-      // Save token
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // Save user data
+      localStorage.setItem("token", userData.token);
+      localStorage.setItem("user", JSON.stringify(userData.user));
 
-      // ✅ Backend tells us if user is admin
-      if (data.user?.role === "Admin") {
+      // Clear any admin data
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("isAdmin");
+
+      // Redirect based on role
+      if (userData.user?.role === "Admin") {
         navigate("/admin");
       } else {
         navigate("/");
