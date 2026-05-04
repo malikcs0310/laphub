@@ -10,7 +10,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // ✅ Add this line - Backend URL
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const handleSubmit = async (e) => {
@@ -19,8 +18,9 @@ const Login = () => {
     setError("");
 
     try {
-      // Check if it's admin login
-      if (email === "malikcs0310@gmail.com" && password === "admin123") {
+      // ✅ STEP 1: Try admin login first (using backend API only)
+      let adminResponse = null;
+      try {
         const adminRes = await fetch(`${API_URL}/api/auth/admin/login`, {
           method: "POST",
           headers: {
@@ -29,18 +29,20 @@ const Login = () => {
           body: JSON.stringify({ email, password }),
         });
 
-        const adminData = await adminRes.json();
-
         if (adminRes.ok) {
+          const adminData = await adminRes.json();
           localStorage.setItem("adminToken", adminData.token);
           localStorage.setItem("isAdmin", "true");
           navigate("/admin");
           setLoading(false);
           return;
         }
+      } catch (adminErr) {
+        // Admin login failed, continue to user login
+        console.log("Not admin, trying user login...");
       }
 
-      // User login
+      // ✅ STEP 2: If not admin, try regular user login
       const userRes = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
