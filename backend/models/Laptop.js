@@ -4,12 +4,9 @@ const laptopSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     slug: { type: String, unique: true, sparse: true },
-
-    // ✅ PRICE FIELDS - ADD THESE
-    costPrice: { type: Number, default: 0, min: 0 }, // What you paid
-    sellingPrice: { type: Number, default: 0, min: 0 }, // Customer pays
-    price: { type: Number, min: 0 }, // For compatibility
-
+    costPrice: { type: Number, default: 0, min: 0 },
+    sellingPrice: { type: Number, default: 0, min: 0 },
+    price: { type: Number, min: 0 },
     condition: { type: String, default: "Used" },
     location: { type: String, required: true },
     description: { type: String, default: "" },
@@ -37,30 +34,28 @@ const laptopSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Virtual field for profit calculation
+// Virtuals
 laptopSchema.virtual("profit").get(function () {
   return (this.sellingPrice || this.price || 0) - (this.costPrice || 0);
 });
 
-// Virtual field for profit margin
 laptopSchema.virtual("profitMargin").get(function () {
   const cost = this.costPrice || 1;
   const profit = this.profit;
   return ((profit / cost) * 100).toFixed(1);
 });
 
-// Set price = sellingPrice for compatibility
-laptopSchema.pre("save", function (next) {
+// ✅ FOR MONGOOSE 9.x - async function (no next parameter)
+laptopSchema.pre("save", async function () {
   if (this.sellingPrice) {
     this.price = this.sellingPrice;
   }
-  next();
+  // No next() call needed
 });
 
 // Indexes
 laptopSchema.index({ status: 1, featured: 1 });
 laptopSchema.index({ brand: 1 });
 laptopSchema.index({ sellingPrice: 1 });
-// FIX: Re-deploy trigger - March 2026
 
 export default mongoose.model("Laptop", laptopSchema);
