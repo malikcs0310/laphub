@@ -10,7 +10,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // ✅ Add this line - Backend URL
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const handleSubmit = async (e) => {
@@ -19,29 +18,8 @@ const Login = () => {
     setError("");
 
     try {
-      // Check if it's admin login
-      if (email === "malikcs0310@gmail.com" && password === "admin123") {
-        const adminRes = await fetch(`${API_URL}/api/auth/admin/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const adminData = await adminRes.json();
-
-        if (adminRes.ok) {
-          localStorage.setItem("adminToken", adminData.token);
-          localStorage.setItem("isAdmin", "true");
-          navigate("/admin");
-          setLoading(false);
-          return;
-        }
-      }
-
-      // User login
-      const userRes = await fetch(`${API_URL}/api/auth/login`, {
+      // ✅ Direct API call - no hardcoded credentials
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,22 +27,18 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const userData = await userRes.json();
+      const data = await res.json();
 
-      if (!userRes.ok) {
-        throw new Error(userData.message || "Login failed");
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
       }
 
-      // Save user data
-      localStorage.setItem("token", userData.token);
-      localStorage.setItem("user", JSON.stringify(userData.user));
+      // Save token
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Clear any admin data
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("isAdmin");
-
-      // Redirect based on role
-      if (userData.user?.role === "Admin") {
+      // ✅ Backend tells us if user is admin
+      if (data.user?.role === "Admin") {
         navigate("/admin");
       } else {
         navigate("/");
