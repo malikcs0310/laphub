@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const laptopSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
-    slug: { type: String, unique: true, sparse: true },
+    // slug: { type: String, unique: true, sparse: true },
     costPrice: { type: Number, default: 0, min: 0 },
     sellingPrice: { type: Number, default: 0, min: 0 },
     price: { type: Number, min: 0 },
