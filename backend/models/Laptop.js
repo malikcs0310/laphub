@@ -61,5 +61,6 @@ laptopSchema.pre("save", function (next) {
 laptopSchema.index({ status: 1, featured: 1 });
 laptopSchema.index({ brand: 1 });
 laptopSchema.index({ sellingPrice: 1 });
+// FIX: Re-deploy trigger - March 2026
 
 export default mongoose.model("Laptop", laptopSchema);
